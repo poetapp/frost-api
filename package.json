@@ -13,7 +13,7 @@
   },
   "lint-staged": {
     "*.ts": [
-      "npm run lint",
+      "tslint -p ./tsconfig.json --fix",
       "git add"
     ]
   },
