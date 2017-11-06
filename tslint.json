@@ -7,7 +7,7 @@
   "rules": {
     "prettier": [ true, 
       { 
-        "singleQuote": false 
+        "singleQuote": true 
       }
     ]
   }
