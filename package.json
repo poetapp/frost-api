@@ -13,7 +13,7 @@
   },
   "lint-staged": {
     "*.ts": [
-      "tslint -p ./tsconfig.json --fix",
+      "lint",
       "git add"
     ]
   },
@@ -36,6 +36,8 @@
     "typescript": "^2.3.4"
   },
   "devDependencies": {
+    "husky": "^0.14.3",
+    "lint-staged": "^4.3.0",
     "prettier": "^1.7.4",
     "tslint": "^5.8.0",
     "tslint-config-prettier": "^1.6.0",
