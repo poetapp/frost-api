@@ -1,14 +1,12 @@
 {
+  "rulesDirectory": ["tslint-plugin-prettier"],
   "extends": [
     "tslint:latest",
     "tslint-config-prettier"
   ],
-  "rulesDirectory": ["tslint-plugin-prettier"],
   "rules": {
-    "prettier": [ true, 
-      { 
-        "singleQuote": true 
-      }
-    ]
+    "semicolon": [true, "never"],
+    "only-arrow-functions": false,
+    "object-literal-sort-keys": false
   }
 }

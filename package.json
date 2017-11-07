@@ -4,16 +4,16 @@
   "description": "Po.et API Layer for Publishers",
   "main": "index.js",
   "scripts": {
-    "start": "node dist",
     "build": "tsc",
-    "watch": "tsc --watch",
-    "lint": "tslint -p ./tsconfig.json --fix",
+    "start": "node dist",
+    "start:dev": "nodemon --exec 'ts-node --inspect=0.0.0.0:5858 --cache-directory .tscache' ./src/index.ts",
+    "tslint": "tslint -p ./tsconfig.json --fix",
     "tslint-check": "tslint-config-prettier-check ./tslint.json",
     "precommit": "lint-staged"
   },
   "lint-staged": {
     "*.ts": [
-      "lint",
+      "tslint",
       "git add"
     ]
   },
@@ -29,16 +29,21 @@
   },
   "homepage": "https://github.com/poetapp/api#readme",
   "dependencies": {
+    "@types/koa": "^2.0.39",
     "bitcore-lib": "github:eordano/bitcore-lib#f9c9876",
     "isomorphic-fetch": "^2.2.1",
     "koa": "^2.4.1",
+    "mongoose": "^4.13.0",
     "poet-js": "^0.2.0",
     "typescript": "^2.3.4"
   },
   "devDependencies": {
+    "@types/mongodb": "^2.2.15",
+    "@types/mongoose": "^4.7.25",
     "husky": "^0.14.3",
     "lint-staged": "^4.3.0",
     "prettier": "^1.7.4",
+    "ts-node": "^3.3.0",
     "tslint": "^5.8.0",
     "tslint-config-prettier": "^1.6.0",
     "tslint-plugin-prettier": "^1.3.0"
