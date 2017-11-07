@@ -1,5 +1,9 @@
 import * as Koa from 'koa'
+import * as bodyParser from 'koa-bodyparser'
 import { connect, connection, model, Schema } from 'mongoose'
+import MongoDB from './databases/mongodb/mongodb'
+import logger from './modules/Logger/Logger'
+import routes from './routes'
 
 const mongodbUri = 'mongodb://localhost:27017/test'
 
@@ -7,23 +11,25 @@ const options = {
   useMongoClient: true,
   socketTimeoutMS: 0,
   keepAlive: true,
-  reconnectTries: 30
+  reconnectTries: 30,
+  promiseLibrary: Promise
 }
 
-const db = connect(mongodbUri, options)
+const main = async () => {
+  try {
+    const mongoDB = new MongoDB(mongodbUri, options)
+    await mongoDB.start()
+    const app = new Koa()
 
-const thingSchema = new Schema({
-  name: String
-})
-const Thing = model('Thing', thingSchema)
-const thing = new Thing({ name: 'test' })
-thing.save() // iAmNotInTheSchema is not saved to the db
+    app
+      .use(bodyParser())
+      .use(routes.routes())
+      .use(routes.allowedMethods())
 
-const app = new Koa()
+    app.listen(3000)
+  } catch (e) {
+    logger.log('error', e)
+  }
+}
 
-// response
-app.use(ctx => {
-  ctx.body = 'Hello Koa'
-})
-
-app.listen(3000)
+main()

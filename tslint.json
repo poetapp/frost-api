@@ -2,11 +2,15 @@
   "rulesDirectory": ["tslint-plugin-prettier"],
   "extends": [
     "tslint:latest",
-    "tslint-config-prettier"
+    "tslint-config-prettier",
+    "tslint-eslint-rules"
   ],
   "rules": {
-    "semicolon": [true, "never"],
     "only-arrow-functions": false,
-    "object-literal-sort-keys": false
+    "object-literal-sort-keys": false,
+    "prettier": [true, { 
+      "singleQuote": true,
+      "semi": false
+    }]
   }
 }
