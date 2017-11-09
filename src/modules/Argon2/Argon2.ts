@@ -16,6 +16,8 @@ export class Argon2 {
       this.pwd.hash(userPassword, (err: any, hash: string) => {
         return err ? reject(err) : resolve(hash)
       })
+    }).catch(e => {
+      throw e
     })
   }
 
@@ -30,6 +32,8 @@ export class Argon2 {
           ? resolve(true)
           : reject({ status: 401, message: 'Unauthorized' })
       })
+    }).catch(e => {
+      throw e
     })
   }
 }
