@@ -20,6 +20,7 @@
     "member-access": false,
     "no-var-requires": false,
     "no-default-export": true,
+    "no-unused-variable": true,
     "ordered-imports": [
       true,
       {
