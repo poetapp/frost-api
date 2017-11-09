@@ -1,7 +1,9 @@
+import * as Joi from 'joi'
 import { sign } from 'jsonwebtoken'
 import { Argon2 } from '../../modules/Argon2/Argon2'
 import { usersController } from '../../modules/Users/User'
 import { Vault } from '../../modules/Vault/Vault'
+import { errors } from '../errors/errors'
 
 const createJwtToken = (data: object, secret: string, expiresIn: number) => {
   return sign(data, secret, { expiresIn })
@@ -25,7 +27,8 @@ export const createAccount = async (ctx: any, next: any) => {
 
     ctx.body = { token }
   } catch (e) {
-    ctx.status = 500
+    const { AccountAlreadyExists } = errors
+    ctx.throw(AccountAlreadyExists.code, AccountAlreadyExists.message)
   }
 }
 
@@ -40,10 +43,32 @@ export const loginAccount = async (ctx: any, next: any) => {
     const token = await getToken(user.email)
     ctx.body = { token }
   } catch (e) {
-    ctx.status = e.status
+    const { ResourceNotFound } = errors
+    ctx.throw(ResourceNotFound.code, ResourceNotFound.message)
   }
 }
 
 export const recoverAccount = async (ctx: any, next: any) => {
   return {}
+}
+
+export const validateAccount = async (ctx: any, next: any) => {
+  const data = ctx.request.body
+  const { InvalidInput } = errors
+
+  const schema = {
+    email: Joi.string()
+      .email()
+      .required(),
+    password: Joi.string()
+      .min(6)
+      .required()
+  }
+
+  try {
+    await Joi.validate(data, schema)
+    return next()
+  } catch (e) {
+    ctx.throw(InvalidInput.code, InvalidInput.message + e.message)
+  }
 }
