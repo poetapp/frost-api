@@ -1,5 +1,9 @@
 import * as KoaRouter from 'koa-router'
-import { createAccount, loginAccount } from './accounts/accounts'
+import {
+  createAccount,
+  loginAccount,
+  validateAccount
+} from './accounts/accounts'
 import { authorization } from './middlewares/authorization'
 import { createWork } from './works/works'
 
@@ -8,8 +12,8 @@ const omitPaths = ['users', 'login']
 
 router.use(authorization(omitPaths))
 
-router.post('/users', createAccount)
-router.post('/login', loginAccount)
+router.post('/users', validateAccount, createAccount)
+router.post('/login', validateAccount, loginAccount)
 router.post('/work', createWork)
 
 export const routes = router
