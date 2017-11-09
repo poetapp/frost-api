@@ -18,7 +18,7 @@ export const authorization = (urls: string[]) => {
 
       await Vault.verifyToken(client_token)
       ctx.state.user = await usersController.get(email)
-      await next()
+      ctx.state.user ? await next() : (ctx.status = 404)
     } catch (e) {
       ctx.status = 401
     }
