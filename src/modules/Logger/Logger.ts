@@ -1,14 +1,14 @@
-import * as logger from 'winston'
+import * as winston from 'winston'
 
-logger.configure({
+winston.configure({
   level: 'info',
   transports: [
     // - Write to all logs with level `info` and below to `combined.log`
     // - Write all logs error (and below) to `error.log`.
-
-    new logger.transports.File({ filename: 'error.log', level: 'error' }),
-    new logger.transports.File({ filename: 'combined.log' })
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: 'error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'combined.log' })
   ]
 })
 
-export default logger
+export const logger = winston

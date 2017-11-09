@@ -1,11 +1,11 @@
 import * as mongoose from 'mongoose'
-import IOptions from './IOptions'
+import { Options } from './Options'
 
-export default class MongoDB {
+export class MongoDB {
   private mongodbUri: string
-  private options: IOptions
+  private options: Options
 
-  constructor(mongodbUri: string, options: IOptions) {
+  constructor(mongodbUri: string, options: Options) {
     this.mongodbUri = mongodbUri
     this.options = options
   }

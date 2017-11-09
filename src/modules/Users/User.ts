@@ -1,7 +1,5 @@
-import UsersController from './User.controller'
-import UsersDAO from './Users.dao'
+import { UsersController } from './User.controller'
+import { UsersDAO } from './Users.dao'
 
 const userDAO = new UsersDAO()
-const usersController = new UsersController(userDAO)
-
-export default usersController
+export const usersController = new UsersController(userDAO)

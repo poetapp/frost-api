@@ -1,22 +1,22 @@
-import IGenericDAO from '../../interfaces/IGenericDAO'
-import { IUser } from './Users.model'
+import { GenericDAO } from '../../interfaces/GenericDAO'
+import { User } from './Users.model'
 
-export default class UserController {
-  private dao: IGenericDAO<IUser>
+export class UsersController {
+  private dao: GenericDAO<User>
 
-  constructor(dao: IGenericDAO<IUser>) {
+  constructor(dao: GenericDAO<User>) {
     this.dao = dao
   }
 
-  public async create(user: IUser) {
+  public async create(user: User) {
     return this.dao.create(user)
   }
 
-  public async get(id: string) {
-    return this.dao.get(id)
+  public async get(email: string): Promise<User> {
+    return this.dao.get(email)
   }
 
-  public async update(id: string, user: IUser) {
+  public async update(id: string, user: User) {
     return this.dao.update(id, user)
   }
 

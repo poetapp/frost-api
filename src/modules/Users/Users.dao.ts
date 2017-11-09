@@ -1,41 +1,41 @@
-import IGenericDAO from '../../interfaces/IGenericDAO'
-import logger from '../Logger/Logger'
-import User, { IUser } from './Users.model'
+import { GenericDAO } from '../../interfaces/GenericDAO'
+import { logger } from '../Logger/Logger'
+import { UserModel, User } from './Users.model'
 
-export default class UserDAO implements IGenericDAO<IUser> {
-  public async create(model: IUser): Promise<IUser> {
+export class UsersDAO implements GenericDAO<User> {
+  public async create(model: User): Promise<User> {
     try {
-      return await User.create(model)
+      return await UserModel.create(model)
     } catch (e) {
       logger.log('error', 'Create user')
-      return e
+      throw e
     }
   }
 
-  public async get(id: string): Promise<IUser> {
+  public async get(email: string): Promise<User> {
     try {
-      return await User.findOne({ _id: id })
+      return await UserModel.findOne({ email })
     } catch (e) {
       logger.log('error', 'get user')
-      return e
+      throw e
     }
   }
 
-  public async update(id: string, user: IUser): Promise<IUser> {
+  public async update(id: string, user: User): Promise<User> {
     try {
-      return await User.findByIdAndUpdate(id, user, { new: true })
+      return await UserModel.findByIdAndUpdate(id, user, { new: true })
     } catch (e) {
       logger.log('error', 'update user')
-      return e
+      throw e
     }
   }
 
-  public async delete(id: string): Promise<IUser> {
+  public async delete(id: string): Promise<User> {
     try {
-      return await User.findByIdAndRemove(id)
+      return await UserModel.findByIdAndRemove(id)
     } catch (e) {
       logger.log('error', 'delete user')
-      return e
+      throw e
     }
   }
 }

@@ -1,6 +1,7 @@
 import { Document, model, Schema } from 'mongoose'
+import { validate } from './User.hooks'
 
-export interface IUser extends Document {
+export interface User extends Document {
   email: string
   password: string
   verified: boolean
@@ -11,7 +12,8 @@ export interface IUser extends Document {
 export const UserSchema = new Schema({
   email: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   password: {
     type: String,
@@ -31,6 +33,6 @@ export const UserSchema = new Schema({
   }
 })
 
-const User = model<IUser>('User', UserSchema)
+UserSchema.pre('validate', validate)
 
-export default User
+export const UserModel = model<User>('User', UserSchema)
