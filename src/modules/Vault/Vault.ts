@@ -32,4 +32,8 @@ export namespace Vault {
   export async function verifyToken(token: string) {
     return this.vault.tokenLookup({ token })
   }
+
+  export async function readSecret(key: string) {
+    return await this.vault.read(`secret/${key}`)
+  }
 }
