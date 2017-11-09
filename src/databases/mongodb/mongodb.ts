@@ -12,9 +12,12 @@ export class MongoDB {
 
   public start() {
     return new Promise((resolve, reject) => {
-      const db = mongoose.connect(this.mongodbUri, this.options, error => {
+      require('mongoose').Promise = this.options.promiseLibrary
+      mongoose.connect(this.mongodbUri, this.options, error => {
         return error ? reject(error) : resolve()
       })
+    }).catch(e => {
+      throw e
     })
   }
 }
