@@ -1,6 +1,9 @@
 import { verify } from 'jsonwebtoken'
 import { usersController } from '../../modules/Users/User'
 import { Vault } from '../../modules/Vault/Vault'
+import { errors } from '../errors/errors'
+
+const { AuthenticationFailed } = errors
 
 export const authorization = (urls: string[]) => {
   return async (ctx: any, next: any) => {
@@ -20,7 +23,7 @@ export const authorization = (urls: string[]) => {
       ctx.state.user = await usersController.get(email)
       ctx.state.user ? await next() : (ctx.status = 404)
     } catch (e) {
-      ctx.status = 401
+      ctx.throw(AuthenticationFailed.code, AuthenticationFailed.message)
     }
   }
 }
