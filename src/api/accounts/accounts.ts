@@ -1,6 +1,7 @@
 import * as Joi from 'joi'
 import { sign } from 'jsonwebtoken'
 import { Argon2 } from '../../modules/Argon2/Argon2'
+import { Nodemailer } from '../../modules/Nodemailer/Nodemailer'
 import { usersController } from '../../modules/Users/User'
 import { Vault } from '../../modules/Vault/Vault'
 import { errors } from '../errors/errors'
@@ -49,7 +50,22 @@ export const loginAccount = async (ctx: any, next: any) => {
 }
 
 export const recoverAccount = async (ctx: any, next: any) => {
-  return {}
+  try {
+    const { email } = ctx.request.body
+    const token = await getToken(email)
+
+    const data = {
+      to: 'walter.zalazar.mdp@gmail.com',
+      from: 'walter@poet.com',
+      subject: 'Password help has arrived!',
+      text: 'text',
+      html: token
+    }
+
+    Nodemailer.sendMail(data)
+  } catch (e) {
+    throw e
+  }
 }
 
 export const validateAccount = async (ctx: any, next: any) => {
@@ -62,6 +78,24 @@ export const validateAccount = async (ctx: any, next: any) => {
       .required(),
     password: Joi.string()
       .min(6)
+      .required()
+  }
+
+  try {
+    await Joi.validate(data, schema)
+    return next()
+  } catch (e) {
+    ctx.throw(InvalidInput.code, InvalidInput.message + e.message)
+  }
+}
+
+export const validateRecoverAccount = async (ctx: any, next: any) => {
+  const data = ctx.request.body
+  const { InvalidInput } = errors
+
+  const schema = {
+    email: Joi.string()
+      .email()
       .required()
   }
 
