@@ -1,5 +1,5 @@
 import * as nodemailer from 'nodemailer'
-const mandrillTransport = require('nodemailer-mandrill-transport')
+const transport = require('nodemailer-mailgun-transport')
 
 import { Email } from './Email'
 import { Options } from './Options'
@@ -7,10 +7,8 @@ import { Options } from './Options'
 export namespace Nodemailer {
   export function config(options?: Options) {
     this.smtpTransport = nodemailer.createTransport(
-      mandrillTransport({
-        auth: {
-          apiKey: options.apiKey
-        }
+      transport({
+        auth: options
       })
     )
   }
