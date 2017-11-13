@@ -26,11 +26,11 @@ export namespace Vault {
   }
 
   export async function createToken(options?: object) {
-    return this.vault.tokenCreate(options)
+    return await this.vault.tokenCreate(options)
   }
 
   export async function verifyToken(token: string) {
-    return this.vault.tokenLookup({ token })
+    return await this.vault.tokenLookup({ token })
   }
 
   export async function readSecret(key: string) {
