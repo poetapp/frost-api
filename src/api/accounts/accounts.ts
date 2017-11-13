@@ -89,7 +89,6 @@ export const recoverAccountToken = async (ctx: any, next: any) => {
 
 export const validateAccount = async (ctx: any, next: any) => {
   const data = ctx.request.body
-  const { InvalidInput } = errors
 
   const schema = {
     email: Joi.string()
@@ -104,13 +103,13 @@ export const validateAccount = async (ctx: any, next: any) => {
     await Joi.validate(data, schema)
     return next()
   } catch (e) {
+    const { InvalidInput } = errors
     ctx.throw(InvalidInput.code, InvalidInput.message + e.message)
   }
 }
 
 export const validateRecoverAccount = async (ctx: any, next: any) => {
   const data = ctx.request.body
-  const { InvalidInput } = errors
 
   const schema = {
     email: Joi.string()
@@ -122,13 +121,13 @@ export const validateRecoverAccount = async (ctx: any, next: any) => {
     await Joi.validate(data, schema)
     return next()
   } catch (e) {
+    const { InvalidInput } = errors
     ctx.throw(InvalidInput.code, InvalidInput.message + e.message)
   }
 }
 
 export const validateRecoverAccountToken = async (ctx: any, next: any) => {
   const data = ctx.request.body
-  const { InvalidInput } = errors
 
   const schema = {
     password: Joi.string()
@@ -144,6 +143,7 @@ export const validateRecoverAccountToken = async (ctx: any, next: any) => {
     await Joi.validate(data, schema)
     return next()
   } catch (e) {
+    const { InvalidInput } = errors
     ctx.throw(InvalidInput.code, InvalidInput.message + e.message)
   }
 }
