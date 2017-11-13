@@ -68,6 +68,25 @@ export const recoverAccount = async (ctx: any, next: any) => {
   }
 }
 
+export const recoverAccountToken = async (ctx: any, next: any) => {
+  try {
+    const { user } = ctx.state
+    const { password, newPassword } = ctx.request.body
+    const argon2 = new Argon2(newPassword)
+
+    await argon2.verify(password, user.password)
+
+    user.password = await argon2.hash()
+
+    await usersController.update(user.id, user)
+
+    ctx.body = 'ok'
+  } catch (e) {
+    const { InvalidInput } = errors
+    ctx.throw(InvalidInput.code, InvalidInput.message + ' ' + e.message)
+  }
+}
+
 export const validateAccount = async (ctx: any, next: any) => {
   const data = ctx.request.body
   const { InvalidInput } = errors
@@ -97,6 +116,28 @@ export const validateRecoverAccount = async (ctx: any, next: any) => {
     email: Joi.string()
       .email()
       .required()
+  }
+
+  try {
+    await Joi.validate(data, schema)
+    return next()
+  } catch (e) {
+    ctx.throw(InvalidInput.code, InvalidInput.message + e.message)
+  }
+}
+
+export const validateRecoverAccountToken = async (ctx: any, next: any) => {
+  const data = ctx.request.body
+  const { InvalidInput } = errors
+
+  const schema = {
+    password: Joi.string()
+      .min(6)
+      .required(),
+    newPassword: Joi.string()
+      .min(6)
+      .required(),
+    token: Joi.string().required()
   }
 
   try {
