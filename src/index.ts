@@ -1,6 +1,5 @@
 import * as Koa from 'koa'
 import * as bodyParser from 'koa-bodyparser'
-import * as views from 'koa-views'
 import { routes } from './api/routes'
 import { MongoDB } from './databases/mongodb/mongodb'
 import { logger } from './modules/Logger/Logger'
@@ -38,14 +37,6 @@ const main = async () => {
 
     app
       .use(bodyParser())
-      .use(
-        views(__dirname + '/views', {
-          extension: 'hbs',
-          map: {
-            hbs: 'handlebars'
-          }
-        })
-      )
       .use(routes.routes())
       .use(routes.allowedMethods())
 
