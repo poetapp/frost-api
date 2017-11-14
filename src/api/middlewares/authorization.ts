@@ -5,17 +5,13 @@ import { errors } from '../errors/errors'
 
 const { AuthenticationFailed } = errors
 
-export const authorization = (urls: string[]) => {
+export const authorization = () => {
   return async (ctx: any, next: any) => {
     try {
       const secret = await Vault.readSecret('poet')
       const { jwt } = secret.data
-      const url = ctx.url
-      const notRequiredToken = urls.includes(url)
 
-      if (notRequiredToken) return next()
-
-      const { token } = ctx.request.body
+      const token = ctx.header.token ? ctx.header.token : ctx.params.token
       const decoded = verify(token, jwt)
       const { client_token, email } = decoded as any
 
