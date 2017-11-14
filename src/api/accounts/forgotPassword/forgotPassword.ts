@@ -12,7 +12,7 @@ export class ForgotPassword implements ControllerApi {
 
       const data = {
         to: email,
-        from: 'contact@po.et',
+        from: `"Po.et" <contact@po.et>`,
         subject,
         html: template(token)
       }
