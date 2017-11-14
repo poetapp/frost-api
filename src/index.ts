@@ -24,7 +24,7 @@ const optionsVault = {
 }
 
 const optionsNodemailer = {
-  apiKey: 'hUCUZIPZtDLKlSlaSbqNhw'
+  apiKey: '***REMOVED***'
 }
 
 const main = async () => {
