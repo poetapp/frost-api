@@ -1,6 +1,14 @@
 import * as Joi from 'joi'
-import { ControllerApi } from '../interfaces/ControllerApi'
-import { errors } from './errors/errors'
+import { errors } from '../../api/errors/errors'
+import { ControllerApi } from '../../interfaces/ControllerApi'
+
+export enum Method {
+  POST = 'post',
+  GET = 'get',
+  PUT = 'put',
+  DEL = 'del',
+  ALL = 'all'
+}
 export class Route {
   private router: any
 
@@ -8,7 +16,7 @@ export class Route {
     this.router = router
   }
 
-  set(method: string, path: string, controllerApi: ControllerApi) {
+  set(method: Method, path: string, controllerApi: ControllerApi) {
     this.router[method](path, this.handler(controllerApi))
   }
 
