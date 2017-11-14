@@ -1,29 +1,24 @@
 import * as KoaRouter from 'koa-router'
-import {
-  createAccount,
-  loginAccount,
-  recoverAccount,
-  recoverAccountToken,
-  validateAccount,
-  validateRecoverAccount,
-  validateRecoverAccountToken
-} from './accounts/accounts'
 import { authorization } from './middlewares/authorization'
-import { createWork } from './works/works'
+import { Work } from './works/works'
+
+import { ChangePassword } from './accounts/changePassword/changePassword'
+import { CreateAccount } from './accounts/create/create'
+import { ForgotPassword } from './accounts/forgotPassword/forgotPassword'
+import { Login } from './accounts/login/login'
+
+import { Route } from './Route'
 
 const router = new KoaRouter()
-const omitPaths = ['users', 'login', 'recover-account', 'home']
+const omitPaths = ['account', 'login', 'password/forgot']
 
 router.use(authorization(omitPaths))
 
-router.post('/users', validateAccount, createAccount)
-router.post('/login', validateAccount, loginAccount)
-router.post('/recover-account', validateRecoverAccount, recoverAccount)
-router.post(
-  '/recover-account-token',
-  validateRecoverAccountToken,
-  recoverAccountToken
-)
-router.post('/work', createWork)
+const route = new Route(router)
+route.set('post', '/account', new CreateAccount())
+route.set('post', '/login', new Login())
+route.set('post', '/password/forgot', new ForgotPassword())
+route.set('post', '/password/change', new ChangePassword())
+route.set('post', '/work', new Work())
 
 export const routes = router
