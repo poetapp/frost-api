@@ -1,5 +1,5 @@
 import * as nodemailer from 'nodemailer'
-const transport = require('nodemailer-mailgun-transport')
+const transport = require('nodemailer-mandrill-transport')
 
 import { Email } from './Email'
 import { Options } from './Options'
