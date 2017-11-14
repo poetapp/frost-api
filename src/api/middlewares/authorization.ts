@@ -10,7 +10,7 @@ export const authorization = (urls: string[]) => {
     try {
       const secret = await Vault.readSecret('poet')
       const { jwt } = secret.data
-      const url = ctx.url.replace('/', '')
+      const url = ctx.url
       const notRequiredToken = urls.includes(url)
 
       if (notRequiredToken) return next()
