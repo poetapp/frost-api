@@ -3,6 +3,7 @@ import * as KoaRouter from 'koa-router'
 import { Route, Method } from './../modules/Route/Route'
 import { Path } from './Path'
 import { authorization } from './middlewares/authorization'
+import { requireEmailVerified } from './middlewares/requireEmailVerified'
 
 import { ChangePassword } from './accounts/changePassword/changePassword'
 import { CreateAccount } from './accounts/create/create'
@@ -19,6 +20,8 @@ router.use(
   [Path.ACCOUNT_VERIFY_TOKEN, Path.PASSWORD_CHANGE, Path.WORK],
   authorization()
 )
+
+router.use([Path.WORK, Path.PASSWORD_CHANGE], requireEmailVerified())
 
 route.set(Method.POST, Path.ACCOUNT, new CreateAccount())
 route.set(Method.POST, Path.ACCOUNT_VERIFY, new VerifyAccount())
