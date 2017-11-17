@@ -1,4 +1,5 @@
 import * as Joi from 'joi'
+import { SendEmail } from '../../../modules/SendEmail/SendEmail'
 import { usersController } from '../../../modules/Users/User'
 import { errors } from '../../errors/errors'
 import { getToken } from '../utils/utils'
@@ -11,8 +12,10 @@ export class CreateAccount implements ControllerApi {
       const user = ctx.request.body
       const response = await usersController.create(user)
       const { email } = response
+      const sendEmail = new SendEmail(email)
 
       const token = await getToken(email)
+      await sendEmail.sendVerified(token)
 
       ctx.body = { token }
     } catch (e) {
