@@ -1,32 +1,20 @@
 import * as Joi from 'joi'
-import { template, subject } from '../../../emails/forgotPassword'
 import { ControllerApi } from '../../../interfaces/ControllerApi'
-import { Nodemailer } from '../../../modules/Nodemailer/Nodemailer'
+import { SendEmail } from '../../../modules/SendEmail/SendEmail'
 import { usersController } from '../../../modules/Users/User'
 import { errors } from '../../errors/errors'
 import { getToken } from '../utils/utils'
 
 export class ForgotPassword implements ControllerApi {
-  async sendEmail(email: string) {
-    const token = await getToken(email)
-
-    const data = {
-      to: email,
-      from: `"Po.et" <contact@po.et>`,
-      subject,
-      html: template(token)
-    }
-
-    await Nodemailer.sendMail(data)
-  }
-
   async handler(ctx: any, next: any): Promise<any> {
     try {
       const { email } = ctx.request.body
       const user = await usersController.get(email)
       const { ResourceNotFound } = errors
       if (user) {
-        await this.sendEmail(email)
+        const sendEmail = new SendEmail(email)
+        const token = await getToken(email)
+        await sendEmail.sendForgotPassword(token)
         ctx.status = 200
       } else {
         ctx.status = ResourceNotFound.code
