@@ -25,5 +25,9 @@ export const errors = {
     code: 500,
     message:
       'The server encountered an internal error. Please retry the request.'
+  },
+  EmailVerfied: {
+    code: 400,
+    message: 'Email already verified.'
   }
 }
