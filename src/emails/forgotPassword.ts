@@ -25,7 +25,7 @@ export const template = (token: string) => `
             <strong>Po.et account</strong>. You can reset your password using the token below.
           </p>
 
-          <p style="font-family:Helvetica,Arial,sans-serif;font-weight:normal;color:#525845;font-size:15px;line-height:21px; border: 1px dashed #ccc;
+          <p id="frost-token" style="font-family:Helvetica,Arial,sans-serif;font-weight:normal;color:#525845;font-size:15px;line-height:21px; border: 1px dashed #ccc;
           padding: 30px; margin: 40px 0px;">
             ${token}
           </p>
