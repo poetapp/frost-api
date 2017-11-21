@@ -24,7 +24,7 @@ export const template = (link: string) => `
           </p>
 
           <p style="text-align: center; margin: 60px 0;">
-            <a class='verify-link' style="font-family:Helvetica,Arial,sans-serif;font-weight:bold;letter-spacing:1px;color:#ffffff;text-decoration:none;font-size:16px;line-height:22px;background-color:#43B980;border-top:18px solid #43B980;border-bottom:18px solid #43B980;border-left:80px solid #43B980;border-right:80px solid #43B980;border-radius:9999px;text-align:center;display:inline-block" href="${link}" target="_blank">
+            <a id='verify-link' style="font-family:Helvetica,Arial,sans-serif;font-weight:bold;letter-spacing:1px;color:#ffffff;text-decoration:none;font-size:16px;line-height:22px;background-color:#43B980;border-top:18px solid #43B980;border-bottom:18px solid #43B980;border-left:80px solid #43B980;border-right:80px solid #43B980;border-radius:9999px;text-align:center;display:inline-block" href="${link}" target="_blank">
               CONFIRM YOUR EMAIL
             </a>
           </p>
