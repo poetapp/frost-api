@@ -8,7 +8,7 @@ const { AuthenticationFailed } = errors
 export const authorization = () => {
   return async (ctx: any, next: any) => {
     try {
-      const secret = await Vault.readSecret('poet')
+      const secret = await Vault.readSecret('frost')
       const { jwt } = secret.data
 
       const token = ctx.header.token ? ctx.header.token : ctx.params.token
