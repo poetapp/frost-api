@@ -5,7 +5,7 @@ services:
     image: vault:0.8.3
     stdin_open: true
     environment:
-      - VAULT_DEV_ROOT_TOKEN_ID=goldfish
+      - VAULT_DEV_ROOT_TOKEN_ID=poet
     cap_add:
         - IPC_LOCK
     command: server -dev

@@ -6,7 +6,7 @@
 
 # Vault container config
 export VAULT_ADDR="http://vault:8200"
-export VAULT_TOKEN="goldfish"
+export VAULT_TOKEN="poet"
 
 #One place for curl options
 CURL_OPT="-s -H X-Vault-Token:${VAULT_TOKEN}"
