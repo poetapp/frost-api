@@ -6,7 +6,7 @@ const createJwtToken = (data: object, secret: string, expiresIn: number) => {
 }
 
 export const getToken = async (email: string) => {
-  const secret = await Vault.readSecret('poet')
+  const secret = await Vault.readSecret('frost')
   const { jwt } = secret.data
   const tokenVault = await Vault.createToken({ policies: ['goldfish'] })
   const { client_token, lease_duration } = tokenVault.auth
