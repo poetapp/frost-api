@@ -17,7 +17,7 @@ const optionsMongoDB = {
 }
 
 const optionsVault = {
-  token: 'goldfish',
+  token: 'poet',
   endpoint: 'http://0.0.0.0:8200',
   apiVersion: 'v1'
 }
