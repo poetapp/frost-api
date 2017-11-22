@@ -15,7 +15,7 @@ services:
   goldfish:
     container_name: "goldfish"
     build:
-      context: ./vault
+      context: ./goldfish
       dockerfile: Dockerfile
     stdin_open: true
     ports:
