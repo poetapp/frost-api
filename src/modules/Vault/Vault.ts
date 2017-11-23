@@ -12,14 +12,14 @@ export namespace Vault {
 
   export async function encrypt(text: string) {
     const plaintext = new Buffer(text).toString('base64')
-    const encrypted = await this.vault.write('transit/encrypt/usertransit', {
+    const encrypted = await this.vault.write('transit/encrypt/frost', {
       plaintext
     })
     return encrypted.data.ciphertext
   }
 
   export async function decrypt(ciphertext: string) {
-    const decrypted = await this.vault.write('transit/decrypt/usertransit', {
+    const decrypted = await this.vault.write('transit/decrypt/frost', {
       ciphertext
     })
     return new Buffer(decrypted.data.plaintext, 'base64').toString('ascii')
