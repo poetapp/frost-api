@@ -1,6 +1,6 @@
 import { Root, Type, INamespace } from 'protobufjs'
 
-import * as PoetProto from './PoetProto.json'
+import { PoetProto } from './PoetProtoJson'
 
 const poetProtoRoot = Root.fromJSON(PoetProto as INamespace)
 
