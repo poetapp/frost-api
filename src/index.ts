@@ -22,13 +22,15 @@ const optionsVault = {
   apiVersion: 'v1'
 }
 
-const optionsNodemailer = {
-  apiKey: '***REMOVED***'
-}
-
 const main = async () => {
   try {
     Vault.config(optionsVault)
+    const secret = await Vault.readSecret('frost')
+
+    const optionsNodemailer = {
+      apiKey: secret.data['transactional-mandrill']
+    }
+
     Nodemailer.config(optionsNodemailer)
 
     const mongoDB = new MongoDB(mongodbUri, optionsMongoDB)
