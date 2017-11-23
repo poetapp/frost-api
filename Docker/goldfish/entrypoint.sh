@@ -20,8 +20,14 @@ curl ${CURL_OPT} -X PUT ${VAULT_ADDR}/v1/sys/policy/goldfish -d '{"rules": "path
 curl ${CURL_OPT} ${VAULT_ADDR}/v1/auth/approle/role/goldfish -d '{"policies":"default,goldfish", "secret_id_num_uses":"1", "secret_id_ttl":"5", "period":"24h"}'
 curl ${CURL_OPT} ${VAULT_ADDR}/v1/auth/approle/role/goldfish/role-id -d '{"role_id":"goldfish"}'
 
+
+# set policy frost
+curl ${CURL_OPT} -X PUT ${VAULT_ADDR}/v1/sys/policy/frost -d '{"rules": "path \"transit/encrypt/frost\" {capabilities = [\"read\"]}, path \"transit/decrypt/frost\" {capabilities = [\"read\"]}, path \"secret/frost*\" {capabilities = [\"read\"]}"}'
+
+
 # initialize transit key. This is not strictly required but is proper procedure
 curl ${CURL_OPT} -X POST ${VAULT_ADDR}/v1/transit/keys/goldfish
+curl ${CURL_OPT} -X POST ${VAULT_ADDR}/v1/transit/keys/frost
 
 # production goldfish needs a generic secret endpoint to hot reload settings from. See Configuration page for details
 curl ${CURL_OPT} ${VAULT_ADDR}/v1/secret/goldfish -d '{"DefaultSecretPath":"secret/", "TransitBackend":"transit", "UserTransitKey":"usertransit", "ServerTransitKey":"goldfish", "BulletinPath":"secret/bulletins/"}'
