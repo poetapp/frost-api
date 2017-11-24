@@ -14,7 +14,7 @@ export const errors = {
     message: 'The specified account does not verified'
   },
   InvalidInput: {
-    code: 400,
+    code: 422,
     message: 'One of the request inputs is not valid.'
   },
   ResourceNotFound: {
@@ -29,5 +29,9 @@ export const errors = {
   EmailVerfied: {
     code: 400,
     message: 'Email already verified.'
+  },
+  WorkError: {
+    code: 400,
+    message: 'Could not create the work'
   }
 }
