@@ -17,7 +17,7 @@ export const authorization = () => {
 
       await Vault.verifyToken(client_token)
       ctx.state.user = await usersController.get(email)
-      ctx.state.user ? await next() : (ctx.status = 404)
+      return ctx.state.user ? next() : (ctx.status = 404)
     } catch (e) {
       ctx.throw(AuthenticationFailed.code, AuthenticationFailed.message)
     }
