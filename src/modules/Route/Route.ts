@@ -25,10 +25,10 @@ export class Route {
       const data = ctx.request.body
 
       try {
-        await Joi.validate(data, controllerApi.validate())
+        await Joi.validate(data, controllerApi.validate(data))
       } catch (e) {
         const { InvalidInput } = errors
-        return ctx.throw(InvalidInput.code, InvalidInput.message + e.message)
+        return ctx.throw(InvalidInput.code, `${InvalidInput.message} ${e}`)
       }
 
       await controllerApi.handler(ctx, next)

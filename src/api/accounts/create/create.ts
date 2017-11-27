@@ -1,10 +1,20 @@
 import * as Joi from 'joi'
+const PasswordComplexity = require('joi-password-complexity')
 import { SendEmail } from '../../../modules/SendEmail/SendEmail'
 import { usersController } from '../../../modules/Users/User'
 import { errors } from '../../errors/errors'
 import { getToken } from '../utils/utils'
 
 import { ControllerApi } from '../../../interfaces/ControllerApi'
+
+interface ComplexityOptions {
+  min: number
+  max: number
+  lowerCase: number
+  upperCase: number
+  numeric: number
+  symbol: number
+}
 
 export class CreateAccount implements ControllerApi {
   async handler(ctx: any, next: any): Promise<any> {
@@ -24,14 +34,39 @@ export class CreateAccount implements ControllerApi {
     }
   }
 
-  validate(): object {
+  getTextErrorPassword(options: ComplexityOptions): string {
+    const mapOptions = Object.entries(options).map(value => {
+      return `${value[0]}: ${value[1]} `
+    })
+
+    return `Password Requirements, ${mapOptions.join('')}`
+  }
+
+  validate(values: any): object {
+    const { password } = values
+
+    const complexityOptions = {
+      min: 10,
+      max: 30,
+      lowerCase: 1,
+      upperCase: 1,
+      numeric: 1,
+      symbol: 1
+    }
+
     return {
       email: Joi.string()
         .email()
         .required(),
-      password: Joi.string()
-        .min(6)
-        .required()
+      password: Joi.validate(
+        password,
+        new PasswordComplexity(complexityOptions),
+        (err, value) => {
+          if (err) throw this.getTextErrorPassword(complexityOptions)
+
+          return value
+        }
+      )
     }
   }
 }
