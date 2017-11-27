@@ -11,8 +11,8 @@ import { ForgotPassword } from './accounts/forgotPassword/forgotPassword'
 import { Login } from './accounts/login/login'
 import { VerifyAccount } from './accounts/verify/verify'
 import { VerifyAccountToken } from './accounts/verifyToken/verifyToken'
+import { CreateWork } from './works/CreateWork'
 import { GetWork } from './works/GetWork'
-import { Work } from './works/works'
 
 const router = new KoaRouter()
 const route = new Route(router)
@@ -38,7 +38,7 @@ route.set(Method.GET, Path.ACCOUNT_VERIFY_TOKEN, new VerifyAccountToken())
 route.set(Method.POST, Path.LOGIN, new Login())
 route.set(Method.POST, Path.PASSWORD_RESET, new ForgotPassword())
 route.set(Method.POST, Path.PASSWORD_CHANGE, new ChangePassword())
-route.set(Method.POST, Path.WORK, new Work())
+route.set(Method.POST, Path.WORK, new CreateWork())
 route.set(Method.GET, Path.WORK_WORKID, new GetWork())
 
 export const routes = router
