@@ -5,5 +5,6 @@ export enum Path {
   LOGIN = '/login',
   PASSWORD_RESET = '/password/reset',
   PASSWORD_CHANGE = '/password/change',
-  WORK = '/work'
+  WORK = '/work',
+  WORK_WORKID = '/work/:workId'
 }
