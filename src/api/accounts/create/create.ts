@@ -8,12 +8,12 @@ import { getToken } from '../utils/utils'
 import { ControllerApi } from '../../../interfaces/ControllerApi'
 
 interface ComplexityOptions {
-  min: number
-  max: number
-  lowerCase: number
-  upperCase: number
-  numeric: number
-  symbol: number
+  readonly min: number
+  readonly max: number
+  readonly lowerCase: number
+  readonly upperCase: number
+  readonly numeric: number
+  readonly symbol: number
 }
 
 export class CreateAccount implements ControllerApi {
