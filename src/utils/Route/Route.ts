@@ -1,5 +1,5 @@
+import { errors } from 'errors'
 import * as Joi from 'joi'
-import { errors } from '../../api/errors/errors'
 import { ControllerApi } from '../../interfaces/ControllerApi'
 
 export enum Method {

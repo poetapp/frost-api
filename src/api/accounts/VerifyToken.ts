@@ -1,6 +1,6 @@
-import { ControllerApi } from '../../../interfaces/ControllerApi'
-import { usersController } from '../../../modules/Users/User'
-import { errors } from '../../errors/errors'
+import { errors } from 'errors'
+import { ControllerApi } from '../../interfaces/ControllerApi'
+import { usersController } from '../../modules/Users/User'
 
 export class VerifyAccountToken implements ControllerApi {
   async handler(ctx: any, next: any): Promise<any> {

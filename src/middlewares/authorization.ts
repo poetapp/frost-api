@@ -1,7 +1,7 @@
+import { Vault } from 'Vault'
+import { errors } from 'errors'
 import { verify } from 'jsonwebtoken'
-import { usersController } from '../../modules/Users/User'
-import { Vault } from '../../modules/Vault/Vault'
-import { errors } from '../errors/errors'
+import { usersController } from '../modules/Users/User'
 
 const { AuthenticationFailed } = errors
 

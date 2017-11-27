@@ -1,9 +1,9 @@
+import { Nodemailer } from 'Nodemailer'
 import * as Joi from 'joi'
-import { template, subject } from '../../../emails/verify'
-import { Nodemailer } from '../../../modules/Nodemailer/Nodemailer'
-import { getToken } from '../utils/utils'
+import { template, subject } from '../../emails/verify'
+import { getToken } from './utils/utils'
 
-import { ControllerApi } from '../../../interfaces/ControllerApi'
+import { ControllerApi } from '../../interfaces/ControllerApi'
 
 export class VerifyAccount implements ControllerApi {
   async handler(ctx: any, next: any): Promise<any> {

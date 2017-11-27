@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist",
-    "start:dev": "nodemon --exec 'ts-node --inspect=0.0.0.0:5858 --cache-directory .tscache' ./src/index.ts",
+    "start:dev": "nodemon --exec 'ts-node --inspect=0.0.0.0:5858 -r tsconfig-paths/register --cache-directory .tscache' ./src/index.ts",
     "tslint": "tslint -p ./tsconfig.json --fix",
     "tslint:check": "tslint-config-prettier-check ./tslint.json",
     "precommit": "lint-staged"
@@ -57,6 +57,7 @@
     "poet-js": "^0.2.0",
     "protobufjs": "^6.8.0",
     "secure-password": "^2.1.2",
+    "tsconfig-paths": "^2.4.0",
     "typescript": "^2.3.4",
     "winston": "^3.0.0-rc1"
   },

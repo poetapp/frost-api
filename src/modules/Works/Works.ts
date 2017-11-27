@@ -1,7 +1,7 @@
+import { createClaim } from 'PoetNode/Helpers/Claim'
+import { WorkAttributes, ClaimType } from 'PoetNode/Interfaces/Interfaces'
+import { Method } from 'Route'
 import fetch from 'node-fetch'
-import { createClaim } from '../PoetNode/Helpers/Claim'
-import { WorkAttributes, ClaimType } from '../PoetNode/Interfaces/Interfaces'
-import { Method } from '../Route/Route'
 
 const url = 'http://localhost:8080'
 

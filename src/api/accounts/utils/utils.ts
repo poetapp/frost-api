@@ -1,5 +1,5 @@
+import { Vault } from 'Vault'
 import { sign } from 'jsonwebtoken'
-import { Vault } from '../../../modules/Vault/Vault'
 
 const createJwtToken = (data: object, secret: string, expiresIn: number) => {
   return sign(data, secret, { expiresIn })
