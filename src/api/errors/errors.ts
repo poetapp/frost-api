@@ -33,5 +33,9 @@ export const errors = {
   WorkError: {
     code: 400,
     message: 'Could not create the work'
+  },
+  WorkNotFound: {
+    code: 400,
+    message: 'Work not found.'
   }
 }
