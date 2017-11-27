@@ -6,7 +6,7 @@ import { errors } from '../errors/errors'
 
 import { WorksController } from '../../modules/Works/Works'
 
-export class Work implements ControllerApi {
+export class CreateWork implements ControllerApi {
   async handler(ctx: any, next: any): Promise<any> {
     try {
       const { user } = ctx.state
