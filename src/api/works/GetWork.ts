@@ -1,5 +1,5 @@
+import { errors } from 'errors'
 import { ControllerApi } from '../../interfaces/ControllerApi'
-import { errors } from '../errors/errors'
 
 import { WorksController } from '../../modules/Works/Works'
 

@@ -1,8 +1,8 @@
+import { logger } from 'Logger'
+import { Vault } from 'Vault'
+import { errors } from 'errors'
 import * as Joi from 'joi'
 import { ControllerApi } from '../../interfaces/ControllerApi'
-import { logger } from '../../modules/Logger/Logger'
-import { Vault } from '../../modules/Vault/Vault'
-import { errors } from '../errors/errors'
 
 import { WorksController } from '../../modules/Works/Works'
 

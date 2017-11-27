@@ -1,8 +1,8 @@
+import { Argon2 } from 'Argon2'
+import { errors } from 'errors'
 import * as Joi from 'joi'
-import { ControllerApi } from '../../../interfaces/ControllerApi'
-import { Argon2 } from '../../../modules/Argon2/Argon2'
-import { usersController } from '../../../modules/Users/User'
-import { errors } from '../../errors/errors'
+import { ControllerApi } from '../../interfaces/ControllerApi'
+import { usersController } from '../../modules/Users/User'
 
 export class ChangePassword implements ControllerApi {
   async handler(ctx: any, next: any): Promise<any> {

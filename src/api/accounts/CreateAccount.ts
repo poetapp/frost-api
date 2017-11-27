@@ -1,11 +1,11 @@
+import { SendEmail } from 'SendEmail'
 import * as Joi from 'joi'
 const PasswordComplexity = require('joi-password-complexity')
-import { SendEmail } from '../../../modules/SendEmail/SendEmail'
-import { usersController } from '../../../modules/Users/User'
-import { errors } from '../../errors/errors'
-import { getToken } from '../utils/utils'
+import { errors } from 'errors'
+import { usersController } from '../../modules/Users/User'
+import { getToken } from './utils/utils'
 
-import { ControllerApi } from '../../../interfaces/ControllerApi'
+import { ControllerApi } from '../../interfaces/ControllerApi'
 
 interface ComplexityOptions {
   readonly min: number

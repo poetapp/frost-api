@@ -1,10 +1,11 @@
+import { Argon2 } from 'Argon2'
 import * as Joi from 'joi'
-import { Argon2 } from '../../../modules/Argon2/Argon2'
-import { usersController } from '../../../modules/Users/User'
-import { errors } from '../../errors/errors'
-import { getToken } from '../utils/utils'
 
-import { ControllerApi } from '../../../interfaces/ControllerApi'
+import { errors } from 'errors'
+import { usersController } from '../../modules/Users/User'
+import { getToken } from './utils/utils'
+
+import { ControllerApi } from '../../interfaces/ControllerApi'
 
 export class Login implements ControllerApi {
   async handler(ctx: any, next: any) {

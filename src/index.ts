@@ -1,10 +1,10 @@
+import { logger } from 'Logger'
+import { Nodemailer } from 'Nodemailer'
+import { Vault } from 'Vault'
 import * as Koa from 'koa'
 import * as bodyParser from 'koa-bodyparser'
 import { routes } from './api/routes'
 import { MongoDB } from './databases/mongodb/mongodb'
-import { logger } from './modules/Logger/Logger'
-import { Nodemailer } from './modules/Nodemailer/Nodemailer'
-import { Vault } from './modules/Vault/Vault'
 
 const mongodbUri = 'mongodb://localhost:27017/test'
 
