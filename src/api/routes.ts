@@ -28,7 +28,7 @@ router.use(
 )
 
 router.use(
-  [Path.WORK, Path.WORK_WORKID, Path.PASSWORD_CHANGE],
+  [Path.WORK, Path.WORK_WORKID, Path.PASSWORD_CHANGE, Path.WORK_WORKID],
   requireEmailVerified()
 )
 
