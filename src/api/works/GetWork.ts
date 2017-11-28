@@ -10,7 +10,7 @@ export class GetWork implements ControllerApi {
       const worksController = new WorksController()
       try {
         const response = await worksController.get(workId)
-        ctx.body = response
+        ctx.body = response.attributes
         return
       } catch (e) {
         const { WorkNotFound } = errors
