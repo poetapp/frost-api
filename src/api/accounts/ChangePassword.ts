@@ -1,8 +1,8 @@
-import { Argon2 } from 'Argon2'
-import { errors } from 'errors'
 import * as Joi from 'joi'
+import { errors } from '../../errors/errors'
 import { ControllerApi } from '../../interfaces/ControllerApi'
 import { usersController } from '../../modules/Users/User'
+import { Argon2 } from '../../utils/Argon2/Argon2'
 
 export class ChangePassword implements ControllerApi {
   async handler(ctx: any, next: any): Promise<any> {

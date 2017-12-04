@@ -1,6 +1,6 @@
 import * as KoaRouter from 'koa-router'
 
-import { Route, Method } from 'Route'
+import { Route, Method } from '../utils/Route/Route'
 import { Path } from './Path'
 
 import { authorization } from '../middlewares/authorization'

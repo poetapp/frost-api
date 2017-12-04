@@ -1,6 +1,6 @@
 const { PrivateKey } = require('bitcore-lib')
-import { Argon2 } from 'Argon2'
-import { Vault } from 'Vault'
+import { Argon2 } from '../../utils/Argon2/Argon2'
+import { Vault } from '../../utils/Vault/Vault'
 
 const createPrivateKey = (): string => {
   const privateKey = new PrivateKey()

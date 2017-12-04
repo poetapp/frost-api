@@ -1,4 +1,4 @@
-import * as nodemailer from 'nodemailer'
+const nodemailer = require('nodemailer')
 const transport = require('nodemailer-mandrill-transport')
 
 import { Email } from './Email'

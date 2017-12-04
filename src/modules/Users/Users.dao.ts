@@ -1,5 +1,5 @@
-import { logger } from 'Logger'
 import { GenericDAO } from '../../interfaces/GenericDAO'
+import { logger } from '../../utils/Logger/Logger'
 import { UserModel, User } from './Users.model'
 
 export class UsersDAO implements GenericDAO<User> {
