@@ -1,8 +1,7 @@
-import { Argon2 } from 'Argon2'
 import * as Joi from 'joi'
-
-import { errors } from 'errors'
+import { errors } from '../../errors/errors'
 import { usersController } from '../../modules/Users/User'
+import { Argon2 } from '../../utils/Argon2/Argon2'
 import { getToken } from './utils/utils'
 
 import { ControllerApi } from '../../interfaces/ControllerApi'

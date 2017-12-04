@@ -1,8 +1,8 @@
-import { SendEmail } from 'SendEmail'
 import * as Joi from 'joi'
 const PasswordComplexity = require('joi-password-complexity')
-import { errors } from 'errors'
+import { errors } from '../../errors/errors'
 import { usersController } from '../../modules/Users/User'
+import { SendEmail } from '../../utils/SendEmail/SendEmail'
 import { getToken } from './utils/utils'
 
 import { ControllerApi } from '../../interfaces/ControllerApi'

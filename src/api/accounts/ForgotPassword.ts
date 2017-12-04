@@ -1,8 +1,8 @@
-import { SendEmail } from 'SendEmail'
-import { errors } from 'errors'
 import * as Joi from 'joi'
+import { errors } from '../../errors/errors'
 import { ControllerApi } from '../../interfaces/ControllerApi'
 import { usersController } from '../../modules/Users/User'
+import { SendEmail } from '../../utils/SendEmail/SendEmail'
 import { getToken } from './utils/utils'
 
 export class ForgotPassword implements ControllerApi {

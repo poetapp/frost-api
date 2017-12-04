@@ -1,6 +1,6 @@
-import { Nodemailer } from 'Nodemailer'
 import * as Joi from 'joi'
 import { template, subject } from '../../emails/verify'
+import { Nodemailer } from '../../utils/Nodemailer/Nodemailer'
 import { getToken } from './utils/utils'
 
 import { ControllerApi } from '../../interfaces/ControllerApi'

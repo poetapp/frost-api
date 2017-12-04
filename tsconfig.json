@@ -9,17 +9,7 @@
     "experimentalDecorators": true,
     "sourceMap": false,
     "outDir": "./dist",
-    "baseUrl": "src",
-    "paths": {
-      "PoetNode/*": ["utils/PoetNode/*"],
-      "Argon2": ["utils/Argon2/Argon2"],
-      "Logger": ["utils/Logger/Logger"],
-      "Nodemailer": ["utils/Nodemailer/Nodemailer"],
-      "SendEmail": ["utils/SendEmail/SendEmail"],
-      "Vault": ["utils/Vault/Vault"],
-      "Route": ["utils/Route/Route"],
-      "errors": ["errors/errors"]
-    }
+    "baseUrl": "src"
   },
   "include": [
     "./src/**/*",

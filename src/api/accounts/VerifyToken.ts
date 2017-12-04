@@ -1,4 +1,4 @@
-import { errors } from 'errors'
+import { errors } from '../../errors/errors'
 import { ControllerApi } from '../../interfaces/ControllerApi'
 import { usersController } from '../../modules/Users/User'
 
