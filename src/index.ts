@@ -11,7 +11,7 @@ const mongodbUri = 'mongodb://localhost:27017/test'
 const optionsMongoDB = {
   useMongoClient: true,
   socketTimeoutMS: 0,
-  keepAlive: true,
+  keepAlive: 0,
   reconnectTries: 30,
   promiseLibrary: Promise
 }
