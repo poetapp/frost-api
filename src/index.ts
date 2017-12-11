@@ -6,7 +6,15 @@ import { logger } from './utils/Logger/Logger'
 import { Nodemailer } from './utils/Nodemailer/Nodemailer'
 import { Vault } from './utils/Vault/Vault'
 
-const mongodbUri = 'mongodb://localhost:27017/test'
+const defaultConst = {
+  mongodbUrl: 'mongodb://localhost:27017/frost',
+  vaultUrl: 'http://0.0.0.0:8200',
+  vaultToken: 'frost'
+}
+
+const { MONGODB_URL, VAULT_URL, VAULT_TOKEN } = process.env
+
+const mongodbUri = MONGODB_URL || defaultConst.mongodbUrl
 
 const optionsMongoDB = {
   useMongoClient: true,
@@ -17,8 +25,8 @@ const optionsMongoDB = {
 }
 
 const optionsVault = {
-  token: 'poet',
-  endpoint: 'http://0.0.0.0:8200',
+  token: VAULT_TOKEN || defaultConst.vaultToken,
+  endpoint: VAULT_URL || defaultConst.vaultUrl,
   apiVersion: 'v1'
 }
 
