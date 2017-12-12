@@ -7,7 +7,7 @@ import { Nodemailer } from './utils/Nodemailer/Nodemailer'
 import { Vault } from './utils/Vault/Vault'
 
 const defaultConst = {
-  mongodbUrl: 'mongodb://localhost:27017/frost',
+  mongodbUrl: 'mongodb://0.0.0.0:27017/frost',
   vaultUrl: 'http://0.0.0.0:8200',
   vaultToken: 'frost'
 }
@@ -32,14 +32,17 @@ const optionsVault = {
 
 const main = async () => {
   try {
-    Vault.config(optionsVault)
-    const secret = await Vault.readSecret('frost')
+    try {
+      Vault.config(optionsVault)
+      const secret = await Vault.readSecret('frost')
+      const optionsNodemailer = {
+        apiKey: secret.data['transactional-mandrill']
+      }
 
-    const optionsNodemailer = {
-      apiKey: secret.data['transactional-mandrill']
+      Nodemailer.config(optionsNodemailer)
+    } catch (e) {
+      logger.log('Error Vault: ', e)
     }
-
-    Nodemailer.config(optionsNodemailer)
 
     const mongoDB = new MongoDB(mongodbUri, optionsMongoDB)
     await mongoDB.start()
