@@ -1,10 +1,10 @@
 export enum Path {
-  ACCOUNT = '/account',
-  ACCOUNT_VERIFY = '/account/verify',
-  ACCOUNT_VERIFY_TOKEN = '/account/verify/:token',
   LOGIN = '/login',
   PASSWORD_RESET = '/password/reset',
   PASSWORD_CHANGE = '/password/change',
-  WORK = '/work',
-  WORK_WORKID = '/work/:workId'
+  ACCOUNTS = '/accounts',
+  ACCOUNTS_VERIFY = '/accounts/verify',
+  ACCOUNTS_VERIFY_TOKEN = '/accounts/verify/:token',
+  WORKS = '/works',
+  WORKS_WORKID = '/works/:workId'
 }
