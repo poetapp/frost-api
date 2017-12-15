@@ -8,6 +8,7 @@ import { Message } from 'protobufjs'
 import { Claim, ClaimAttributes } from '../Interfaces/Interfaces'
 import { ClaimProto, AttributeProto } from '../Serialization/PoetProto'
 
+//
 export namespace Serialization {
   export function protoToClaim(proto: any): Claim {
     const attributes: any = {}
@@ -51,10 +52,10 @@ export namespace Serialization {
   function attributesToProtos(
     attributes: ClaimAttributes
   ): ReadonlyArray<Message<any>> {
-    const attributeArray = Object.entries(attributes).map(([key, value]) => ({
-      key,
-      value
-    }))
+    const attributeArray = Object.entries(attributes)
+      .map(([key, value]) => ({ key, value }))
+      .map(({ key, value }) => ({ key: key.toLowerCase(), value }))
+      .sort((a, b) => a.key.localeCompare(b.key))
     return attributeArray.map(AttributeProto.create, AttributeProto)
   }
 }
