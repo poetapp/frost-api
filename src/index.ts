@@ -1,20 +1,15 @@
 import * as Koa from 'koa'
 import * as bodyParser from 'koa-bodyparser'
 import { routes } from './api/routes'
+import { configuration } from './configuration'
 import { MongoDB } from './databases/mongodb/mongodb'
 import { logger } from './utils/Logger/Logger'
 import { Nodemailer } from './utils/Nodemailer/Nodemailer'
 import { Vault } from './utils/Vault/Vault'
 
-const defaultConst = {
-  mongodbUrl: 'mongodb://0.0.0.0:27017/frost',
-  vaultUrl: 'http://0.0.0.0:8200',
-  vaultToken: 'frost'
-}
+const { mongodbUrl, vaultUrl, vaultToken } = configuration
 
-const { MONGODB_URL, VAULT_URL, VAULT_TOKEN } = process.env
-
-const mongodbUri = MONGODB_URL || defaultConst.mongodbUrl
+const mongodbUri = mongodbUrl
 
 const optionsMongoDB = {
   useMongoClient: true,
@@ -25,8 +20,8 @@ const optionsMongoDB = {
 }
 
 const optionsVault = {
-  token: VAULT_TOKEN || defaultConst.vaultToken,
-  endpoint: VAULT_URL || defaultConst.vaultUrl,
+  token: vaultToken,
+  endpoint: vaultUrl,
   apiVersion: 'v1'
 }
 

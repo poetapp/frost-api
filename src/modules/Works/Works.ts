@@ -1,4 +1,5 @@
 import fetch from 'node-fetch'
+import { configuration } from '../../configuration'
 import { createClaim } from '../../utils/PoetNode/Helpers/Claim'
 import {
   WorkAttributes,
@@ -6,7 +7,7 @@ import {
 } from '../../utils/PoetNode/Interfaces/Interfaces'
 import { Method } from '../../utils/Route/Route'
 
-const url = 'http://localhost:8080'
+const { poetUrl } = configuration
 
 export class WorksController {
   private work: WorkAttributes
@@ -23,7 +24,7 @@ export class WorksController {
 
   async create(workAttributes: any) {
     try {
-      const createWork = await fetch(url + '/works/', {
+      const createWork = await fetch(poetUrl + '/works/', {
         method: Method.POST,
         headers: {
           Accept: 'application/json',
@@ -42,7 +43,7 @@ export class WorksController {
 
   async get(workId: string) {
     try {
-      const work = await fetch(`${url}/works/${workId}`)
+      const work = await fetch(`${poetUrl}/works/${workId}`)
 
       if (work.ok) return await work.json()
 
