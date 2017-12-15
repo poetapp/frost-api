@@ -27,6 +27,10 @@ export const UserSchema = new Schema({
     type: String,
     required: true
   },
+  publicKey: {
+    type: String,
+    required: true
+  },
   createdAt: {
     type: String,
     required: true
