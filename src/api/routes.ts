@@ -13,32 +13,34 @@ import { VerifyAccount } from './accounts/Verify'
 import { VerifyAccountToken } from './accounts/VerifyToken'
 import { CreateWork } from './works/CreateWork'
 import { GetWork } from './works/GetWork'
+import { GetWorks } from './works/GetWorks'
 
 const router = new KoaRouter()
 const route = new Route(router)
 
 router.use(
   [
-    Path.ACCOUNT_VERIFY_TOKEN,
+    Path.ACCOUNTS_VERIFY_TOKEN,
     Path.PASSWORD_CHANGE,
-    Path.WORK,
-    Path.WORK_WORKID
+    Path.WORKS,
+    Path.WORKS_WORKID
   ],
   authorization()
 )
 
 router.use(
-  [Path.WORK, Path.WORK_WORKID, Path.PASSWORD_CHANGE, Path.WORK_WORKID],
+  [Path.WORKS, Path.WORKS_WORKID, Path.PASSWORD_CHANGE, Path.WORKS_WORKID],
   requireEmailVerified()
 )
 
-route.set(Method.POST, Path.ACCOUNT, new CreateAccount())
-route.set(Method.POST, Path.ACCOUNT_VERIFY, new VerifyAccount())
-route.set(Method.GET, Path.ACCOUNT_VERIFY_TOKEN, new VerifyAccountToken())
+route.set(Method.POST, Path.ACCOUNTS, new CreateAccount())
+route.set(Method.POST, Path.ACCOUNTS_VERIFY, new VerifyAccount())
+route.set(Method.GET, Path.ACCOUNTS_VERIFY_TOKEN, new VerifyAccountToken())
 route.set(Method.POST, Path.LOGIN, new Login())
 route.set(Method.POST, Path.PASSWORD_RESET, new ForgotPassword())
 route.set(Method.POST, Path.PASSWORD_CHANGE, new ChangePassword())
-route.set(Method.POST, Path.WORK, new CreateWork())
-route.set(Method.GET, Path.WORK_WORKID, new GetWork())
+route.set(Method.POST, Path.WORKS, new CreateWork())
+route.set(Method.GET, Path.WORKS, new GetWorks())
+route.set(Method.GET, Path.WORKS_WORKID, new GetWork())
 
 export const routes = router
