@@ -1,3 +1,5 @@
+import { Path } from '../../api/Path'
+import { configuration } from '../../configuration'
 import * as forgotPassword from '../../emails/forgotPassword'
 import * as verify from '../../emails/verify'
 import { Nodemailer } from '..//Nodemailer/Nodemailer'
@@ -27,11 +29,13 @@ export class SendEmail {
 
   async sendVerified(token: string) {
     try {
+      const { frostUrl } = configuration
+      const { ACCOUNTS_VERIFY } = Path
       const data = {
         to: this.email,
         from: this.from,
         subject: verify.subject,
-        html: verify.template(`http://localhost:3000/account/verify/${token}`)
+        html: verify.template(`${frostUrl}${ACCOUNTS_VERIFY}/${token}`)
       }
 
       await Nodemailer.sendMail(data)
