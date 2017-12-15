@@ -52,4 +52,16 @@ export class WorksController {
       throw e
     }
   }
+
+  async getWorksByPublicKey(publicKey: string) {
+    try {
+      const works = await fetch(`${poetUrl}/works/?publicKey=${publicKey}`)
+
+      if (works.ok) return await works.json()
+
+      throw new Error('Works not found')
+    } catch (e) {
+      throw e
+    }
+  }
 }
