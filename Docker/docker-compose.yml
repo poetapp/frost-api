@@ -1,30 +1,30 @@
 version: '2'
 services:
+  consul:
+    image: "consul"
+    hostname: "consul"
+    command: "agent --dev -server -ui -bootstrap-expect 1 -client 0.0.0.0"
+    ports:
+      - "8400:8400"
+      - "8500:8500"
+      - "8600:53/udp"
+
   vault:
-    container_name: "vault"
-    image: vault:0.8.3
-    stdin_open: true
+    depends_on:
+      - consul
+    image: "vault"
+    hostname: "vault"
+    links:
+      - "consul:consul"
     environment:
-      - VAULT_DEV_ROOT_TOKEN_ID=frost
-    cap_add:
-        - IPC_LOCK
-    command: server -dev
+      VAULT_ADDR: http://127.0.0.1:8200
     ports:
       - "8200:8200"
-
-  goldfish:
-    container_name: "goldfish"
-    build:
-      context: ./goldfish
-      dockerfile: Dockerfile
-    stdin_open: true
-    ports:
-      - "8000:8000"
-    links:
-      - vault
-    depends_on:
-      - vault
-    command: /app/entrypoint.sh
+    volumes:
+      - ./tools/wait-for-it.sh:/wait-for-it.sh
+      - ./config/vault:/config
+      - ./config/vault/policies:/policies
+    entrypoint: /wait-for-it.sh -t 20 -h consul -p 8500 -s -- vault server -config=/config/vault.hcl
 
   mongodb:
       image: mongo:3.4
