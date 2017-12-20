@@ -4,7 +4,7 @@ import { ControllerApi } from '../../interfaces/ControllerApi'
 import { logger } from '../../utils/Logger/Logger'
 import { Vault } from '../../utils/Vault/Vault'
 
-import { WorksController } from '../../modules/Works/Works'
+import { WorksController } from '../../modules/Works/Works.controller'
 
 export class CreateWork implements ControllerApi {
   async handler(ctx: any, next: any): Promise<any> {

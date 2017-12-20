@@ -1,7 +1,7 @@
 import * as Joi from 'joi'
 import { errors } from '../../errors/errors'
 import { ControllerApi } from '../../interfaces/ControllerApi'
-import { usersController } from '../../modules/Users/User'
+import { AccountsController } from '../../modules/Accounts/Accounts.controller'
 import { SendEmail } from '../../utils/SendEmail/SendEmail'
 import { getToken } from './utils/utils'
 
@@ -9,6 +9,7 @@ export class ForgotPassword implements ControllerApi {
   async handler(ctx: any, next: any): Promise<any> {
     try {
       const { email } = ctx.request.body
+      const usersController = new AccountsController()
       const user = await usersController.get(email)
       const { ResourceNotFound } = errors
       if (user) {

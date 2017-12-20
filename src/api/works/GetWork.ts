@@ -1,7 +1,7 @@
 import { errors } from '../../errors/errors'
 import { ControllerApi } from '../../interfaces/ControllerApi'
 
-import { WorksController } from '../../modules/Works/Works'
+import { WorksController } from '../../modules/Works/Works.controller'
 
 export class GetWork implements ControllerApi {
   async handler(ctx: any, next: any): Promise<any> {
