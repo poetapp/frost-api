@@ -5,3 +5,4 @@ dist
 temp.text
 *.log
 Docker/data
+.env
