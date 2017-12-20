@@ -10,6 +10,14 @@ export namespace Vault {
     return this.vault
   }
 
+  export async function init() {
+    return await this.vault.init({ secret_shares: 1, secret_threshold: 1 })
+  }
+
+  export async function unseal(key: string) {
+    return await this.vault.unseal({ secret_shares: 1, key })
+  }
+
   export async function encrypt(text: string) {
     const plaintext = new Buffer(text).toString('base64')
     const encrypted = await this.vault.write('transit/encrypt/frost', {
@@ -35,5 +43,31 @@ export namespace Vault {
 
   export async function readSecret(key: string) {
     return await this.vault.read(`secret/${key}`)
+  }
+
+  export async function writeSecret(key: string, value: object) {
+    return await this.vault.write(`secret/${key}`, value)
+  }
+
+  export async function mountSecret() {
+    await this.vault.mounts()
+    return await this.vault.mount({
+      mount_point: 'secret',
+      type: 'generic',
+      description: 'secrets'
+    })
+  }
+
+  export async function mountTransit() {
+    await this.vault.mounts()
+    return await this.vault.mount({
+      mount_point: 'transit',
+      type: 'transit',
+      description: 'transit'
+    })
+  }
+
+  export async function writeTransitKey() {
+    return await this.vault.write('transit/keys/frost')
   }
 }
