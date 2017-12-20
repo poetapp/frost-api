@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist",
-    "start:dev": "nodemon -L --exec 'ts-node --inspect=0.0.0.0:5858 -r tsconfig-paths/register --cache-directory .tscache' ./src/index.ts",
+    "start:dev": "nodemon -r dotenv/config -L --exec 'ts-node --inspect=0.0.0.0:5858 -r tsconfig-paths/register --cache-directory .tscache' ./src/index.ts",
     "tslint": "tslint -p ./tsconfig.json --fix",
     "tslint:check": "tslint-config-prettier-check ./tslint.json",
     "precommit": "lint-staged"
@@ -40,7 +40,9 @@
     "@types/winston": "^2.3.7",
     "bitcore-lib": "^0.15.0",
     "body-parser": "^1.18.2",
-    "handlebars": "^4.0.11",
+    "cli-box": "^6.0.8",
+    "console.table": "^0.9.1",
+    "dotenv": "^4.0.0",
     "isomorphic-fetch": "^2.2.1",
     "joi": "^13.0.1",
     "joi-password-complexity": "^2.0.1",
