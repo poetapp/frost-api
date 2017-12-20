@@ -1,6 +1,6 @@
 import { errors } from '../../errors/errors'
 import { ControllerApi } from '../../interfaces/ControllerApi'
-import { usersController } from '../../modules/Users/User'
+import { AccountsController } from '../../modules/Accounts/Accounts.controller'
 
 export class VerifyAccountToken implements ControllerApi {
   async handler(ctx: any, next: any): Promise<any> {
@@ -15,7 +15,7 @@ export class VerifyAccountToken implements ControllerApi {
       }
 
       user.verified = true
-
+      const usersController = new AccountsController()
       await usersController.update(user.id, user)
 
       return (ctx.body = 'Email verified')

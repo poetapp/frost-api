@@ -1,7 +1,7 @@
 import * as Joi from 'joi'
 import { errors } from '../../errors/errors'
 import { ControllerApi } from '../../interfaces/ControllerApi'
-import { usersController } from '../../modules/Users/User'
+import { AccountsController } from '../../modules/Accounts/Accounts.controller'
 import { Argon2 } from '../../utils/Argon2/Argon2'
 
 export class ChangePassword implements ControllerApi {
@@ -12,7 +12,7 @@ export class ChangePassword implements ControllerApi {
       const argon2 = new Argon2(password)
 
       user.password = await argon2.hash()
-
+      const usersController = new AccountsController()
       await usersController.update(user.id, user)
 
       ctx.status = 200
