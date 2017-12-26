@@ -6,3 +6,4 @@ temp.text
 *.log
 Docker/data
 .env
+vault.json
