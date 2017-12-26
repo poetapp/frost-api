@@ -1,3 +1,4 @@
+import * as fs from 'fs'
 import * as Koa from 'koa'
 import * as bodyParser from 'koa-bodyparser'
 import { routes } from './api/routes'
@@ -52,6 +53,12 @@ const initVault = async () => {
 
     console.log(box)
     console.table(config)
+
+    fs.writeFile('./vault.json', JSON.stringify(config, null, '\t'), err => {
+      if (err) return console.log(err)
+
+      console.log('The file was saved!')
+    })
 
     /* tslint:enable:no-console */
 
