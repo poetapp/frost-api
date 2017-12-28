@@ -2,6 +2,7 @@ storage "consul" {
   address = "consul:8500"
   path = "vault"
   scheme = "http"
+  token = "398073a8-5091-4d9c-871a-bbbeb030d1f6"
 }
 
 listener "tcp" {
