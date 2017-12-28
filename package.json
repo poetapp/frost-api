@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist",
-    "start:dev": "nodemon -r dotenv/config -L --exec 'ts-node --inspect=0.0.0.0:5858 -r tsconfig-paths/register --cache-directory .tscache' ./src/index.ts",
+    "start:dev": "nodemon --watch src -r dotenv/config -L --exec 'ts-node --inspect=0.0.0.0:5858 -r tsconfig-paths/register --cache-directory .tscache' ./src/index.ts",
     "tslint": "tslint -p ./tsconfig.json --fix",
     "tslint:check": "tslint-config-prettier-check ./tslint.json",
     "precommit": "lint-staged"
