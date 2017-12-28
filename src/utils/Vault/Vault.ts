@@ -67,6 +67,10 @@ export namespace Vault {
     })
   }
 
+  export async function status() {
+    return await this.vault.health()
+  }
+
   export async function writeTransitKey() {
     return await this.vault.write('transit/keys/frost')
   }
