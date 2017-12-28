@@ -4,6 +4,7 @@ import * as bodyParser from 'koa-bodyparser'
 import { routes } from './api/routes'
 import { configuration } from './configuration'
 import { MongoDB } from './databases/mongodb/mongodb'
+import { delay } from './utils/Delay/Delay'
 import { logger } from './utils/Logger/Logger'
 import { Nodemailer } from './utils/Nodemailer/Nodemailer'
 import { Vault } from './utils/Vault/Vault'
@@ -36,49 +37,95 @@ const optionsVault = {
 
 const initVault = async () => {
   try {
-    const config = await Vault.init()
+    let initialized = false
+    let sealed = true
+    let standby = true
+    let config
+    let status
 
-    // Box with aligned text to top-right
-    const box = Box('30x5', {
-      text: `
-      \u001b[31mIMPORTANT!!!\u001b[0m
-      \nCopy this keys in a secure place. \nThese keys are very important and it does not way recovery.`,
-      stretch: true,
-      autoEOL: true,
-      vAlign: 'middle',
-      hAlign: 'left'
-    })
+    while (!initialized)
+      try {
+        logger.log('info', 'waiting vault')
+        status = await Vault.status()
+        initialized = status.initialized
+        if (!status.initialized) {
+          config = await Vault.init()
+          logger.log('info', 'Vault is initialized')
+        }
+      } catch (e) {
+        logger.log('error', e.message)
+        logger.log('info', 'Retry in 5 seconds')
+        await delay(5000)
+      }
 
-    /* tslint:disable:no-console */
+    if (config) {
+      const box = Box('30x5', {
+        text: `
+        \u001b[31mIMPORTANT!!!\u001b[0m
+        \nCopy this keys in a secure place. \nThese keys are very important and it does not way recovery.`,
+        stretch: true,
+        autoEOL: true,
+        vAlign: 'middle',
+        hAlign: 'left'
+      })
 
-    console.log(box)
-    console.table(config)
+      /* tslint:disable:no-console */
 
-    fs.writeFile('./vault.json', JSON.stringify(config, null, '\t'), err => {
-      if (err) return console.log(err)
+      console.log(box)
+      console.table(config)
 
-      console.log('The file was saved!')
-    })
+      fs.writeFile('./vault.json', JSON.stringify(config, null, '\t'), err => {
+        if (err) return console.log(err)
 
-    /* tslint:enable:no-console */
+        console.log('The file was saved!')
+      })
 
-    const { keys, root_token } = config
-    const vault = Vault.getInstance()
-    vault.token = root_token
+      /* tslint:enable:no-console */
 
-    await Vault.unseal(keys[0])
+      const { keys, root_token } = config
+      const vault = Vault.getInstance()
+      vault.token = root_token
 
-    await Vault.mountTransit()
-    await Vault.writeTransitKey()
+      while (sealed)
+        try {
+          status = await Vault.status()
+          sealed = status.sealed
+          if (status.sealed) {
+            logger.log('info', 'vault trying unseal')
+            await Vault.unseal(keys[0])
+            logger.log('info', 'Vault is unseal')
+          }
+        } catch (e) {
+          logger.log('error', e.message)
+          logger.log('info', 'Retry in 5 seconds')
+          await delay(5000)
+        }
 
-    // Secrets
-    const value = {
-      transactionalMandrill,
-      jwt
-    }
+      while (standby) {
+        status = await Vault.status()
+        standby = status.standby
+        if (standby) {
+          logger.log('info', 'Vault is in standby')
+          logger.log('info', 'Retry in 5 seconds')
+          await delay(5000)
+        }
+      }
 
-    await Vault.writeSecret('frost', value)
-    return true
+      await Vault.mountTransit()
+      await Vault.writeTransitKey()
+      // Secrets
+      const value = {
+        transactionalMandrill,
+        jwt
+      }
+
+      await Vault.writeSecret('frost', value)
+      return true
+    } else if (status.initialized)
+      logger.log(
+        'error',
+        'Vault was initialized. Check file vault.json in the root project. You have to set the environment variable VAULT_TOKEN '
+      )
   } catch (e) {
     logger.log('error', e.message)
   }
