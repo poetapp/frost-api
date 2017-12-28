@@ -3,11 +3,14 @@ services:
   consul:
     image: "consul"
     hostname: "consul"
-    command: "agent --dev -server -ui -bootstrap-expect 1 -client 0.0.0.0"
+    volumes:
+      - ./config/consul:/usr/share/consul
+      - ./tools/consul.sh:/consul.sh
     ports:
       - "8400:8400"
       - "8500:8500"
       - "8600:53/udp"
+    entrypoint: /consul.sh
 
   vault:
     depends_on:
