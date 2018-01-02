@@ -6,17 +6,17 @@ Po.et API Layer for Publishers
 ---
 ## Guide
 
-- [API](#API)
+- [API](#api)
   - [Accounts](#accounts)
     - [Create account](#create-account)
     - [Login account](#login-account)
     - [Verify account](#verify-account)
     - [Password reset](#password-reset)
-    - [Password change](#pasword-change)
+    - [Password change](#password-change)
   - [Works](#works)
     - [Create work](#create-work)
     - [Get all works](#get-all-works)
-    - [Get work](get-work)
+    - [Get work](#get-work)
 
 ---
 
