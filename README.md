@@ -199,6 +199,9 @@ Require, log in and password verified.
     * Code: 422
     * Content 'One of the request inputs is not valid.'
 
+    * Code: 409
+    * Content: 'The specified account does not verified'
+
     * Code: 500
     * Content 'The server encountered an internal error. Please retry the request.'
 
@@ -248,6 +251,9 @@ Require, log in and password verified.
       Make sure the value of the Authorization header is formed correctly 
       including the signature.'
 
+    * Code: 409
+    * Content: 'The specified account does not verified'
+
     * Code: 422
     * Content 'One of the request inputs is not valid.'
 
@@ -281,6 +287,9 @@ Require, log in and password verified.
     * Content 'Server failed to authenticate the request. 
       Make sure the value of the Authorization header is formed correctly 
       including the signature.'
+
+    * Code: 409
+    * Content: 'The specified account does not verified'
 
     * Code: 500
     * Content 'The server encountered an internal error. Please retry the request.'
