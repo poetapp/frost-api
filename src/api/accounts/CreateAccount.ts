@@ -4,17 +4,11 @@ import { errors } from '../../errors/errors'
 import { SendEmail } from '../../utils/SendEmail/SendEmail'
 import { getToken } from './utils/utils'
 
+import { configuration } from '../../configuration'
 import { ControllerApi } from '../../interfaces/ControllerApi'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
 
-interface ComplexityOptions {
-  readonly min: number
-  readonly max: number
-  readonly lowerCase: number
-  readonly upperCase: number
-  readonly numeric: number
-  readonly symbol: number
-}
+const { passwordComplex } = configuration
 
 export class CreateAccount implements ControllerApi {
   async handler(ctx: any, next: any): Promise<any> {
@@ -35,25 +29,9 @@ export class CreateAccount implements ControllerApi {
     }
   }
 
-  getTextErrorPassword(options: ComplexityOptions): string {
-    const mapOptions = Object.entries(options).map(value => {
-      return `${value[0]}: ${value[1]} `
-    })
-
-    return `Password Requirements, ${mapOptions.join('')}`
-  }
-
   validate(values: any): object {
     const { password } = values
-
-    const complexityOptions = {
-      min: 10,
-      max: 30,
-      lowerCase: 1,
-      upperCase: 1,
-      numeric: 1,
-      symbol: 1
-    }
+    const usersController = new AccountsController()
 
     return {
       email: Joi.string()
@@ -61,9 +39,9 @@ export class CreateAccount implements ControllerApi {
         .required(),
       password: Joi.validate(
         password,
-        new PasswordComplexity(complexityOptions),
+        new PasswordComplexity(passwordComplex),
         (err, value) => {
-          if (err) throw this.getTextErrorPassword(complexityOptions)
+          if (err) throw usersController.getTextErrorPassword(passwordComplex)
 
           return value
         }
