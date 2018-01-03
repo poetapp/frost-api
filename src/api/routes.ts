@@ -21,6 +21,7 @@ const route = new Route(router)
 router.use(
   [
     Path.ACCOUNTS_VERIFY_TOKEN,
+    Path.ACCOUNTS_VERIFY,
     Path.PASSWORD_CHANGE,
     Path.WORKS,
     Path.WORKS_WORKID
