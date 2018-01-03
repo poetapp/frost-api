@@ -1,4 +1,3 @@
-import * as Joi from 'joi'
 import { template, subject } from '../../emails/verify'
 import { Nodemailer } from '../../utils/Nodemailer/Nodemailer'
 import { getToken } from './utils/utils'
@@ -10,7 +9,8 @@ import { Path } from '../Path'
 export class VerifyAccount implements ControllerApi {
   async handler(ctx: any, next: any): Promise<any> {
     try {
-      const { email } = ctx.request.body
+      const { user } = ctx.state
+      const { email } = user
       const token = await getToken(email)
       const { ACCOUNTS_VERIFY } = Path
       const { frostUrl } = configuration
@@ -30,10 +30,6 @@ export class VerifyAccount implements ControllerApi {
   }
 
   validate(): object {
-    return {
-      email: Joi.string()
-        .email()
-        .required()
-    }
+    return {}
   }
 }
