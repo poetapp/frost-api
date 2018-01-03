@@ -1,8 +1,12 @@
 import * as Joi from 'joi'
+const PasswordComplexity = require('joi-password-complexity')
+import { configuration } from '../../configuration'
 import { errors } from '../../errors/errors'
 import { ControllerApi } from '../../interfaces/ControllerApi'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
 import { Argon2 } from '../../utils/Argon2/Argon2'
+
+const { passwordComplex } = configuration
 
 export class ChangePassword implements ControllerApi {
   async handler(ctx: any, next: any): Promise<any> {
@@ -22,11 +26,20 @@ export class ChangePassword implements ControllerApi {
     }
   }
 
-  validate(): object {
+  validate(values: any): object {
+    const { password } = values
+    const usersController = new AccountsController()
+
     return {
-      password: Joi.string()
-        .min(6)
-        .required()
+      password: Joi.validate(
+        password,
+        new PasswordComplexity(passwordComplex),
+        (err, value) => {
+          if (err) throw usersController.getTextErrorPassword(passwordComplex)
+
+          return value
+        }
+      )
     }
   }
 }
