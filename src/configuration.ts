@@ -7,7 +7,7 @@ export const configuration = {
   poetUrl: POET_URL || 'http://localhost:18080',
   frostUrl: FROST_URL || 'http://localhost:3000',
   transactionalMandrill: '46mwv_E6dOxrSDUkJD4NOQ',
-  jwt: 'frost',
+  jwt: '2cff77d8f0a411e78c3f9a214cf093ae',
   passwordComplex: {
     min: 10,
     max: 30,
