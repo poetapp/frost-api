@@ -111,8 +111,8 @@ When the user creates a new account the system automatically will send an email 
 
 * **URL** /accounts/verify
 * **Method** POST
-* **Data Params**
-    * email
+* **Header Params**
+    * token
         * Required
 
 * **Response success**
