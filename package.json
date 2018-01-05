@@ -4,7 +4,7 @@
   "description": "Po.et API Layer for Publishers",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --skipLibCheck",
     "start": "node dist",
     "start:dev": "nodemon --watch src -r dotenv/config -L --exec 'ts-node --inspect=0.0.0.0:5858 -r tsconfig-paths/register --cache-directory .tscache' ./src/index.ts",
     "tslint": "tslint -p ./tsconfig.json --fix",
