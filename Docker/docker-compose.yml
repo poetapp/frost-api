@@ -1,7 +1,8 @@
 version: '2'
 services:
   consul:
-    image: "consul"
+    image: "consul:1.0.2"
+    container_name: "consul"
     hostname: "consul"
     volumes:
       - ./config/consul:/usr/share/consul
@@ -13,9 +14,8 @@ services:
     entrypoint: /consul.sh
 
   vault:
-    depends_on:
-      - consul
-    image: "vault"
+    image: "vault:0.9.0"
+    container_name: "vault"
     hostname: "vault"
     links:
       - "consul:consul"
@@ -23,6 +23,8 @@ services:
       VAULT_ADDR: http://127.0.0.1:8200
     ports:
       - "8200:8200"
+    depends_on:
+      - consul
     volumes:
       - ./tools/wait-for-it.sh:/wait-for-it.sh
       - ./config/vault:/config
