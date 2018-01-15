@@ -16,7 +16,7 @@ export class Login implements ControllerApi {
 
       await argon2.verify(user.password, response.password)
 
-      const token = await getToken(user.email)
+      const token = await getToken(user.email, ['login'])
       ctx.body = { token }
     } catch (e) {
       const { ResourceNotFound } = errors

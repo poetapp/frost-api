@@ -11,7 +11,7 @@ export class VerifyAccount implements ControllerApi {
     try {
       const { user } = ctx.state
       const { email } = user
-      const token = await getToken(email)
+      const token = await getToken(email, ['verified-account'])
       const { ACCOUNTS_VERIFY } = Path
       const { frostUrl } = configuration
 

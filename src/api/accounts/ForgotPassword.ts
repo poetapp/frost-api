@@ -14,7 +14,7 @@ export class ForgotPassword implements ControllerApi {
       const { ResourceNotFound } = errors
       if (user) {
         const sendEmail = new SendEmail(email)
-        const token = await getToken(email)
+        const token = await getToken(email, ['forgot-password'])
         await sendEmail.sendForgotPassword(token)
         ctx.status = 200
       } else {
