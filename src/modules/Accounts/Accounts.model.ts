@@ -27,6 +27,9 @@ export const AccountsSchema = new Schema({
   createdAt: {
     type: String,
     required: true
+  },
+  apiToken: {
+    type: String
   }
 })
 

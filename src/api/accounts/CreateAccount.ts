@@ -7,6 +7,7 @@ import { getToken } from './utils/utils'
 import { configuration } from '../../configuration'
 import { ControllerApi } from '../../interfaces/ControllerApi'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
+import { Vault } from '../../utils/Vault/Vault'
 
 const { passwordComplex } = configuration
 
@@ -14,15 +15,18 @@ export class CreateAccount implements ControllerApi {
   async handler(ctx: any, next: any): Promise<any> {
     try {
       const user = ctx.request.body
+      const { email } = user
+      const apiToken = await getToken(email, ['api'])
+      user.apiToken = await Vault.encrypt(apiToken)
       const usersController = new AccountsController()
-      const response = await usersController.create(user)
-      const { email } = response
+
+      await usersController.create(user)
+
       const sendEmail = new SendEmail(email)
+      const tokenVerifiedAccount = await getToken(email, ['verified-account'])
+      await sendEmail.sendVerified(tokenVerifiedAccount)
 
-      const token = await getToken(email)
-      await sendEmail.sendVerified(token)
-
-      ctx.body = { token }
+      ctx.body = { token: apiToken }
     } catch (e) {
       const { AccountAlreadyExists } = errors
       ctx.throw(AccountAlreadyExists.code, AccountAlreadyExists.message)
