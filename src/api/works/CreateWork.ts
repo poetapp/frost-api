@@ -40,7 +40,7 @@ export class CreateWork implements ControllerApi {
         .required()
         .isoDate(),
       author: Joi.string().required(),
-      tags: Joi.string().required(),
+      tags: Joi.string(),
       content: Joi.string().required()
     }
   }
