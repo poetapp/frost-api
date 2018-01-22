@@ -231,7 +231,7 @@ Require, log in and password verified.
     * author
         * string - required
     * tags
-        * string - required
+        * string - optional
     * content 
         * string - required
         
