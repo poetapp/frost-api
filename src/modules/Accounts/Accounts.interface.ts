@@ -5,5 +5,6 @@ export interface Accounts extends Document {
   readonly password: string
   readonly verified: boolean
   readonly privateKey: string
+  readonly apiToken: string
   readonly createdAt: string
 }

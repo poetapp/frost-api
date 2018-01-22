@@ -11,6 +11,7 @@ import { ForgotPassword } from './accounts/ForgotPassword'
 import { Login } from './accounts/Login'
 import { VerifyAccount } from './accounts/Verify'
 import { VerifyAccountToken } from './accounts/VerifyToken'
+import { GetToken } from './tokens/GetToken'
 import { CreateWork } from './works/CreateWork'
 import { GetWork } from './works/GetWork'
 import { GetWorks } from './works/GetWorks'
@@ -24,7 +25,8 @@ router.use(
     Path.ACCOUNTS_VERIFY,
     Path.PASSWORD_CHANGE,
     Path.WORKS,
-    Path.WORKS_WORKID
+    Path.WORKS_WORKID,
+    Path.TOKENS
   ],
   authorization()
 )
@@ -43,5 +45,6 @@ route.set(Method.POST, Path.PASSWORD_CHANGE, new ChangePassword())
 route.set(Method.POST, Path.WORKS, new CreateWork())
 route.set(Method.GET, Path.WORKS, new GetWorks())
 route.set(Method.GET, Path.WORKS_WORKID, new GetWork())
+route.set(Method.GET, Path.TOKENS, new GetToken())
 
 export const routes = router
