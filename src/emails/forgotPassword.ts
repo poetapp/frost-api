@@ -1,7 +1,7 @@
 export const subject = 'Po.et Password Reset'
 
 // tslint:disable:max-line-length
-export const template = (link: string, token: string) => `
+export const template = (link: string) => `
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 <tr>
   <td bgcolor="#ffffff" align="center">

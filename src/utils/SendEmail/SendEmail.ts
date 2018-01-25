@@ -1,4 +1,3 @@
-import { Path } from '../../api/Path'
 import { configuration } from '../../configuration'
 import * as forgotPassword from '../../emails/forgotPassword'
 import * as verify from '../../emails/verify'
@@ -14,11 +13,12 @@ export class SendEmail {
 
   async sendForgotPassword(token: string) {
     try {
+      const { frostChangePassword } = configuration
       const data = {
         to: this.email,
         from: this.from,
         subject: forgotPassword.subject,
-        html: forgotPassword.template(token)
+        html: forgotPassword.template(`${frostChangePassword}/?token=${token}`)
       }
 
       await Nodemailer.sendMail(data)
@@ -29,13 +29,12 @@ export class SendEmail {
 
   async sendVerified(token: string) {
     try {
-      const { frostUrl } = configuration
-      const { ACCOUNTS_VERIFY } = Path
+      const { frostVerifiedAccount } = configuration
       const data = {
         to: this.email,
         from: this.from,
         subject: verify.subject,
-        html: verify.template(`${frostUrl}${ACCOUNTS_VERIFY}/${token}`)
+        html: verify.template(`${frostVerifiedAccount}/?token=${token}`)
       }
 
       await Nodemailer.sendMail(data)
