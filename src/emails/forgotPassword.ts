@@ -1,7 +1,7 @@
 export const subject = 'Po.et Password Reset'
 
 // tslint:disable:max-line-length
-export const template = (token: string) => `
+export const template = (link: string, token: string) => `
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 <tr>
   <td bgcolor="#ffffff" align="center">
@@ -22,12 +22,13 @@ export const template = (token: string) => `
           <p style="font-family:Helvetica,Arial,sans-serif;font-weight:normal;color:#525845;font-size:15px;line-height:21px;">
             You recently requested to
             <strong>reset your password</strong> for your
-            <strong>Po.et account</strong>. You can reset your password using the token below.
+            <strong>Po.et account</strong>.
           </p>
 
-          <p id="frost-token" style="font-family:Helvetica,Arial,sans-serif;font-weight:normal;color:#525845;font-size:15px;line-height:21px; border: 1px dashed #ccc;
-          padding: 30px; margin: 40px 0px;">
-            ${token}
+          <p style="text-align: center; margin: 60px 0;">
+            <a id='change-password-link' style="font-family:Helvetica,Arial,sans-serif;font-weight:bold;letter-spacing:1px;color:#ffffff;text-decoration:none;font-size:16px;line-height:22px;background-color:#43B980;border-top:18px solid #43B980;border-bottom:18px solid #43B980;border-left:80px solid #43B980;border-right:80px solid #43B980;border-radius:9999px;text-align:center;display:inline-block" href="${link}" target="_blank">
+              CHANGE YOUR PASSWORD
+            </a>
           </p>
 
           <p style="font-family:Helvetica,Arial,sans-serif;font-weight:normal;color:#525845;font-size:15px;line-height:21px;">
