@@ -18,7 +18,7 @@ export class SendEmail {
         to: this.email,
         from: this.from,
         subject: forgotPassword.subject,
-        html: forgotPassword.template(`${frostChangePassword}/?token=${token}`)
+        html: forgotPassword.template(`${frostChangePassword}?token=${token}`)
       }
 
       await Nodemailer.sendMail(data)
@@ -34,7 +34,7 @@ export class SendEmail {
         to: this.email,
         from: this.from,
         subject: verify.subject,
-        html: verify.template(`${frostVerifiedAccount}/?token=${token}`)
+        html: verify.template(`${frostVerifiedAccount}?token=${token}`)
       }
 
       await Nodemailer.sendMail(data)
