@@ -1,3 +1,4 @@
+require('dotenv').config({ path: '.env' })
 import * as fs from 'fs'
 import * as Koa from 'koa'
 import * as bodyParser from 'koa-bodyparser'
