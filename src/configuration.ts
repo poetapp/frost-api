@@ -1,4 +1,12 @@
-const { MONGODB_URL, VAULT_URL, VAULT_TOKEN, POET_URL, FROST_URL } = process.env
+const {
+  MONGODB_URL,
+  VAULT_URL,
+  VAULT_TOKEN,
+  POET_URL,
+  FROST_URL,
+  FROST_VERIFIED_ACCOUNT,
+  FROST_CHANGE_PASSWORD
+} = process.env
 
 export const configuration = {
   vaultToken: VAULT_TOKEN || undefined,
@@ -6,6 +14,8 @@ export const configuration = {
   mongodbUrl: MONGODB_URL || 'mongodb://localhost:27017/frost',
   poetUrl: POET_URL || 'http://localhost:18080',
   frostUrl: FROST_URL || 'http://localhost:3000',
+  frostVerifiedAccount: FROST_VERIFIED_ACCOUNT || '',
+  frostChangePassword: FROST_CHANGE_PASSWORD || '',
   transactionalMandrill: '46mwv_E6dOxrSDUkJD4NOQ',
   jwt: '2cff77d8f0a411e78c3f9a214cf093ae',
   passwordComplex: {
