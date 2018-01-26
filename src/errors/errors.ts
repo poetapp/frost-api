@@ -11,7 +11,7 @@ export const errors = {
   },
   AccountNotVerify: {
     code: 409,
-    message: 'The specified account does not verified'
+    message: 'The specified account is not verified'
   },
   InvalidInput: {
     code: 422,
