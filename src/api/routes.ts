@@ -8,6 +8,7 @@ import { requireEmailVerified } from '../middlewares/requireEmailVerified'
 import { ChangePassword } from './accounts/ChangePassword'
 import { CreateAccount } from './accounts/CreateAccount'
 import { ForgotPassword } from './accounts/ForgotPassword'
+import { GetProfile } from './accounts/GetProfile'
 import { Login } from './accounts/Login'
 import { VerifyAccount } from './accounts/Verify'
 import { VerifyAccountToken } from './accounts/VerifyToken'
@@ -26,7 +27,8 @@ router.use(
     Path.PASSWORD_CHANGE,
     Path.WORKS,
     Path.WORKS_WORKID,
-    Path.TOKENS
+    Path.TOKENS,
+    Path.ACCOUNTS_PROFILE
   ],
   authorization()
 )
@@ -37,6 +39,7 @@ router.use(
 )
 
 route.set(Method.POST, Path.ACCOUNTS, new CreateAccount())
+route.set(Method.GET, Path.ACCOUNTS_PROFILE, new GetProfile())
 route.set(Method.POST, Path.ACCOUNTS_VERIFY, new VerifyAccount())
 route.set(Method.GET, Path.ACCOUNTS_VERIFY_TOKEN, new VerifyAccountToken())
 route.set(Method.POST, Path.LOGIN, new Login())
