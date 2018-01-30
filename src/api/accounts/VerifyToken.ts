@@ -9,13 +9,14 @@ export class VerifyAccountToken implements ControllerApi {
     try {
       const { user, tokenData } = ctx.state
       const { EmailVerfied, InternalError } = errors
-      if (tokenData.data.meta.name === Token.VerifyAccount.meta.name) {
-        if (user.verified) {
-          ctx.status = EmailVerfied.code
-          ctx.body = EmailVerfied.message
-          return
-        }
 
+      if (user.verified) {
+        ctx.status = EmailVerfied.code
+        ctx.body = EmailVerfied.message
+        return
+      }
+
+      if (tokenData.data.meta.name === Token.VerifyAccount.meta.name) {
         user.verified = true
         const usersController = new AccountsController()
         await usersController.update(user.id, user)
