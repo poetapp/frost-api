@@ -2,7 +2,7 @@ import * as Joi from 'joi'
 import { errors } from '../../errors/errors'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
 import { Argon2 } from '../../utils/Argon2/Argon2'
-import { Token } from '../tokens'
+import { Token } from '../Tokens'
 import { getToken } from './utils/utils'
 
 import { ControllerApi } from '../../interfaces/ControllerApi'
