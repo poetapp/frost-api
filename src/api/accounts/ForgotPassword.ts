@@ -3,6 +3,7 @@ import { errors } from '../../errors/errors'
 import { ControllerApi } from '../../interfaces/ControllerApi'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
 import { SendEmail } from '../../utils/SendEmail/SendEmail'
+import { Token } from '../Tokens'
 import { getToken } from './utils/utils'
 
 export class ForgotPassword implements ControllerApi {
@@ -14,7 +15,7 @@ export class ForgotPassword implements ControllerApi {
       const { ResourceNotFound } = errors
       if (user) {
         const sendEmail = new SendEmail(email)
-        const token = await getToken(email, ['forgot-password'])
+        const token = await getToken(email, Token.ForgotPassword)
         await sendEmail.sendForgotPassword(token)
         ctx.status = 200
       } else {
