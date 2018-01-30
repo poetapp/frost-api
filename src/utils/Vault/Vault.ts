@@ -37,6 +37,10 @@ export namespace Vault {
     return await this.vault.tokenCreate(options)
   }
 
+  export async function revokeToken(token: string) {
+    return await this.vault.tokenRevokeOrphan({ token })
+  }
+
   export async function verifyToken(token: string) {
     return await this.vault.tokenLookup({ token })
   }
