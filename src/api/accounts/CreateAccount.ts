@@ -2,7 +2,7 @@ import * as Joi from 'joi'
 const PasswordComplexity = require('joi-password-complexity')
 import { errors } from '../../errors/errors'
 import { SendEmail } from '../../utils/SendEmail/SendEmail'
-import { Token } from '../tokens'
+import { Token } from '../Tokens'
 import { getToken } from './utils/utils'
 
 import { configuration } from '../../configuration'
