@@ -15,8 +15,9 @@ export const authorization = () => {
       const decoded = verify(token, jwt)
       const { client_token, email } = decoded as any
 
-      await Vault.verifyToken(client_token)
+      const tokenData = await Vault.verifyToken(client_token)
       const usersController = new AccountsController()
+      ctx.state.tokenData = tokenData
       ctx.state.user = await usersController.get(email)
       return ctx.state.user ? next() : (ctx.status = 404)
     } catch (e) {
