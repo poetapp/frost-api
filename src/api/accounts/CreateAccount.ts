@@ -2,6 +2,7 @@ import * as Joi from 'joi'
 const PasswordComplexity = require('joi-password-complexity')
 import { errors } from '../../errors/errors'
 import { SendEmail } from '../../utils/SendEmail/SendEmail'
+import { Token } from '../tokens'
 import { getToken } from './utils/utils'
 
 import { configuration } from '../../configuration'
@@ -16,17 +17,17 @@ export class CreateAccount implements ControllerApi {
     try {
       const user = ctx.request.body
       const { email } = user
-      const apiToken = await getToken(email, ['api'])
+      const apiToken = await getToken(email, Token.ApiKey)
       user.apiToken = await Vault.encrypt(apiToken)
       const usersController = new AccountsController()
 
       await usersController.create(user)
 
       const sendEmail = new SendEmail(email)
-      const tokenVerifiedAccount = await getToken(email, ['verified-account'])
+      const tokenVerifiedAccount = await getToken(email, Token.VerifyAccount)
       await sendEmail.sendVerified(tokenVerifiedAccount)
-
-      ctx.body = { token: apiToken }
+      const token = await getToken(email, Token.Login)
+      ctx.body = { token }
     } catch (e) {
       const { AccountAlreadyExists } = errors
       ctx.throw(AccountAlreadyExists.code, AccountAlreadyExists.message)

@@ -2,6 +2,7 @@ import * as Joi from 'joi'
 import { errors } from '../../errors/errors'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
 import { Argon2 } from '../../utils/Argon2/Argon2'
+import { Token } from '../tokens'
 import { getToken } from './utils/utils'
 
 import { ControllerApi } from '../../interfaces/ControllerApi'
@@ -16,7 +17,7 @@ export class Login implements ControllerApi {
 
       await argon2.verify(user.password, response.password)
 
-      const token = await getToken(user.email, ['login'])
+      const token = await getToken(user.email, Token.Login)
       ctx.body = { token }
     } catch (e) {
       const { ResourceNotFound } = errors
