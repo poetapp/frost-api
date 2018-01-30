@@ -5,7 +5,8 @@ const {
   POET_URL,
   FROST_URL,
   FROST_VERIFIED_ACCOUNT,
-  FROST_CHANGE_PASSWORD
+  FROST_CHANGE_PASSWORD,
+  VERIFIED_ACCOUNT
 } = process.env
 
 export const configuration = {
@@ -18,6 +19,7 @@ export const configuration = {
   frostChangePassword: FROST_CHANGE_PASSWORD || '',
   transactionalMandrill: '***REMOVED***',
   jwt: '***REMOVED***',
+  verifiedAccount: VERIFIED_ACCOUNT === 'true' ? true : false,
   passwordComplex: {
     min: 10,
     max: 30,
