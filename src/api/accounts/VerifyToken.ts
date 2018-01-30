@@ -6,9 +6,9 @@ import { Token } from '../Tokens'
 
 export class VerifyAccountToken implements ControllerApi {
   async handler(ctx: any, next: any): Promise<any> {
+    const { EmailVerfied, InternalError } = errors
     try {
       const { user, tokenData } = ctx.state
-      const { EmailVerfied, InternalError } = errors
 
       if (user.verified) {
         ctx.status = EmailVerfied.code
@@ -16,15 +16,17 @@ export class VerifyAccountToken implements ControllerApi {
         return
       }
 
-      if (tokenData.data.meta.name === Token.VerifyAccount.meta.name) {
-        user.verified = true
-        const usersController = new AccountsController()
-        await usersController.update(user.id, user)
-        await Vault.revokeToken(tokenData.data.id)
-        return (ctx.body = 'Email verified')
+      if (tokenData.data.meta.name !== Token.VerifyAccount.meta.name) {
+        ctx.status = InternalError.code
+        ctx.body = InternalError.message
+        return
       }
-      ctx.status = InternalError.code
-      ctx.body = InternalError.message
+
+      user.verified = true
+      const usersController = new AccountsController()
+      await usersController.update(user.id, user)
+      await Vault.revokeToken(tokenData.data.id)
+      return (ctx.body = 'Email verified')
     } catch (e) {
       throw e
     }

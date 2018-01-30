@@ -9,8 +9,8 @@ export class Argon2 {
     this.pwd = securePassword()
   }
 
-  public hash() {
-    const userPassword = Buffer.from(this.password)
+  public hash(password?: string) {
+    const userPassword = Buffer.from(password || this.password)
 
     return new Promise((resolve, reject) => {
       this.pwd.hash(userPassword, (err: any, hash: string) => {

@@ -5,11 +5,12 @@ import { Path } from './Path'
 
 import { authorization } from '../middlewares/authorization'
 import { requireEmailVerified } from '../middlewares/requireEmailVerified'
-import { ChangePassword } from './accounts/ChangePassword'
 import { CreateAccount } from './accounts/CreateAccount'
 import { ForgotPassword } from './accounts/ForgotPassword'
 import { GetProfile } from './accounts/GetProfile'
 import { Login } from './accounts/Login'
+import { PasswordChange } from './accounts/PasswordChange'
+import { PasswordChangeToken } from './accounts/PasswordChangeToken'
 import { VerifyAccount } from './accounts/Verify'
 import { VerifyAccountToken } from './accounts/VerifyToken'
 import { GetToken } from './tokens/GetToken'
@@ -28,7 +29,8 @@ router.use(
     Path.WORKS,
     Path.WORKS_WORKID,
     Path.TOKENS,
-    Path.ACCOUNTS_PROFILE
+    Path.ACCOUNTS_PROFILE,
+    Path.PASSWORD_CHANGE_TOKEN
   ],
   authorization()
 )
@@ -44,7 +46,8 @@ route.set(Method.POST, Path.ACCOUNTS_VERIFY, new VerifyAccount())
 route.set(Method.GET, Path.ACCOUNTS_VERIFY_TOKEN, new VerifyAccountToken())
 route.set(Method.POST, Path.LOGIN, new Login())
 route.set(Method.POST, Path.PASSWORD_RESET, new ForgotPassword())
-route.set(Method.POST, Path.PASSWORD_CHANGE, new ChangePassword())
+route.set(Method.POST, Path.PASSWORD_CHANGE_TOKEN, new PasswordChangeToken())
+route.set(Method.POST, Path.PASSWORD_CHANGE, new PasswordChange())
 route.set(Method.POST, Path.WORKS, new CreateWork())
 route.set(Method.GET, Path.WORKS, new GetWorks())
 route.set(Method.GET, Path.WORKS_WORKID, new GetWork())
