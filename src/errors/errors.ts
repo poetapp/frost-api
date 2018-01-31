@@ -37,5 +37,10 @@ export const errors = {
   WorkNotFound: {
     code: 400,
     message: 'Work not found.'
+  },
+  InternalErrorExternalAPI: {
+    code: 500,
+    message:
+      'The server encountered an internal error. Error parsing data external API. Please retry the request.'
   }
 }
