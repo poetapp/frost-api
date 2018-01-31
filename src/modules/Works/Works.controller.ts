@@ -35,12 +35,10 @@ export class WorksController {
         body: JSON.stringify(workAttributes)
       })
 
-      await createWork.text()
+      if (createWork.ok) return await createWork.text()
 
-      if (!createWork.ok) {
-        logger.error('WorksController.create', createWork)
-        throw new Error(errors.InternalErrorExternalAPI.message)
-      }
+      logger.error('WorksController.create', createWork)
+      throw new Error(errors.InternalErrorExternalAPI.message)
     } catch (e) {
       logger.error('WorksController.create', e)
       throw e
@@ -53,8 +51,10 @@ export class WorksController {
 
       if (work.ok) return await work.json()
 
+      logger.error('WorksController.get', work)
       throw new Error('Work not found')
     } catch (e) {
+      logger.error('WorksController.get', e)
       throw e
     }
   }
@@ -65,8 +65,10 @@ export class WorksController {
 
       if (works.ok) return await works.json()
 
+      logger.error('WorksController.getWorksByPublicKey', works)
       throw new Error('Works not found')
     } catch (e) {
+      logger.error('WorksController.getWorksByPublicKey', e)
       throw e
     }
   }
