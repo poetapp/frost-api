@@ -1,5 +1,6 @@
 import fetch from 'node-fetch'
 import { configuration } from '../../configuration'
+import { errors } from '../../errors/errors'
 import { logger } from '../../utils/Logger/Logger'
 import { createClaim } from '../../utils/PoetNode/Helpers/Claim'
 import {
@@ -36,7 +37,10 @@ export class WorksController {
 
       await createWork.text()
 
-      if (!createWork.ok) logger.error('WorksController.create', createWork)
+      if (!createWork.ok) {
+        logger.error('WorksController.create', createWork)
+        throw new Error(errors.InternalErrorExternalAPI.message)
+      }
     } catch (e) {
       logger.error('WorksController.create', e)
       throw e
