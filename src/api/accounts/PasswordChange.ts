@@ -5,6 +5,7 @@ import { errors } from '../../errors/errors'
 import { ControllerApi } from '../../interfaces/ControllerApi'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
 import { Argon2 } from '../../utils/Argon2/Argon2'
+import { logger } from '../../utils/Logger/Logger'
 import { Token } from '../Tokens'
 
 const { passwordComplex } = configuration
@@ -32,6 +33,7 @@ export class PasswordChange implements ControllerApi {
 
       ctx.status = 200
     } catch (e) {
+      logger.error('api.PasswordChange', e)
       ctx.throw(InvalidInput.code, InvalidInput.message + ' ' + e.message)
     }
   }

@@ -1,6 +1,6 @@
 import { errors } from '../../errors/errors'
-
 import { ControllerApi } from '../../interfaces/ControllerApi'
+import { logger } from '../../utils/Logger/Logger'
 
 export class GetProfile implements ControllerApi {
   async handler(ctx: any, next: any) {
@@ -10,6 +10,7 @@ export class GetProfile implements ControllerApi {
       ctx.body = { createdAt, verified }
     } catch (e) {
       const { InternalError } = errors
+      logger.error('api.GetProfile', e)
       ctx.throw(InternalError.code, InternalError.message)
     }
   }

@@ -1,5 +1,6 @@
 import { ControllerApi } from '../../interfaces/ControllerApi'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
+import { logger } from '../../utils/Logger/Logger'
 import { Vault } from '../../utils/Vault/Vault'
 
 export class GetToken implements ControllerApi {
@@ -15,6 +16,7 @@ export class GetToken implements ControllerApi {
         dateCreated: currentUser.createdAt
       }
     } catch (e) {
+      logger.error('api.GetToken', e)
       ctx.status = 500
     }
   }

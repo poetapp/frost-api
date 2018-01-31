@@ -1,7 +1,7 @@
 import { errors } from '../../errors/errors'
 import { ControllerApi } from '../../interfaces/ControllerApi'
-
 import { WorksController } from '../../modules/Works/Works.controller'
+import { logger } from '../../utils/Logger/Logger'
 
 export class GetWork implements ControllerApi {
   async handler(ctx: any, next: any): Promise<any> {
@@ -18,6 +18,7 @@ export class GetWork implements ControllerApi {
         ctx.body = WorkNotFound.message
       }
     } catch (e) {
+      logger.error('api.GetWork', e)
       ctx.status = 500
     }
   }
