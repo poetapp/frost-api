@@ -1,5 +1,6 @@
 import fetch from 'node-fetch'
 import { configuration } from '../../configuration'
+import { logger } from '../../utils/Logger/Logger'
 import { createClaim } from '../../utils/PoetNode/Helpers/Claim'
 import {
   WorkAttributes,
@@ -35,8 +36,9 @@ export class WorksController {
 
       await createWork.text()
 
-      if (!createWork.ok) throw new Error('')
+      if (!createWork.ok) logger.error('WorksController.create', createWork)
     } catch (e) {
+      logger.error('WorksController.create', e)
       throw e
     }
   }
