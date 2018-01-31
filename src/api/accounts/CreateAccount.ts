@@ -8,6 +8,7 @@ import { getToken } from './utils/utils'
 import { configuration } from '../../configuration'
 import { ControllerApi } from '../../interfaces/ControllerApi'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
+import { logger } from '../../utils/Logger/Logger'
 import { Vault } from '../../utils/Vault/Vault'
 
 const { passwordComplex } = configuration
@@ -30,6 +31,7 @@ export class CreateAccount implements ControllerApi {
       ctx.body = { token }
     } catch (e) {
       const { AccountAlreadyExists } = errors
+      logger.error('api.CreateAccount', e)
       ctx.throw(AccountAlreadyExists.code, AccountAlreadyExists.message)
     }
   }

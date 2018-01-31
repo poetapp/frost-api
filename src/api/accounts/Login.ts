@@ -1,11 +1,11 @@
 import * as Joi from 'joi'
 import { errors } from '../../errors/errors'
+import { ControllerApi } from '../../interfaces/ControllerApi'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
 import { Argon2 } from '../../utils/Argon2/Argon2'
+import { logger } from '../../utils/Logger/Logger'
 import { Token } from '../Tokens'
 import { getToken } from './utils/utils'
-
-import { ControllerApi } from '../../interfaces/ControllerApi'
 
 export class Login implements ControllerApi {
   async handler(ctx: any, next: any) {
@@ -21,6 +21,7 @@ export class Login implements ControllerApi {
       ctx.body = { token }
     } catch (e) {
       const { ResourceNotFound } = errors
+      logger.error('api.Login', e)
       ctx.throw(ResourceNotFound.code, ResourceNotFound.message)
     }
   }

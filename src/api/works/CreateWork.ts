@@ -1,9 +1,9 @@
 import * as Joi from 'joi'
 import { errors } from '../../errors/errors'
 import { ControllerApi } from '../../interfaces/ControllerApi'
-import { Vault } from '../../utils/Vault/Vault'
-
 import { WorksController } from '../../modules/Works/Works.controller'
+import { logger } from '../../utils/Logger/Logger'
+import { Vault } from '../../utils/Vault/Vault'
 
 export class CreateWork implements ControllerApi {
   async handler(ctx: any, next: any): Promise<any> {
@@ -26,6 +26,7 @@ export class CreateWork implements ControllerApi {
       ctx.status = 200
       ctx.body = { workId: claim.id }
     } catch (e) {
+      logger.error('api.CreateWork', e)
       ctx.status = 500
     }
   }

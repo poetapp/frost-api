@@ -2,6 +2,7 @@ import * as Joi from 'joi'
 import { errors } from '../../errors/errors'
 import { ControllerApi } from '../../interfaces/ControllerApi'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
+import { logger } from '../../utils/Logger/Logger'
 import { SendEmail } from '../../utils/SendEmail/SendEmail'
 import { Token } from '../Tokens'
 import { getToken } from './utils/utils'
@@ -24,6 +25,7 @@ export class ForgotPassword implements ControllerApi {
       }
     } catch (e) {
       const { InternalError } = errors
+      logger.error('api.ForgotPassword', e)
       ctx.throw(InternalError.code, InternalError.message)
     }
   }

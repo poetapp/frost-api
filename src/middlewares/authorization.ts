@@ -1,6 +1,7 @@
 import { verify } from 'jsonwebtoken'
 import { errors } from '../errors/errors'
 import { AccountsController } from '../modules/Accounts/Accounts.controller'
+import { logger } from '../utils/Logger/Logger'
 import { Vault } from '../utils/Vault/Vault'
 
 const { AuthenticationFailed } = errors
@@ -21,6 +22,7 @@ export const authorization = () => {
       ctx.state.user = await usersController.get(email)
       return ctx.state.user ? next() : (ctx.status = 404)
     } catch (e) {
+      logger.error('middleware.authorization', e)
       ctx.throw(AuthenticationFailed.code, AuthenticationFailed.message)
     }
   }

@@ -1,8 +1,8 @@
 import { errors } from '../../errors/errors'
 import { ControllerApi } from '../../interfaces/ControllerApi'
 import { WorksController } from '../../modules/Works/Works.controller'
+import { logger } from '../../utils/Logger/Logger'
 import { WorkAttributes } from '../../utils/PoetNode/Interfaces/Interfaces'
-
 export class GetWorks implements ControllerApi {
   async handler(ctx: any, next: any): Promise<any> {
     try {
@@ -21,6 +21,7 @@ export class GetWorks implements ControllerApi {
         ctx.body = WorkNotFound.message
       }
     } catch (e) {
+      logger.error('api.GetWorks', e)
       ctx.status = 500
     }
   }

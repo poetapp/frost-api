@@ -1,6 +1,7 @@
 import { errors } from '../../errors/errors'
 import { ControllerApi } from '../../interfaces/ControllerApi'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
+import { logger } from '../../utils/Logger/Logger'
 import { Vault } from '../../utils/Vault/Vault'
 import { Token } from '../Tokens'
 
@@ -28,6 +29,7 @@ export class VerifyAccountToken implements ControllerApi {
       await Vault.revokeToken(tokenData.data.id)
       return (ctx.body = 'Email verified')
     } catch (e) {
+      logger.error('api.VerifyAccountToken', e)
       throw e
     }
   }
