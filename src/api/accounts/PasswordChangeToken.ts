@@ -5,6 +5,7 @@ import { errors } from '../../errors/errors'
 import { ControllerApi } from '../../interfaces/ControllerApi'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
 import { Argon2 } from '../../utils/Argon2/Argon2'
+import { Vault } from '../../utils/Vault/Vault'
 import { Token } from '../Tokens'
 
 const { passwordComplex } = configuration
@@ -27,7 +28,7 @@ export class PasswordChangeToken implements ControllerApi {
       user.password = await argon2.hash()
       const usersController = new AccountsController()
       await usersController.update(user.id, user)
-
+      await Vault.revokeToken(tokenData.data.id)
       ctx.status = 200
     } catch (e) {
       ctx.throw(InvalidInput.code, InvalidInput.message + ' ' + e.message)
