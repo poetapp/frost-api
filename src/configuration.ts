@@ -6,7 +6,9 @@ const {
   FROST_URL,
   FROST_VERIFIED_ACCOUNT,
   FROST_CHANGE_PASSWORD,
-  VERIFIED_ACCOUNT
+  VERIFIED_ACCOUNT,
+  EMAIL_REPLY,
+  EMAIL_FROM
 } = process.env
 
 export const configuration = {
@@ -20,6 +22,8 @@ export const configuration = {
   transactionalMandrill: '***REMOVED***',
   jwt: '***REMOVED***',
   verifiedAccount: VERIFIED_ACCOUNT === 'true' ? true : false,
+  emailReply: EMAIL_REPLY || 'contact@po.et',
+  emailFrom: EMAIL_FROM || 'Po.et',
   passwordComplex: {
     min: 10,
     max: 30,
