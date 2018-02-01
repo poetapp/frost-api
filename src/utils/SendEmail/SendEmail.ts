@@ -5,7 +5,9 @@ import { Nodemailer } from '..//Nodemailer/Nodemailer'
 
 export class SendEmail {
   private email: string
-  private from: string = `"Po.et" <contact@po.et>`
+  private from: string = `"${configuration.emailFrom}" <${
+    configuration.emailReply
+  }>`
 
   constructor(email: string) {
     this.email = email
