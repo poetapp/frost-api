@@ -6,7 +6,10 @@ const {
   FROST_URL,
   FROST_VERIFIED_ACCOUNT,
   FROST_CHANGE_PASSWORD,
-  VERIFIED_ACCOUNT
+  VERIFIED_ACCOUNT,
+  EMAIL_REPLY,
+  EMAIL_FROM,
+  SEND_EMAIL_DISABLED
 } = process.env
 
 export const configuration = {
@@ -20,6 +23,9 @@ export const configuration = {
   transactionalMandrill: '46mwv_E6dOxrSDUkJD4NOQ',
   jwt: '2cff77d8f0a411e78c3f9a214cf093ae',
   verifiedAccount: VERIFIED_ACCOUNT === 'true' ? true : false,
+  emailReply: EMAIL_REPLY || 'contact@po.et',
+  emailFrom: EMAIL_FROM || 'Po.et',
+  sendEmailDisabled: SEND_EMAIL_DISABLED === 'true' ? true : false,
   passwordComplex: {
     min: 10,
     max: 30,
