@@ -42,6 +42,7 @@ logger.error = function() {
     args[1].requestError.timeout = args[1].timeout
     args[1].requestError.url = args[1].url
     args[1].requestError.errorText = args[1].errorText
+    args[1].requestError.method = args[1].method
     args[1].requestError.requestData = args[2]
   }
 
