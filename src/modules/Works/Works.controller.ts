@@ -38,7 +38,7 @@ export class WorksController {
       if (createWork.ok) return await createWork.text()
 
       const errorText = await createWork.text()
-      const data = { ...createWork, errorText }
+      const data = { ...createWork, errorText, method: Method.POST }
       logger.error('WorksController.create', data, workAttributes)
 
       throw new Error(errors.InternalErrorExternalAPI.message)
@@ -55,7 +55,7 @@ export class WorksController {
       if (work.ok) return await work.json()
 
       const errorText = await work.text()
-      const data = { ...work, errorText }
+      const data = { ...work, errorText, method: Method.GET }
       logger.error('WorksController.get', data, { workId })
 
       throw new Error('Work not found')
@@ -72,7 +72,7 @@ export class WorksController {
       if (works.ok) return await works.json()
 
       const errorText = await works.text()
-      const data = { ...works, errorText }
+      const data = { ...works, errorText, method: Method.GET }
       logger.error('WorksController.getWorksByPublicKey', data, { publicKey })
 
       throw new Error('Works not found')
