@@ -32,12 +32,15 @@ export class WorksController {
           Accept: 'application/json',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(workAttributes)
+        body: JSON.stringify({ ...workAttributes, ...{ signature: '123' } })
       })
 
       if (createWork.ok) return await createWork.text()
 
-      logger.error('WorksController.create', createWork, workAttributes)
+      const errorText = await createWork.text()
+      const data = { ...createWork, errorText }
+      logger.error('WorksController.create', data, workAttributes)
+
       throw new Error(errors.InternalErrorExternalAPI.message)
     } catch (e) {
       logger.error('WorksController.create', e)
@@ -51,7 +54,10 @@ export class WorksController {
 
       if (work.ok) return await work.json()
 
-      logger.error('WorksController.get', work, { workId })
+      const errorText = await work.text()
+      const data = { ...work, errorText }
+      logger.error('WorksController.get', data, { workId })
+
       throw new Error('Work not found')
     } catch (e) {
       logger.error('WorksController.get', e)
@@ -65,7 +71,10 @@ export class WorksController {
 
       if (works.ok) return await works.json()
 
-      logger.error('WorksController.getWorksByPublicKey', works, { publicKey })
+      const errorText = await works.text()
+      const data = { ...works, errorText }
+      logger.error('WorksController.getWorksByPublicKey', data, { publicKey })
+
       throw new Error('Works not found')
     } catch (e) {
       logger.error('WorksController.getWorksByPublicKey', e)
