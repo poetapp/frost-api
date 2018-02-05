@@ -3,6 +3,7 @@ import { ControllerApi } from '../../interfaces/ControllerApi'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
 import { Vault } from '../../utils/Vault/Vault'
 import { Token } from '../Tokens'
+import { getToken } from './utils/utils'
 
 export class VerifyAccountToken implements ControllerApi {
   async handler(ctx: any, next: any): Promise<any> {
@@ -26,7 +27,8 @@ export class VerifyAccountToken implements ControllerApi {
       const usersController = new AccountsController()
       await usersController.update(user.id, user)
       await Vault.revokeToken(tokenData.data.id)
-      return (ctx.body = 'Email verified')
+      const token = await getToken(user.email, Token.Login)
+      ctx.body = { token }
     } catch (e) {
       throw e
     }
