@@ -4,7 +4,7 @@ import { AccountsController } from '../modules/Accounts/Accounts.controller'
 import { logger } from '../utils/Logger/Logger'
 import { Vault } from '../utils/Vault/Vault'
 
-const { AuthenticationFailed } = errors
+const { AuthenticationFailed, ExpiredToken, InvalidToken } = errors
 
 export const authorization = () => {
   return async (ctx: any, next: any) => {
@@ -23,7 +23,20 @@ export const authorization = () => {
       return ctx.state.user ? next() : (ctx.status = 404)
     } catch (e) {
       logger.error('middleware.authorization', e)
-      ctx.throw(AuthenticationFailed.code, AuthenticationFailed.message)
+
+      switch (e.message) {
+        case 'bad token':
+          ctx.throw(ExpiredToken.code, ExpiredToken.message)
+          break
+        case 'invalid token':
+          ctx.throw(InvalidToken.code, InvalidToken.message)
+          break
+        case 'jwt malformed':
+          ctx.throw(InvalidToken.code, InvalidToken.message)
+          break
+        default:
+          ctx.throw(AuthenticationFailed.code, AuthenticationFailed.message)
+      }
     }
   }
 }

@@ -42,5 +42,13 @@ export const errors = {
     code: 500,
     message:
       'The server encountered an internal error. Error parsing data external API. Please retry the request.'
+  },
+  InvalidToken: {
+    code: 422,
+    message: 'Invalid token.'
+  },
+  ExpiredToken: {
+    code: 422,
+    message: 'Expired token.'
   }
 }
