@@ -1,5 +1,5 @@
 const nodemailer = require('nodemailer')
-const transport = require('nodemailer-mandrill-transport')
+const mandrill = require('nodemailer-mandrill-transport')
 
 import { configuration } from '../../configuration'
 import { Email } from './Email'
@@ -7,11 +7,27 @@ import { Options } from './Options'
 
 export namespace Nodemailer {
   export function config(options?: Options) {
-    this.smtpTransport = nodemailer.createTransport(
-      transport({
-        auth: options
-      })
-    )
+    const {
+      emailTransportGmail,
+      emailTransportGmailUser,
+      emailTransportGmailPass
+    } = configuration
+
+    const gmailTransport = {
+      service: 'gmail',
+      auth: {
+        user: emailTransportGmailUser,
+        pass: emailTransportGmailPass
+      }
+    }
+
+    const mandrillTransport = mandrill({
+      auth: options
+    })
+
+    const transport = emailTransportGmail ? gmailTransport : mandrillTransport
+
+    this.smtpTransport = nodemailer.createTransport(transport)
   }
 
   export function sendMail(options?: Email) {
