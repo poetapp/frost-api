@@ -1,7 +1,6 @@
 import { errors } from '../../errors/errors'
 import { ControllerApi } from '../../interfaces/ControllerApi'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
-import { Vault } from '../../utils/Vault/Vault'
 import { Token } from '../Tokens'
 import { getToken } from './utils/utils'
 
@@ -26,7 +25,6 @@ export class VerifyAccountToken implements ControllerApi {
       user.verified = true
       const usersController = new AccountsController()
       await usersController.update(user.id, user)
-      await Vault.revokeToken(tokenData.data.id)
       const token = await getToken(user.email, Token.Login)
       ctx.body = { token }
     } catch (e) {
