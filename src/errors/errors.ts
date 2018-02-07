@@ -37,5 +37,13 @@ export const errors = {
   WorkNotFound: {
     code: 400,
     message: 'Work not found.'
+  },
+  InvalidToken: {
+    code: 422,
+    message: 'Invalid token.'
+  },
+  ExpiredToken: {
+    code: 422,
+    message: 'Expired token.'
   }
 }
