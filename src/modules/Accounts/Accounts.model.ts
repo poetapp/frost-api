@@ -2,6 +2,13 @@ import { model, Schema } from 'mongoose'
 import { validate } from './Accounts.hooks'
 import { Accounts } from './Accounts.interface'
 
+const Tokens = new Schema(
+  {
+    token: String
+  },
+  { _id: false }
+)
+
 export const AccountsSchema = new Schema({
   email: {
     type: String,
@@ -30,7 +37,8 @@ export const AccountsSchema = new Schema({
   },
   apiToken: {
     type: String
-  }
+  },
+  apiTokens: [Tokens]
 })
 
 AccountsSchema.pre('validate', validate)
