@@ -10,10 +10,13 @@ export class GetToken implements ControllerApi {
       const { email } = user
       const accountsController = new AccountsController()
       const currentUser = await accountsController.get(email)
-      const apiToken = await Vault.decrypt(currentUser.apiToken)
+      const allTokens = currentUser.apiTokens.map(({ token }) =>
+        Vault.decrypt(token)
+      )
+      const apiTokens = await Promise.all(allTokens)
+
       ctx.body = {
-        apiToken,
-        dateCreated: currentUser.createdAt
+        apiTokens
       }
     } catch (e) {
       logger.error('api.GetToken', e)

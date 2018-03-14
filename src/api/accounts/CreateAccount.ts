@@ -19,7 +19,7 @@ export class CreateAccount implements ControllerApi {
       const user = ctx.request.body
       const { email } = user
       const apiToken = await getToken(email, Token.ApiKey)
-      user.apiToken = await Vault.encrypt(apiToken)
+      user.apiTokens = [{ token: await Vault.encrypt(apiToken) }]
       const usersController = new AccountsController()
 
       await usersController.create(user)
