@@ -50,6 +50,7 @@
     "koa": "^2.4.1",
     "koa-bodyparser": "^4.2.0",
     "koa-router": "^7.2.1",
+    "koa2-cors": "^2.0.5",
     "mongoose": "^4.13.0",
     "node-fetch": "^1.7.3",
     "node-vault": "^0.7.1",

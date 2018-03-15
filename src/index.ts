@@ -2,6 +2,8 @@ require('dotenv').config({ path: '.env' })
 import * as fs from 'fs'
 import * as Koa from 'koa'
 import * as bodyParser from 'koa-bodyparser'
+import * as cors from 'koa2-cors'
+import { Path } from './api/Path'
 import { routes } from './api/routes'
 import { configuration } from './configuration'
 import { MongoDB } from './databases/mongodb/mongodb'
@@ -167,6 +169,12 @@ const main = async () => {
     const app = new Koa()
 
     app
+      .use(
+        cors({
+          origin: (ctx: any, next: any) =>
+            ctx.url.includes(Path.WORKS) ? '*' : false
+        })
+      )
       .use(bodyParser())
       .use(routes.routes())
       .use(routes.allowedMethods())

@@ -21,6 +21,13 @@ import { GetWorks } from './works/GetWorks'
 const router = new KoaRouter()
 const route = new Route(router)
 
+router.use([Path.WORKS, Path.WORKS_WORKID], (ctx: any, next: any) => {
+  ctx.set('Access-Control-Allow-Methods', 'POST,GET')
+  ctx.set('Access-Control-Allow-Headers', 'Content-Type,token')
+
+  return next()
+})
+
 router.use(
   [
     Path.ACCOUNTS_VERIFY_TOKEN,
