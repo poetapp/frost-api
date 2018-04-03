@@ -137,6 +137,7 @@ const initVault = async () => {
 const main = async () => {
   try {
     Vault.config(optionsVault)
+    await Vault.mountAuthTune()
 
     // Init vault and unseal
     // https://www.vaultproject.io/intro/getting-started/deploy.html
