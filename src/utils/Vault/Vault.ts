@@ -71,6 +71,18 @@ export namespace Vault {
     })
   }
 
+  export async function mountAuthTune() {
+    await this.vault.mounts()
+    return await this.vault.mount({
+      mount_point: 'auth/token/tune',
+      type: 'auth',
+      description: 'auth tune',
+      default_lease_ttl: 720,
+      max_lease_ttl: 4611686018, // ~146 years
+      force_no_cache: false
+    })
+  }
+
   export async function status() {
     return await this.vault.health()
   }

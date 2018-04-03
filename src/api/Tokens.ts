@@ -52,7 +52,7 @@ export namespace Token {
     policies: ['api_key'],
     no_default_policy: true,
     renewable: true,
-    ttl: '0', // never expires
+    ttl: '4611686018s', // ~146 years
     display_name: 'Api key',
     num_uses: 0, // The value of 0 has no limit to the number of uses.
     meta: {
