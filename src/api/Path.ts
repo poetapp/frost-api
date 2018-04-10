@@ -9,5 +9,6 @@ export enum Path {
   ACCOUNTS_VERIFY_TOKEN = '/accounts/verify/:token',
   WORKS = '/works',
   WORKS_WORKID = '/works/:workId',
-  TOKENS = '/tokens'
+  TOKENS = '/tokens',
+  TOKENS_TOKENID = '/tokens/:tokenId'
 }
