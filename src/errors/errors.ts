@@ -50,5 +50,13 @@ export const errors = {
   ExpiredToken: {
     code: 422,
     message: 'Expired token.'
+  },
+  MaximumApiTokensLimitReached: {
+    code: 409,
+    message: 'You have reached the maximum number of allowed tokens.'
+  },
+  BadTokenScope: {
+    code: 409,
+    message: 'The token does not have sufficient permissions for this action.'
   }
 }

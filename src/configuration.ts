@@ -12,7 +12,8 @@ const {
   SEND_EMAIL_DISABLED,
   EMAIL_TRANSPORT_GMAIL,
   EMAIL_TRANSPORT_GMAIL_USER,
-  EMAIL_TRANSPORT_GMAIL_PASS
+  EMAIL_TRANSPORT_GMAIL_PASS,
+  MAX_API_TOKENS
 } = process.env
 
 export const configuration = {
@@ -32,6 +33,7 @@ export const configuration = {
   emailTransportGmail: EMAIL_TRANSPORT_GMAIL === 'true' ? true : false,
   emailTransportGmailUser: EMAIL_TRANSPORT_GMAIL_USER || '',
   emailTransportGmailPass: EMAIL_TRANSPORT_GMAIL_PASS || '',
+  maxApiTokens: parseInt(MAX_API_TOKENS, 10) || 5,
   passwordComplex: {
     min: 10,
     max: 30,
