@@ -1,4 +1,4 @@
-import { Token } from '../../src/api/tokens'
+import { Token } from '../api/tokens'
 import { errors } from '../errors/errors'
 
 export const isLoggedIn = () => {
