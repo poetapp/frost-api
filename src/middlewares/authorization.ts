@@ -20,6 +20,7 @@ export const authorization = () => {
       const usersController = new AccountsController()
       ctx.state.tokenData = tokenData
       ctx.state.user = await usersController.get(email)
+      ctx.state.jwtSecret = jwt
       return ctx.state.user ? next() : (ctx.status = 404)
     } catch (e) {
       logger.error('middleware.authorization', e)

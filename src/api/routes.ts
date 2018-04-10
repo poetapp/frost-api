@@ -16,6 +16,7 @@ import { VerifyAccount } from './accounts/Verify'
 import { VerifyAccountToken } from './accounts/VerifyToken'
 import { CreateToken } from './tokens/CreateToken'
 import { GetToken } from './tokens/GetToken'
+import { RemoveToken } from './tokens/RemoveToken'
 import { CreateWork } from './works/CreateWork'
 import { GetWork } from './works/GetWork'
 import { GetWorks } from './works/GetWorks'
@@ -39,7 +40,8 @@ router.use(
     Path.WORKS_WORKID,
     Path.TOKENS,
     Path.ACCOUNTS_PROFILE,
-    Path.PASSWORD_CHANGE_TOKEN
+    Path.PASSWORD_CHANGE_TOKEN,
+    Path.TOKENS_TOKENID
   ],
   authorization()
 )
@@ -63,6 +65,7 @@ route.set(Method.POST, Path.WORKS, new CreateWork())
 route.set(Method.GET, Path.WORKS, new GetWorks())
 route.set(Method.GET, Path.WORKS_WORKID, new GetWork())
 route.set(Method.GET, Path.TOKENS, new GetToken())
+route.set(Method.DEL, Path.TOKENS_TOKENID, new RemoveToken())
 route.set(Method.POST, Path.TOKENS, new CreateToken())
 
 export const routes = router
