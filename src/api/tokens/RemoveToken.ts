@@ -15,7 +15,7 @@ const decryptApiTokens = async (tokens: ReadonlyArray<string>) => {
 }
 
 const encryptApiTokens = async (tokens: ReadonlyArray<string>) => {
-  const allTokens = tokens.map(Vault.decrypt, Vault)
+  const allTokens = tokens.map(Vault.encrypt, Vault)
   return await Promise.all(allTokens)
 }
 
@@ -37,7 +37,9 @@ export class RemoveToken implements ControllerApi {
         return
       }
 
-      const { client_token } = verify(tokenId, jwtSecret) as {
+      const { client_token } = verify(tokenId, jwtSecret, {
+        ignoreExpiration: true
+      }) as {
         email: string
         client_token: string
         iat: number
