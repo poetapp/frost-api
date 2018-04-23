@@ -6,8 +6,11 @@
   "scripts": {
     "build": "tsc --skipLibCheck",
     "start": "node dist",
+    "start:ci": "npm run maildev && EMAIL_TRANSPORT_MAIL_DEV=true node dist > /dev/null 2>&1",
     "start:dev": "nodemon --watch src -L --exec 'ts-node --inspect=0.0.0.0:5858 -r tsconfig-paths/register --cache-directory .tscache' ./src/index.ts",
+    "maildev": "maildev &",
     "tslint": "tslint -p ./tsconfig.json --fix",
+    "tslint:no-fix": "tslint -p ./tsconfig.json",
     "tslint:check": "tslint-config-prettier-check ./tslint.json",
     "precommit": "lint-staged"
   },
@@ -66,6 +69,7 @@
     "@types/mongoose": "^4.7.25",
     "husky": "^0.14.3",
     "lint-staged": "^4.3.0",
+    "maildev": "^1.0.0-rc3",
     "prettier": "^1.7.4",
     "ts-node": "^3.3.0",
     "tsconfig-paths": "^2.7.3",
