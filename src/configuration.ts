@@ -10,9 +10,7 @@ const {
   EMAIL_REPLY,
   EMAIL_FROM,
   SEND_EMAIL_DISABLED,
-  EMAIL_TRANSPORT_GMAIL,
-  EMAIL_TRANSPORT_GMAIL_USER,
-  EMAIL_TRANSPORT_GMAIL_PASS,
+  EMAIL_TRANSPORT_MAIL_DEV,
   MAX_API_TOKENS
 } = process.env
 
@@ -30,9 +28,7 @@ export const configuration = {
   emailReply: EMAIL_REPLY || 'contact@po.et',
   emailFrom: EMAIL_FROM || 'Po.et',
   sendEmailDisabled: SEND_EMAIL_DISABLED === 'true' ? true : false,
-  emailTransportGmail: EMAIL_TRANSPORT_GMAIL === 'true' ? true : false,
-  emailTransportGmailUser: EMAIL_TRANSPORT_GMAIL_USER || '',
-  emailTransportGmailPass: EMAIL_TRANSPORT_GMAIL_PASS || '',
+  emailTransportMailDev: EMAIL_TRANSPORT_MAIL_DEV === 'true' ? true : false,
   maxApiTokens: parseInt(MAX_API_TOKENS, 10) || 5,
   passwordComplex: {
     min: 10,

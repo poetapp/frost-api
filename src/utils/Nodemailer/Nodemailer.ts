@@ -7,26 +7,18 @@ import { Options } from './Options'
 
 export namespace Nodemailer {
   export function config(options?: Options) {
-    const {
-      emailTransportGmail,
-      emailTransportGmailUser,
-      emailTransportGmailPass
-    } = configuration
-
-    const gmailTransport = {
-      service: 'gmail',
-      auth: {
-        user: emailTransportGmailUser,
-        pass: emailTransportGmailPass
-      }
-    }
+    const { emailTransportMailDev } = configuration
 
     const mandrillTransport = mandrill({
       auth: options
     })
 
-    const transport = emailTransportGmail ? gmailTransport : mandrillTransport
+    const maildev = {
+      port: 1025,
+      ignoreTLS: true
+    }
 
+    const transport = emailTransportMailDev ? maildev : mandrillTransport
     this.smtpTransport = nodemailer.createTransport(transport)
   }
 
