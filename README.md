@@ -1,5 +1,7 @@
 # Frost API
 
+[![Build Status](https://travis-ci.com/poetapp/frost-api.svg?token=FP3fasWY3bH5YsQqyXXz&branch=master)](https://travis-ci.com/poetapp/frost-api)
+
 Po.et API Layer for Publishers
 
 
