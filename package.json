@@ -5,13 +5,13 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc --skipLibCheck",
+    "lint": "tslint -p ./tsconfig.json",
+    "lint:fix": "tslint -p ./tsconfig.json --fix",
+    "lint:check": "tslint-config-prettier-check ./tslint.json",
     "start": "node dist",
     "start:ci": "npm run maildev && EMAIL_TRANSPORT_MAIL_DEV=true node dist > /dev/null 2>&1",
     "start:dev": "nodemon --watch src -L --exec 'ts-node --inspect=0.0.0.0:5858 -r tsconfig-paths/register --cache-directory .tscache' ./src/index.ts",
     "maildev": "maildev &",
-    "tslint": "tslint -p ./tsconfig.json --fix",
-    "tslint:no-fix": "tslint -p ./tsconfig.json",
-    "tslint:check": "tslint-config-prettier-check ./tslint.json",
     "precommit": "lint-staged"
   },
   "lint-staged": {
@@ -56,6 +56,7 @@
     "winston": "3.0.0-rc1"
   },
   "devDependencies": {
+    "@po.et/tslint-rules": "^1.0.0",
     "@types/handlebars": "4.0.36",
     "@types/joi": "10.6.1",
     "@types/jsonwebtoken": "7.2.5",
@@ -73,9 +74,7 @@
     "prettier": "1.9.2",
     "ts-node": "3.3.0",
     "tsconfig-paths": "2.7.3",
-    "tslint": "5.8.0",
     "tslint-config-prettier": "1.6.0",
-    "tslint-eslint-rules": "4.1.1",
     "tslint-plugin-prettier": "1.3.0",
     "typescript": "2.6.2"
   }
