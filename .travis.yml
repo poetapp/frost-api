@@ -20,5 +20,5 @@ before_script:
   - cd frost-api-ci && npm install
   - cd ..
 script:
-  - npm run tslint:no-fix
+  # - npm run lint
   - cd ./frost-api-ci && npm run test
