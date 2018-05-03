@@ -127,7 +127,8 @@ const initVault = async () => {
     } else if (status.initialized)
       logger.log(
         'error',
-        'Vault was initialized. Check file vault.json in the root project. You have to set the environment variable VAULT_TOKEN '
+        'Vault was initialized. Check file vault.json in the root project. \
+         You have to set the environment variable VAULT_TOKEN '
       )
   } catch (e) {
     logger.log('error', e.message)
