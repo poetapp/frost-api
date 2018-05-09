@@ -35,7 +35,7 @@ Examaple with curl, you must to set $FROST_URL.
         * Required
     * password
         * Required
-        * Security complexity 
+        * Security complexity
             - minimum **10**
             - maximun **30**
             - lowercase **1**
@@ -76,7 +76,7 @@ curl -H "Content-Type: application/json" -X POST -d '{"email":"...","password":"
         * Required
     * password
         * Required
-         * Security complexity 
+         * Security complexity
             - minimum **10**
             - maximun **30**
             - lowercase **1**
@@ -94,7 +94,7 @@ curl -H "Content-Type: application/json" -X POST -d '{"email":"...","password":"
 
     * Code: 422
     * Content 'One of the request inputs is not valid.'
-    
+
     * Code: 500
     * Content 'The server encountered an internal error. Please retry the request.'
 
@@ -109,7 +109,7 @@ curl -H "Content-Type: application/json" -X POST -d '{"email":"...","password":"
 
 ### Verify account
 
-When the user creates a new account the system automatically will send an email for the purpose to verify this email account. This e-mail contains a link, the user only need to click in there. 
+When the user creates a new account the system automatically will send an email for the purpose to verify this email account. This e-mail contains a link, the user only need to click in there.
 
 * **URL** /accounts/verify
 * **Method** POST
@@ -120,7 +120,7 @@ When the user creates a new account the system automatically will send an email 
 * **Response success**
     * Code: 200
 
-* **Response error**    
+* **Response error**
     * Code: 500
     * Content 'The server encountered an internal error. Please retry the request.'
 
@@ -142,7 +142,7 @@ curl -H "Content-Type: application/json" -X POST -d '{"email":"..."}' $FROST_URL
 * **Response success**
     * Code: 200
 
-* **Response error**    
+* **Response error**
     * Code: 500
     * Content 'The server encountered an internal error. Please retry the request.'
 
@@ -167,7 +167,7 @@ curl -H "Content-Type: application/json" -X GET $FROST_URL/accounts/verify/$FROS
 * **Response success**
     * Code: 200
 
-* **Response error**    
+* **Response error**
     * Code: 500
     * Content 'The server encountered an internal error. Please retry the request.'
 
@@ -224,9 +224,9 @@ Require, log in and password verified.
 * **URL** /works
 * **Method** POST
 * **Data Params**
-    * name 
+    * name
         * string - required
-    * datePublished: 
+    * datePublished:
         * string - required - iso date
     * dateCreated
         * string - required - iso date
@@ -234,9 +234,9 @@ Require, log in and password verified.
         * string - required
     * tags
         * string - optional
-    * content 
+    * content
         * string - required
-        
+
 * **Header Params**
     * token
         * Required
@@ -249,8 +249,8 @@ Require, log in and password verified.
     * Content 'Could not create the work'
 
     * Code: 403
-    * Content 'Server failed to authenticate the request. 
-      Make sure the value of the Authorization header is formed correctly 
+    * Content 'Server failed to authenticate the request.
+      Make sure the value of the Authorization header is formed correctly
       including the signature.'
 
     * Code: 409
@@ -289,8 +289,8 @@ Require, log in and password verified.
 
 * **Response error**
     * Code: 403
-    * Content 'Server failed to authenticate the request. 
-      Make sure the value of the Authorization header is formed correctly 
+    * Content 'Server failed to authenticate the request.
+      Make sure the value of the Authorization header is formed correctly
       including the signature.'
 
     * Code: 409
@@ -324,8 +324,8 @@ Require, log in and password verified.
 
 * **Response error**
     * Code: 403
-    * Content 'Server failed to authenticate the request. 
-      Make sure the value of the Authorization header is formed correctly 
+    * Content 'Server failed to authenticate the request.
+      Make sure the value of the Authorization header is formed correctly
       including the signature.'
 
     * Code: 500
@@ -345,7 +345,7 @@ curl -H "Content-Type: application/json" -H "token: $FROST_TOKEN" -X GET $FROST_
 
 ## [Vault](https://www.vaultproject.io/)
 
-### [Basics](https://www.vaultproject.io/intro/getting-started/dev-server.html)  
+### [Basics](https://www.vaultproject.io/intro/getting-started/dev-server.html)
 
 Start
 
@@ -372,7 +372,7 @@ curl --header "X-Vault-Token: ..." --request LIST http://localhost:8200/v1/trans
 
 ```
 
-Create s specific key 
+Create s specific key
 
 ```bash
 
@@ -396,9 +396,9 @@ export VAULT_ADDR='http://127.0.0.1:8200'
 
 ```
 
-## [Consul](https://www.consul.io)   
+## [Consul](https://www.consul.io)
 
-### [Basics](https://www.consul.io/docs/agent/basics.html)  
+### [Basics](https://www.consul.io/docs/agent/basics.html)
 
 Start
 
@@ -426,3 +426,4 @@ Warning, only use in developing mode
 curl -X DELETE 'http://localhost:8500/v1/kv/vault?recurse'
 
 ```
+
