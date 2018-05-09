@@ -44,15 +44,11 @@ export class CreateAccount implements ControllerApi {
       email: Joi.string()
         .email()
         .required(),
-      password: Joi.validate(
-        password,
-        new PasswordComplexity(passwordComplex),
-        (err, value) => {
-          if (err) throw usersController.getTextErrorPassword(passwordComplex)
+      password: Joi.validate(password, new PasswordComplexity(passwordComplex), (err, value) => {
+        if (err) throw usersController.getTextErrorPassword(passwordComplex)
 
-          return value
-        }
-      )
+        return value
+      }),
     }
   }
 }

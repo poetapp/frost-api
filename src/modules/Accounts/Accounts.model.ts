@@ -4,7 +4,7 @@ import { Accounts } from './Accounts.interface'
 
 const Tokens = new Schema(
   {
-    token: String
+    token: String,
   },
   { _id: false }
 )
@@ -13,32 +13,32 @@ export const AccountsSchema = new Schema({
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   password: {
     type: String,
-    required: true
+    required: true,
   },
   verified: {
     type: Boolean,
-    required: true
+    required: true,
   },
   privateKey: {
     type: String,
-    required: true
+    required: true,
   },
   publicKey: {
     type: String,
-    required: true
+    required: true,
   },
   createdAt: {
     type: String,
-    required: true
+    required: true,
   },
   apiToken: {
-    type: String
+    type: String,
   },
-  apiTokens: [Tokens]
+  apiTokens: [Tokens],
 })
 
 AccountsSchema.pre('validate', validate)

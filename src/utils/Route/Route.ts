@@ -7,7 +7,7 @@ export enum Method {
   GET = 'get',
   PUT = 'put',
   DEL = 'del',
-  ALL = 'all'
+  ALL = 'all',
 }
 export class Route {
   private router: any

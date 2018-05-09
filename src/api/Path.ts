@@ -10,5 +10,5 @@ export enum Path {
   WORKS = '/works',
   WORKS_WORKID = '/works/:workId',
   TOKENS = '/tokens',
-  TOKENS_TOKENID = '/tokens/:tokenId'
+  TOKENS_TOKENID = '/tokens/:tokenId',
 }

@@ -13,7 +13,7 @@ const {
   EMAIL_TRANSPORT_MAIL_DEV,
   MAX_API_TOKENS,
   MAX_API_REQUEST_LIMIT_FORM,
-  MAX_API_REQUEST_LIMIT_JSON
+  MAX_API_REQUEST_LIMIT_JSON,
 } = process.env
 
 export const configuration = {
@@ -40,6 +40,6 @@ export const configuration = {
     lowerCase: 1,
     upperCase: 1,
     numeric: 1,
-    symbol: 1
-  }
+    symbol: 1,
+  },
 }

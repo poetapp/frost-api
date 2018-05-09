@@ -27,9 +27,7 @@ export class RemoveToken implements ControllerApi {
       const { tokenId } = ctx.params
 
       const apiTokensDecrypted = await decryptApiTokens(getApiTokens(user))
-      const apiTokensFiltered = apiTokensDecrypted.filter(
-        (token: string) => token !== tokenId
-      )
+      const apiTokensFiltered = apiTokensDecrypted.filter((token: string) => token !== tokenId)
 
       if (apiTokensDecrypted.length === apiTokensFiltered.length) {
         ctx.status = ResourceNotFound.code
@@ -38,7 +36,7 @@ export class RemoveToken implements ControllerApi {
       }
 
       const { client_token } = verify(tokenId, jwtSecret, {
-        ignoreExpiration: true
+        ignoreExpiration: true,
       }) as {
         email: string
         client_token: string
@@ -49,7 +47,7 @@ export class RemoveToken implements ControllerApi {
 
       const apiTokensEncrypted = await encryptApiTokens(apiTokensFiltered)
       const updateApiTokens = apiTokensEncrypted.map((token: string) => ({
-        token
+        token,
       }))
 
       user.apiTokens = updateApiTokens

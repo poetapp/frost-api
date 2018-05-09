@@ -20,8 +20,8 @@ export namespace Token {
     display_name: 'Login',
     num_uses: 0, // The value of 0 has no limit to the number of uses.
     meta: {
-      name: 'login'
-    }
+      name: 'login',
+    },
   }
   export const VerifyAccount: TokenOptions = {
     role_name: 'verify_account',
@@ -32,8 +32,8 @@ export namespace Token {
     display_name: 'Verify account',
     num_uses: 2,
     meta: {
-      name: 'verify_account'
-    }
+      name: 'verify_account',
+    },
   }
   export const ForgotPassword: TokenOptions = {
     role_name: 'forgot_password',
@@ -44,8 +44,8 @@ export namespace Token {
     display_name: 'Forgot password',
     num_uses: 1,
     meta: {
-      name: 'forgot_password'
-    }
+      name: 'forgot_password',
+    },
   }
   export const ApiKey: TokenOptions = {
     role_name: 'api_key',
@@ -56,7 +56,7 @@ export namespace Token {
     display_name: 'Api key',
     num_uses: 0, // The value of 0 has no limit to the number of uses.
     meta: {
-      name: 'api_key'
-    }
+      name: 'api_key',
+    },
   }
 }

@@ -3,10 +3,7 @@ import { configuration } from '../../configuration'
 import { errors } from '../../errors/errors'
 import { logger } from '../../utils/Logger/Logger'
 import { createClaim } from '../../utils/PoetNode/Helpers/Claim'
-import {
-  WorkAttributes,
-  ClaimType
-} from '../../utils/PoetNode/Interfaces/Interfaces'
+import { WorkAttributes, ClaimType } from '../../utils/PoetNode/Interfaces/Interfaces'
 import { Method } from '../../utils/Route/Route'
 
 const { poetUrl } = configuration
@@ -30,9 +27,9 @@ export class WorksController {
         method: Method.POST,
         headers: {
           Accept: 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(workAttributes)
+        body: JSON.stringify(workAttributes),
       })
 
       if (createWork.ok) return await createWork.text()

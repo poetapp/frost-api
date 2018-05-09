@@ -26,7 +26,7 @@ export class CreateToken implements ControllerApi {
       user.save()
 
       ctx.body = {
-        apiToken
+        apiToken,
       }
     } catch (e) {
       logger.error('api.CreateToken', e)

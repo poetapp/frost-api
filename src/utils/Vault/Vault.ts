@@ -21,14 +21,14 @@ export namespace Vault {
   export async function encrypt(text: string) {
     const plaintext = new Buffer(text).toString('base64')
     const encrypted = await this.vault.write('transit/encrypt/frost', {
-      plaintext
+      plaintext,
     })
     return encrypted.data.ciphertext
   }
 
   export async function decrypt(ciphertext: string) {
     const decrypted = await this.vault.write('transit/decrypt/frost', {
-      ciphertext
+      ciphertext,
     })
     return new Buffer(decrypted.data.plaintext, 'base64').toString('ascii')
   }
@@ -58,7 +58,7 @@ export namespace Vault {
     return await this.vault.mount({
       mount_point: 'secret',
       type: 'generic',
-      description: 'secrets'
+      description: 'secrets',
     })
   }
 
@@ -67,7 +67,7 @@ export namespace Vault {
     return await this.vault.mount({
       mount_point: 'transit',
       type: 'transit',
-      description: 'transit'
+      description: 'transit',
     })
   }
 
@@ -79,7 +79,7 @@ export namespace Vault {
       description: 'auth tune',
       default_lease_ttl: 720,
       max_lease_ttl: 4611686018, // ~146 years
-      force_no_cache: false
+      force_no_cache: false,
     })
   }
 

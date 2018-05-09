@@ -21,7 +21,7 @@ const {
   transactionalMandrill,
   jwt,
   maxApiRequestLimitForm,
-  maxApiRequestLimitJson
+  maxApiRequestLimitJson,
 } = configuration
 
 const mongodbUri = mongodbUrl
@@ -31,13 +31,13 @@ const optionsMongoDB = {
   socketTimeoutMS: 0,
   keepAlive: 0,
   reconnectTries: 30,
-  promiseLibrary: Promise
+  promiseLibrary: Promise,
 }
 
 const optionsVault = {
   token: vaultToken,
   endpoint: vaultUrl,
-  apiVersion: 'v1'
+  apiVersion: 'v1',
 }
 
 const initVault = async () => {
@@ -71,7 +71,7 @@ const initVault = async () => {
         stretch: true,
         autoEOL: true,
         vAlign: 'middle',
-        hAlign: 'left'
+        hAlign: 'left',
       })
 
       /* tslint:disable:no-console */
@@ -121,7 +121,7 @@ const initVault = async () => {
       // Secrets
       const value = {
         transactionalMandrill,
-        jwt
+        jwt,
       }
 
       await Vault.writeSecret('frost', value)
@@ -153,7 +153,7 @@ const main = async () => {
   try {
     const secret = await Vault.readSecret('frost')
     const optionsNodemailer = {
-      apiKey: secret.data.transactionalMandrill
+      apiKey: secret.data.transactionalMandrill,
     }
 
     Nodemailer.config(optionsNodemailer)
@@ -175,14 +175,13 @@ const main = async () => {
     app
       .use(
         cors({
-          origin: (ctx: any, next: any) =>
-            ctx.url.includes(Path.WORKS) ? '*' : false
+          origin: (ctx: any, next: any) => (ctx.url.includes(Path.WORKS) ? '*' : false),
         })
       )
       .use(
         bodyParser({
           formLimit: maxApiRequestLimitForm,
-          jsonLimit: maxApiRequestLimitJson
+          jsonLimit: maxApiRequestLimitJson,
         })
       )
       .use(routes.routes())
