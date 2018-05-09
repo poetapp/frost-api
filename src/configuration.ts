@@ -11,7 +11,9 @@ const {
   EMAIL_FROM,
   SEND_EMAIL_DISABLED,
   EMAIL_TRANSPORT_MAIL_DEV,
-  MAX_API_TOKENS
+  MAX_API_TOKENS,
+  MAX_API_REQUEST_LIMIT_FORM,
+  MAX_API_REQUEST_LIMIT_JSON
 } = process.env
 
 export const configuration = {
@@ -30,6 +32,8 @@ export const configuration = {
   sendEmailDisabled: SEND_EMAIL_DISABLED === 'true' ? true : false,
   emailTransportMailDev: EMAIL_TRANSPORT_MAIL_DEV === 'true' ? true : false,
   maxApiTokens: parseInt(MAX_API_TOKENS, 10) || 5,
+  maxApiRequestLimitForm: MAX_API_REQUEST_LIMIT_FORM || '500kb',
+  maxApiRequestLimitJson: MAX_API_REQUEST_LIMIT_JSON || '500kb',
   passwordComplex: {
     min: 10,
     max: 30,

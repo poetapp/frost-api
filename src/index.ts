@@ -19,7 +19,9 @@ const {
   vaultUrl,
   vaultToken,
   transactionalMandrill,
-  jwt
+  jwt,
+  maxApiRequestLimitForm,
+  maxApiRequestLimitJson
 } = configuration
 
 const mongodbUri = mongodbUrl
@@ -177,7 +179,12 @@ const main = async () => {
             ctx.url.includes(Path.WORKS) ? '*' : false
         })
       )
-      .use(bodyParser())
+      .use(
+        bodyParser({
+          formLimit: maxApiRequestLimitForm,
+          jsonLimit: maxApiRequestLimitJson
+        })
+      )
       .use(routes.routes())
       .use(routes.allowedMethods())
 

@@ -256,6 +256,9 @@ Require, log in and password verified.
     * Code: 409
     * Content: 'The specified account does not verified'
 
+    * Code: 413
+    * Content: 'request entity too large'
+
     * Code: 422
     * Content 'One of the request inputs is not valid.'
 
