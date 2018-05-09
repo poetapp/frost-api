@@ -28,9 +28,7 @@ export class Argon2 {
       this.pwd.verify(userPassword, hashBuffer, (err: any, result: any) => {
         if (err) throw err
 
-        return result === securePassword.VALID
-          ? resolve(true)
-          : reject({ status: 401, message: 'Unauthorized' })
+        return result === securePassword.VALID ? resolve(true) : reject({ status: 401, message: 'Unauthorized' })
       })
     }).catch(e => {
       throw e

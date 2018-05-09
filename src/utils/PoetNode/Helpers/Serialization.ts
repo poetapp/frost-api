@@ -23,7 +23,7 @@ export namespace Serialization {
       signature: proto.signature.toString('hex'),
       type: proto.type,
       dateCreated: new Date(parseInt(proto.dateCreated, 10)),
-      attributes
+      attributes,
     }
   }
 
@@ -34,14 +34,12 @@ export namespace Serialization {
       signature: new Buffer(claim.signature, 'hex'),
       dateCreated: claim.dateCreated.getTime(),
       type: claim.type,
-      attributes: attributesToProtos(claim.attributes)
+      attributes: attributesToProtos(claim.attributes),
     })
   }
 
   export function claimToHex(claim: Claim) {
-    return new Buffer(ClaimProto.encode(claimToProto(claim)).finish()).toString(
-      'hex'
-    )
+    return new Buffer(ClaimProto.encode(claimToProto(claim)).finish()).toString('hex')
   }
 
   export function hexToClaim(claim: string): Claim {
@@ -49,9 +47,7 @@ export namespace Serialization {
     return protoToClaim(decoded)
   }
 
-  function attributesToProtos(
-    attributes: ClaimAttributes
-  ): ReadonlyArray<Message<any>> {
+  function attributesToProtos(attributes: ClaimAttributes): ReadonlyArray<Message<any>> {
     const attributeArray = Object.entries(attributes)
       .map(([key, value]) => ({ key, value }))
       .map(({ key, value }) => ({ key: key.toLowerCase(), value }))

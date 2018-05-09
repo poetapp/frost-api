@@ -10,12 +10,12 @@ export namespace Nodemailer {
     const { emailTransportMailDev } = configuration
 
     const mandrillTransport = mandrill({
-      auth: options
+      auth: options,
     })
 
     const maildev = {
       port: 1025,
-      ignoreTLS: true
+      ignoreTLS: true,
     }
 
     const transport = emailTransportMailDev ? maildev : mandrillTransport

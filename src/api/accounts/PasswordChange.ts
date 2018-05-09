@@ -43,24 +43,16 @@ export class PasswordChange implements ControllerApi {
     const usersController = new AccountsController()
 
     return {
-      password: Joi.validate(
-        password,
-        new PasswordComplexity(passwordComplex),
-        (err, value) => {
-          if (err) throw usersController.getTextErrorPassword(passwordComplex)
+      password: Joi.validate(password, new PasswordComplexity(passwordComplex), (err, value) => {
+        if (err) throw usersController.getTextErrorPassword(passwordComplex)
 
-          return value
-        }
-      ),
-      oldPassword: Joi.validate(
-        oldPassword,
-        new PasswordComplexity(passwordComplex),
-        (err, value) => {
-          if (err) throw usersController.getTextErrorPassword(passwordComplex)
+        return value
+      }),
+      oldPassword: Joi.validate(oldPassword, new PasswordComplexity(passwordComplex), (err, value) => {
+        if (err) throw usersController.getTextErrorPassword(passwordComplex)
 
-          return value
-        }
-      )
+        return value
+      }),
     }
   }
 }

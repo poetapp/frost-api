@@ -34,7 +34,7 @@ export class ForgotPassword implements ControllerApi {
     return {
       email: Joi.string()
         .email()
-        .required()
+        .required(),
     }
   }
 }

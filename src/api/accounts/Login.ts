@@ -31,7 +31,7 @@ export class Login implements ControllerApi {
       email: Joi.string()
         .email()
         .required(),
-      password: Joi.string().required()
+      password: Joi.string().required(),
     }
   }
 }
