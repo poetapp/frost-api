@@ -31,6 +31,12 @@ export class CreateWork implements ControllerApi {
     }
   }
 
+  validateOptions() {
+    return {
+      allowUnknown: true,
+    }
+  }
+
   validate() {
     return {
       name: Joi.string().required(),
