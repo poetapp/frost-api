@@ -1,10 +1,13 @@
 language: node_js
 node_js:
  - "9.4.0"
+before_install:
+  - npm install -g greenkeeper-lockfile@1
 services:
   - docker
   - rabbitmq
 before_script:
+  - greenkeeper-lockfile-update
   - cd ./Docker && sudo docker-compose up -d && cd ..
   - npm run build
   - npm run start:ci > /dev/null 2>&1 &
@@ -22,3 +25,5 @@ before_script:
 script:
   - npm run lint
   - cd ./frost-api-ci && npm run test
+after_script:
+  - greenkeeper-lockfile-upload
