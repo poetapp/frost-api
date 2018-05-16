@@ -1,5 +1,7 @@
 # Frost API
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/poetapp/frost-api.svg?token=09b815bf1efeccc8fdeee2e50782d0f0696ed88d6f3f232294f353c73804742a&ts=1525883681462)](https://greenkeeper.io/)
+
 [![Build Status](https://travis-ci.com/poetapp/frost-api.svg?token=FP3fasWY3bH5YsQqyXXz&branch=master)](https://travis-ci.com/poetapp/frost-api)
 
 Po.et API Layer for Publishers
