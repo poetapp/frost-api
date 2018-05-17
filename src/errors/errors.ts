@@ -5,13 +5,13 @@ export const errors = {
   },
   AuthenticationFailed: {
     code: 403,
-    message: `Server failed to authenticate the request. 
-      Make sure the value of the Authorization header is formed correctly 
+    message: `Server failed to authenticate the request.
+      Make sure the value of the Authorization header is formed correctly
       including the signature.`,
   },
   AccountNotVerify: {
     code: 409,
-    message: 'The specified account is not verified',
+    message: 'The specified account is not verified.',
   },
   InvalidInput: {
     code: 422,
@@ -31,7 +31,7 @@ export const errors = {
   },
   WorkError: {
     code: 400,
-    message: 'Could not create the work',
+    message: 'Could not create the work.',
   },
   WorkNotFound: {
     code: 400,
@@ -39,7 +39,7 @@ export const errors = {
   },
   InternalErrorExternalAPI: {
     code: 500,
-    message: 'The server encountered an internal error. Error parsing data external API. Please retry the request.',
+    message: 'The server encountered an internal error. Error parsing data from external API. Please retry the request.',
   },
   InvalidToken: {
     code: 422,
