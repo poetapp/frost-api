@@ -6,8 +6,8 @@
 
 Po.et API Layer for Publishers
 
-
 ---
+
 ## Guide
 
 - [API](#api)
@@ -26,8 +26,10 @@ Po.et API Layer for Publishers
 
 ## API
 
-Examaple with curl, you must to set $FROST_URL.
+For the examples with curl, you need to set $FROST_URL.
+
 ## Accounts
+
 ### Create account
 
 * **URL** /accounts
@@ -39,7 +41,7 @@ Examaple with curl, you must to set $FROST_URL.
         * Required
         * Security complexity
             - minimum **10**
-            - maximun **30**
+            - maximum **30**
             - lowercase **1**
             - uppercase **1**
             - numeric **1**
@@ -59,7 +61,6 @@ Examaple with curl, you must to set $FROST_URL.
     * Code: 500
     * Content 'The server encountered an internal error. Please retry the request.'
 
-
 **Example with curl**
 
 ```bash
@@ -67,7 +68,6 @@ Examaple with curl, you must to set $FROST_URL.
 curl -H "Content-Type: application/json" -X POST -d '{"email":"...","password":"..."}' $FROST_URL/accounts
 
 ```
-
 
 ### Login account
 
@@ -80,7 +80,7 @@ curl -H "Content-Type: application/json" -X POST -d '{"email":"...","password":"
         * Required
          * Security complexity
             - minimum **10**
-            - maximun **30**
+            - maximum **30**
             - lowercase **1**
             - uppercase **1**
             - numeric **1**
@@ -100,7 +100,6 @@ curl -H "Content-Type: application/json" -X POST -d '{"email":"...","password":"
     * Code: 500
     * Content 'The server encountered an internal error. Please retry the request.'
 
-
 **Example with curl**
 
 ```bash
@@ -111,7 +110,7 @@ curl -H "Content-Type: application/json" -X POST -d '{"email":"...","password":"
 
 ### Verify account
 
-When the user creates a new account the system automatically will send an email for the purpose to verify this email account. This e-mail contains a link, the user only need to click in there.
+When the user creates a new account the system automatically will send an email for the purpose of verifying the email address. This email contains a link, which the user only needs to click in order to verify the email address.
 
 * **URL** /accounts/verify
 * **Method** POST
@@ -126,7 +125,6 @@ When the user creates a new account the system automatically will send an email 
     * Code: 500
     * Content 'The server encountered an internal error. Please retry the request.'
 
-
 **Example with curl**
 
 ```bash
@@ -134,6 +132,8 @@ When the user creates a new account the system automatically will send an email 
 curl -H "Content-Type: application/json" -X POST -d '{"email":"..."}' $FROST_URL/accounts/verify
 
 ```
+
+Or the email verification token can be passed programatically to the server.
 
 * **URL** /accounts/verify/:token
 * **Method** GET
@@ -148,7 +148,6 @@ curl -H "Content-Type: application/json" -X POST -d '{"email":"..."}' $FROST_URL
     * Code: 500
     * Content 'The server encountered an internal error. Please retry the request.'
 
-
 **Example with curl**
 
 ```bash
@@ -156,7 +155,6 @@ curl -H "Content-Type: application/json" -X POST -d '{"email":"..."}' $FROST_URL
 curl -H "Content-Type: application/json" -X GET $FROST_URL/accounts/verify/$FROST_TOKEN_VERIFY
 
 ```
-
 
 ### Password reset
 
@@ -173,7 +171,6 @@ curl -H "Content-Type: application/json" -X GET $FROST_URL/accounts/verify/$FROS
     * Code: 500
     * Content 'The server encountered an internal error. Please retry the request.'
 
-
 **Example with curl**
 
 ```bash
@@ -184,7 +181,7 @@ curl -H "Content-Type: application/json" -X POST -d '{"email":"..."}' $FROST_URL
 
 ### Password change
 
-Require, log in and password verified.
+Requires an authentication token (has already logged in with verified password).
 
 * **URL** /password/change
 * **Method** POST
@@ -204,11 +201,10 @@ Require, log in and password verified.
     * Content 'One of the request inputs is not valid.'
 
     * Code: 409
-    * Content: 'The specified account does not verified'
+    * Content: 'The specified account is not verified.'
 
     * Code: 500
     * Content 'The server encountered an internal error. Please retry the request.'
-
 
 **Example with curl**
 
@@ -219,9 +215,10 @@ curl -H "Content-Type: application/json" -H "token: $FROST_TOKEN" -X POST -d '{"
 ```
 
 ## Works
+
 ### Create work
 
-Require, log in and password verified.
+Requires an authentication token (has already logged in with verified password).
 
 * **URL** /works
 * **Method** POST
@@ -248,7 +245,7 @@ Require, log in and password verified.
 
 * **Response error**
     * Code: 400
-    * Content 'Could not create the work'
+    * Content 'Could not create the work.'
 
     * Code: 403
     * Content 'Server failed to authenticate the request.
@@ -256,17 +253,16 @@ Require, log in and password verified.
       including the signature.'
 
     * Code: 409
-    * Content: 'The specified account does not verified'
+    * Content: 'The specified account is not verified.'
 
     * Code: 413
-    * Content: 'request entity too large'
+    * Content: 'Request entity is too large.'
 
     * Code: 422
     * Content 'One of the request inputs is not valid.'
 
     * Code: 500
     * Content 'The server encountered an internal error. Please retry the request.'
-
 
 **Example with curl**
 
@@ -278,7 +274,7 @@ curl -H "Content-Type: application/json" -H "token: $FROST_TOKEN" -X POST -d '{"
 
 ### Get all works
 
-Require, log in and password verified.
+Requires an authentication token (has already logged in with verified password).
 
 * **URL** /works
 * **Method** GET
@@ -296,11 +292,10 @@ Require, log in and password verified.
       including the signature.'
 
     * Code: 409
-    * Content: 'The specified account does not verified'
+    * Content: 'The specified account is not verified.'
 
     * Code: 500
     * Content 'The server encountered an internal error. Please retry the request.'
-
 
 **Example with curl**
 
@@ -310,10 +305,9 @@ curl -H "Content-Type: application/json" -H "token: $FROST_TOKEN" -X GET $FROST_
 
 ```
 
-
 ### Get work
 
-Require, log in and password verified.
+Requires an authentication token (has already logged in with verified password).
 
 * **URL** /works/:workId
 * **Method** GET
@@ -333,7 +327,6 @@ Require, log in and password verified.
     * Code: 500
     * Content 'The server encountered an internal error. Please retry the request.'
 
-
 **Example with curl**
 
 ```bash
@@ -341,9 +334,6 @@ Require, log in and password verified.
 curl -H "Content-Type: application/json" -H "token: $FROST_TOKEN" -X GET $FROST_URL/works/:workId
 
 ```
-
-
-
 
 ## [Vault](https://www.vaultproject.io/)
 
@@ -428,4 +418,3 @@ Warning, only use in developing mode
 curl -X DELETE 'http://localhost:8500/v1/kv/vault?recurse'
 
 ```
-
