@@ -19,11 +19,8 @@ before_script:
   - npm run build
   - npm start > /dev/null 2>&1 &
   - cd ..
-  - git clone git@github.com:poetapp/frost-api-ci.git
-  - cd frost-api-ci && npm install
-  - cd ..
 script:
   - npm run lint
-  - cd ./frost-api-ci && npm run test
+  - npm run test:integration
 after_script:
   - greenkeeper-lockfile-upload

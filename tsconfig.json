@@ -9,10 +9,15 @@
     "experimentalDecorators": true,
     "sourceMap": false,
     "outDir": "./dist",
-    "baseUrl": "src"
+    "baseUrl": "./src",
+    "paths": {
+      "test/*" : ["../test/*"],
+      "expect": ["../test/utils/expect"]
+    }
   },
   "include": [
     "./src/**/*",
-    "./typings/**/*"
+    "./typings/**/*",
+    "./test/**/*"
   ]
 }

@@ -39,7 +39,8 @@ export const errors = {
   },
   InternalErrorExternalAPI: {
     code: 500,
-    message: 'The server encountered an internal error. Error parsing data from external API. Please retry the request.',
+    message:
+      'The server encountered an internal error. Error parsing data from external API. Please retry the request.',
   },
   InvalidToken: {
     code: 422,

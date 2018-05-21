@@ -27,7 +27,6 @@ const {
 const mongodbUri = mongodbUrl
 
 const optionsMongoDB = {
-  useMongoClient: true,
   socketTimeoutMS: 0,
   keepAlive: 0,
   reconnectTries: 30,
