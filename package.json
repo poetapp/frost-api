@@ -83,6 +83,7 @@
     "maildev": "1.0.0-rc3",
     "mailparser": "2.2.0",
     "mocha": "5.1.1",
+    "nodemon": "1.17.4",
     "prettier": "1.12.1",
     "ts-node": "6.0.3",
     "tsconfig-paths": "2.4.0",
