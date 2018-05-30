@@ -1,0 +1,82 @@
+version: '2'
+services:
+  consul:
+    image: "consul:1.0.2"
+    container_name: "poet_consul"
+    hostname: "consul"
+    volumes:
+      - ./Docker/config/consul:/usr/share/consul
+      - ./Docker/tools/consul.sh:/consul.sh
+    ports:
+      - "8400:8400"
+      - "8500:8500"
+      - "8600:53/udp"
+    entrypoint: /consul.sh
+
+  vault:
+    image: "vault:0.9.0"
+    container_name: "poet_vault"
+    hostname: "vault"
+    links:
+      - "consul:consul"
+    environment:
+      VAULT_ADDR: http://127.0.0.1:8200
+    ports:
+      - "8200:8200"
+    depends_on:
+      - consul
+    volumes:
+      - ./Docker/tools/wait-for-it.sh:/wait-for-it.sh
+      - ./Docker/config/vault:/config
+      - ./Docker/config/vault/policies:/policies
+    entrypoint: /wait-for-it.sh -t 20 -h consul -p 8500 -s -- vault server -config=/config/vault.hcl
+
+  mongodb:
+      image: "mongo:3.4"
+      container_name: "poet_mongodb"
+      environment:
+        - MONGO_DATA_DIR=/data/db
+        - MONGO_LOG_DIR=/dev/null
+      volumes:
+        - ./Docker/data/db:/data/db
+      ports:
+          - "27017:27017"
+      command: mongod --smallfiles --logpath=/dev/null # --quiet
+
+  ipfs:
+      image: "ipfs/go-ipfs:latest"
+      container_name: "poet_ipfs"
+      ports:
+          - "8080:8080"
+          - "4001:4001"
+          - "5001:5001"
+
+  frost-api:
+      build:
+          context: .
+          dockerfile: Dockerfile.build
+      container_name: "poet_frost-api-build"
+      depends_on:
+          - mongodb
+          - ipfs
+          - vault
+      ports:
+          - "1080:1080"
+          - "1025:1025"
+          - "3000:3000"
+      network_mode: "host"
+
+  poet-node:
+      image: "poetapp/node:latest"
+      container_name: "poet_node"
+      ports:
+          - "18080:18080"
+      network_mode: "host"
+      depends_on:
+          - mongodb
+          - ipfs
+          - frost-api
+      environment:
+          - RABBITMQ_URL=amqp://localhost
+          - MONGODB_URL=mongodb://localhost:27017/poet
+          - IPFS_URL=http://localhost:5001
