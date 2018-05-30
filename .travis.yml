@@ -1,26 +1,29 @@
-language: node_js
-node_js:
- - "9.4.0"
-before_install:
-  - npm install -g greenkeeper-lockfile@1
+sudo: required
+dist: trusty
 services:
   - docker
   - rabbitmq
+before_install:
+  - pip install --user awscli
+  - export PATH=$PATH:$HOME/.local/bin
 before_script:
-  - greenkeeper-lockfile-update
-  - cd ./Docker && sudo docker-compose up -d && cd ..
-  - npm run build
-  - npm run start:ci > /dev/null 2>&1 &
-  - git clone git@github.com:poetapp/node.git
-  - cd ./node
-  - sudo make ipfs
-  - sleep 5
-  - npm install
-  - npm run build
-  - npm start > /dev/null 2>&1 &
-  - cd ..
+  - sudo apt-get update && sudo apt-get install nodejs npm
+  - npm install -g greenkeeper-lockfile@1
+  - sudo docker-compose -f ./docker-compose.yml up -d
 script:
-  - npm run lint
-  - npm run test:integration
+  - docker exec -it poet_frost-api-build npm run test:integration
 after_script:
   - greenkeeper-lockfile-upload
+after_success:
+  - COMMIT_HASH=$(git log -1 --pretty=%h)
+  - TAG_HASH=$(if [ "$TRAVIS_BRANCH" == "master" ]; then echo "${COMMIT_HASH}"; else echo "v-${COMMIT_HASH}-beta"; fi)
+  - TAG_BRANCH=$(if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo "$TRAVIS_BRANCH"; fi)
+  - eval $(aws ecr get-login --region us-east-1 --no-include-email) || travis_terminate 1
+  - docker cp poet_frost-api-build:/usr/src/app/api/dist ./api_dist
+  - docker cp poet_frost-api-build:/usr/src/app/api/node_modules ./api_node_modules
+  - docker build -t frost-api . || travis_terminate 1
+  - docker tag frost-api:latest $AWS_ECR:${TAG_BRANCH}
+  - docker tag frost-api:latest $AWS_ECR:${TAG_HASH}
+  - if [ -n "$TRAVIS_TAG" ]; then docker tag frost-api:latest $AWS_ECR:"$TRAVIS_TAG"; docker push $AWS_ECR:"$TRAVIS_TAG"; fi
+  - docker push $AWS_ECR:${TAG_BRANCH}
+  - docker push $AWS_ECR:${TAG_HASH}

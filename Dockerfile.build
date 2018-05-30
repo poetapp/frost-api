@@ -1,0 +1,14 @@
+FROM node:9.11.1
+
+RUN apt-get update && apt-get install -y \
+    rsync
+
+WORKDIR /usr/src/app/api
+
+COPY package*.json ./
+RUN npm i --quiet
+COPY . .
+RUN npm run build
+RUN npm run lint
+
+CMD [ "npm", "run", "start:ci" ]
