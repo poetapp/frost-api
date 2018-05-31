@@ -56,17 +56,17 @@ export const template = (link: string) => `
             <tr>
               <td style="padding: 0 10px">
                 <a href="https://twitter.com/_poetproject">
-                  <img width="35" src="https://po.et/img/twitter-logo.png">
+                  <img width="35" src="https://s3.amazonaws.com/poet-email/twitter.jpg">
                 </a>
               </td>
               <td style="padding: 0 10px">
                 <a href="https://github.com/poetapp">
-                  <img width="35" src="https://po.et/img/github-logo.png">
+                  <img width="35" src="https://s3.amazonaws.com/poet-email/github.jpg">
                 </a>
               </td>
               <td style="padding: 0 10px">
                 <a href="https://www.reddit.com/r/poetproject">
-                  <img width="35" src="https://po.et/img/reddit-logo.png">
+                  <img width="35" src="https://s3.amazonaws.com/poet-email/reddit.jpg">
                 </a>
               </td>
             </tr>
@@ -79,7 +79,7 @@ export const template = (link: string) => `
         <td style="line-height:0px; padding-bottom:35px; padding-top:0px; padding-left:4%; padding-right:4%;" align="center" valign="top"
           width="100%" class="">
           <span style="  margin-bottom:0px; margin-top:0px; font-family: Helvetica, Arial, sans-serif; font-size:12px; line-height:18px;  color:#524C46;">
-            © 2017
+            © ${new Date().getFullYear()}
             <a href="https://po.et/" target="_blank" style="color:#43B980; font-weight:bold; text-decoration:none;">Po.et</a>. All rights reserved.
           </span>
         </td>
