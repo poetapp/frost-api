@@ -70,7 +70,7 @@
     "@types/koa-bodyparser": "4.2.0",
     "@types/koa-router": "7.0.28",
     "@types/mocha": "5.2.1",
-    "@types/mongodb": "3.0.18",
+    "@types/mongodb": "3.0.19",
     "@types/mongoose": "5.0.13",
     "@types/node": "10.1.4",
     "@types/node-fetch": "1.6.9",
