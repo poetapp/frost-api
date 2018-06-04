@@ -54,7 +54,7 @@
     "poet-js": "1.0.3",
     "protobufjs": "6.8.6",
     "secure-password": "3.0.0",
-    "winston": "3.0.0-rc1"
+    "winston": "3.0.0-rc6"
   },
   "devDependencies": {
     "@po.et/frost-client": "0.1.7",
