@@ -14,7 +14,8 @@ export namespace Nodemailer {
     })
 
     const maildev = {
-      port: 1025,
+      host: process.env.MAILDEV_PORT_25_TCP_ADDR || 'localhost',
+      port: process.env.MAILDEV_PORT_25_TCP_PORT || 1025,
       ignoreTLS: true,
     }
 
