@@ -1,8 +1,8 @@
+import { WorkAttributes } from '@po.et/poet-js'
 import { errors } from '../../errors/errors'
 import { ControllerApi } from '../../interfaces/ControllerApi'
 import { WorksController } from '../../modules/Works/Works.controller'
 import { logger } from '../../utils/Logger/Logger'
-import { WorkAttributes } from '../../utils/PoetNode/Interfaces/Interfaces'
 export class GetWorks implements ControllerApi {
   async handler(ctx: any, next: any): Promise<any> {
     try {
