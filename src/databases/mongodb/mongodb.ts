@@ -13,9 +13,13 @@ export class MongoDB {
   public start() {
     return new Promise((resolve, reject) => {
       require('mongoose').Promise = this.options.promiseLibrary
-      mongoose.connect(this.mongodbUri, this.options, error => {
-        return error ? reject(error) : resolve()
-      })
+      mongoose.connect(
+        this.mongodbUri,
+        this.options,
+        error => {
+          return error ? reject(error) : resolve()
+        }
+      )
     }).catch(e => {
       throw e
     })
