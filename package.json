@@ -50,7 +50,7 @@
     "mongoose": "5.1.4",
     "node-fetch": "2.1.2",
     "node-vault": "0.8.0",
-    "nodemailer": "4.6.4",
+    "nodemailer": "4.6.6",
     "nodemailer-mandrill-transport": "1.2.0",
     "protobufjs": "6.8.6",
     "secure-password": "3.0.0",
