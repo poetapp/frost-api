@@ -54,7 +54,7 @@
     "nodemailer-mandrill-transport": "1.2.0",
     "protobufjs": "6.8.6",
     "secure-password": "3.0.0",
-    "winston": "3.0.0-rc6"
+    "winston": "3.0.0"
   },
   "devDependencies": {
     "@po.et/frost-client": "0.1.7",
