@@ -2,11 +2,13 @@ require('dotenv').config({ path: '.env' })
 import * as fs from 'fs'
 import * as Koa from 'koa'
 import * as bodyParser from 'koa-bodyparser'
+import * as helmet from 'koa-helmet'
 import * as cors from 'koa2-cors'
 import { Path } from './api/Path'
 import { routes } from './api/routes'
 import { configuration } from './configuration'
 import { MongoDB } from './databases/mongodb/mongodb'
+import { securityHeaders } from './securityHeaders'
 import { delay } from './utils/Delay/Delay'
 import { logger } from './utils/Logger/Logger'
 import { Nodemailer } from './utils/Nodemailer/Nodemailer'
@@ -172,6 +174,7 @@ const main = async () => {
     const app = new Koa()
 
     app
+      .use(helmet(securityHeaders))
       .use(
         cors({
           origin: (ctx: any, next: any) => (ctx.url.includes(Path.WORKS) ? '*' : false),
