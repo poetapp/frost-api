@@ -1,3 +1,4 @@
+language: node_js
 sudo: required
 dist: trusty
 services:
@@ -12,6 +13,7 @@ before_script:
   - sudo docker-compose -f ./docker-compose.yml up -d
   - greenkeeper-lockfile-update
 script:
+  - npm run test:unit
   - docker exec -it poet_frost-api-build npm run test:integration
 after_script:
   - greenkeeper-lockfile-upload
