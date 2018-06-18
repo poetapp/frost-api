@@ -1,9 +1,10 @@
 import { MongoClient } from 'mongodb'
+import { configuration } from './configuration'
 export class MongoDB {
   private url: string
 
   constructor() {
-    this.url = 'mongodb://localhost:27017/frost'
+    this.url = configuration.mongodbUrl
   }
 
   connect() {
