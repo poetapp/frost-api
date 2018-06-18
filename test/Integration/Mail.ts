@@ -1,5 +1,6 @@
 import * as fetch from 'isomorphic-fetch'
 import { promisify } from 'util'
+import { configuration } from './configuration'
 const delay = promisify(setTimeout)
 
 export enum Method {
@@ -12,7 +13,7 @@ export enum Method {
 
 export class Mail {
   public client: any
-  public host: string = 'http://localhost:1080'
+  public host: string = configuration.maildevUrl
   public timeout: number = 10
 
   async timeoutPromise(): Promise<Response> {
