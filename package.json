@@ -12,7 +12,8 @@
     "test:integration": "mocha --timeout 200000 --exit --require ts-node/register -r tsconfig-paths/register ./test/Integration/**/*.ts",
     "start": "node dist/src",
     "start:ci": "npm run maildev && EMAIL_TRANSPORT_MAIL_DEV=true node dist/src > /dev/null 2>&1",
-    "start:dev": "nodemon --watch src -L --exec 'ts-node --inspect=0.0.0.0:5858 -r tsconfig-paths/register --cache-directory .tscache' ./src/index.ts",
+    "start:dev": "npm run docker:dev && nodemon --watch src -L --exec 'ts-node --inspect=0.0.0.0:5858 -r tsconfig-paths/register --cache-directory .tscache' ./src/index.ts",
+    "docker:dev": "docker-compose -f ./Docker/docker-compose.development.yml up -d",
     "maildev": "maildev &",
     "precommit": "lint-staged"
   },
