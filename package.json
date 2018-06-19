@@ -75,7 +75,7 @@
     "@types/mocha": "5.2.2",
     "@types/mongodb": "3.0.19",
     "@types/mongoose": "5.0.16",
-    "@types/node": "10.3.3",
+    "@types/node": "10.3.4",
     "@types/node-fetch": "1.6.9",
     "@types/node-vault": "0.5.2",
     "@types/sinon": "5.0.1",
