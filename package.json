@@ -72,7 +72,7 @@
     "@types/koa": "2.0.46",
     "@types/koa-bodyparser": "5.0.0",
     "@types/koa-helmet": "3.1.2",
-    "@types/koa-router": "7.0.29",
+    "@types/koa-router": "7.0.30",
     "@types/mocha": "5.2.3",
     "@types/mongodb": "3.0.21",
     "@types/mongoose": "5.0.18",
