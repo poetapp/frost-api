@@ -91,7 +91,7 @@
     "nodemon": "1.17.4",
     "prettier": "1.13.5",
     "riteway": "2.0.4",
-    "sinon": "6.0.0",
+    "sinon": "6.0.1",
     "ts-node": "6.2.0",
     "tsconfig-paths": "3.4.1",
     "tslint-config-prettier": "1.12.0",
