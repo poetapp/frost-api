@@ -64,7 +64,7 @@
     "@po.et/tslint-rules": "1.2.0",
     "@types/bitcore-lib": "0.15.0",
     "@types/chai": "4.1.4",
-    "@types/cheerio": "0.22.7",
+    "@types/cheerio": "0.22.8",
     "@types/handlebars": "4.0.38",
     "@types/isomorphic-fetch": "0.0.34",
     "@types/joi": "13.3.0",
