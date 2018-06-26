@@ -50,7 +50,7 @@
     "koa-helmet": "4.0.0",
     "koa-router": "7.4.0",
     "koa2-cors": "2.0.5",
-    "mongoose": "5.1.6",
+    "mongoose": "5.1.7",
     "node-fetch": "2.1.2",
     "node-vault": "0.8.0",
     "nodemailer": "4.6.7",
