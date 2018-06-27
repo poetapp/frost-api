@@ -19,14 +19,13 @@ after_script:
   - greenkeeper-lockfile-upload
 after_success:
   - COMMIT_HASH=$(git log -1 --pretty=%h)
+  - REPO="poetapp/frost-api"
   - TAG_HASH=$(if [ "$TRAVIS_BRANCH" == "master" ]; then echo "${COMMIT_HASH}"; else echo "v-${COMMIT_HASH}-beta"; fi)
   - TAG_BRANCH=$(if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo "$TRAVIS_BRANCH"; fi)
-  - eval $(aws ecr get-login --region us-east-1 --no-include-email) || travis_terminate 1
   - docker cp poet_frost-api-build:/usr/src/app/api/dist ./api_dist
   - docker cp poet_frost-api-build:/usr/src/app/api/node_modules ./api_node_modules
-  - docker build -t frost-api . || travis_terminate 1
-  - docker tag frost-api:latest $AWS_ECR:${TAG_BRANCH}
-  - docker tag frost-api:latest $AWS_ECR:${TAG_HASH}
-  - if [ -n "$TRAVIS_TAG" ]; then docker tag frost-api:latest $AWS_ECR:"$TRAVIS_TAG"; docker push $AWS_ECR:"$TRAVIS_TAG"; fi
-  - docker push $AWS_ECR:${TAG_BRANCH}
-  - docker push $AWS_ECR:${TAG_HASH}
+  - docker login -u $DOCKER_USER -p $DOCKER_PASS
+  - docker build -t ${REPO}:${TAG_HASH} . || travis_terminate 1
+  - docker tag ${REPO}:${TAG_HASH} ${REPO}:${TAG_BRANCH}
+  - if [ -n "$TRAVIS_TAG" ]; then docker tag ${REPO}:${TAG_HASH} ${REPO}:"$TRAVIS_TAG"; fi
+  - docker push ${REPO}
