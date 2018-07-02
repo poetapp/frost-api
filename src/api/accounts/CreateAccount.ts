@@ -6,49 +6,46 @@ import { Token } from '../Tokens'
 import { getToken } from './utils/utils'
 
 import { configuration } from '../../configuration'
-import { ControllerApi } from '../../interfaces/ControllerApi'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
 import { logger } from '../../utils/Logger/Logger'
 import { Vault } from '../../utils/Vault/Vault'
 
 const { passwordComplex } = configuration
 
-export class CreateAccount implements ControllerApi {
-  async handler(ctx: any, next: any): Promise<any> {
-    try {
-      const user = ctx.request.body
-      const { email } = user
-      const apiToken = await getToken(email, Token.ApiKey)
-      user.apiTokens = [{ token: await Vault.encrypt(apiToken) }]
-      const usersController = new AccountsController()
+export const CreateAccountSchema = (values: { password: string }): object => {
+  const { password } = values
+  const usersController = new AccountsController()
 
-      await usersController.create(user)
+  return {
+    email: Joi.string()
+      .email()
+      .required(),
+    password: Joi.validate(password, new PasswordComplexity(passwordComplex), (err, value) => {
+      if (err) throw usersController.getTextErrorPassword(passwordComplex)
 
-      const sendEmail = new SendEmail(email)
-      const tokenVerifiedAccount = await getToken(email, Token.VerifyAccount)
-      await sendEmail.sendVerified(tokenVerifiedAccount)
-      const token = await getToken(email, Token.Login)
-      ctx.body = { token }
-    } catch (e) {
-      const { AccountAlreadyExists } = errors
-      logger.error('api.CreateAccount', e)
-      ctx.throw(AccountAlreadyExists.code, AccountAlreadyExists.message)
-    }
+      return value
+    }),
   }
+}
 
-  validate(values: any): object {
-    const { password } = values
+export const CreateAccount = () => async (ctx: any, next: any): Promise<any> => {
+  try {
+    const user = ctx.request.body
+    const { email } = user
+    const apiToken = await getToken(email, Token.ApiKey)
+    user.apiTokens = [{ token: await Vault.encrypt(apiToken) }]
     const usersController = new AccountsController()
 
-    return {
-      email: Joi.string()
-        .email()
-        .required(),
-      password: Joi.validate(password, new PasswordComplexity(passwordComplex), (err, value) => {
-        if (err) throw usersController.getTextErrorPassword(passwordComplex)
+    await usersController.create(user)
 
-        return value
-      }),
-    }
+    const sendEmail = new SendEmail(email)
+    const tokenVerifiedAccount = await getToken(email, Token.VerifyAccount)
+    await sendEmail.sendVerified(tokenVerifiedAccount)
+    const token = await getToken(email, Token.Login)
+    ctx.body = { token }
+  } catch (e) {
+    const { AccountAlreadyExists } = errors
+    logger.error('api.CreateAccount', e)
+    ctx.throw(AccountAlreadyExists.code, AccountAlreadyExists.message)
   }
 }

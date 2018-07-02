@@ -1,6 +1,6 @@
+import * as Joi from 'joi'
 import { verify } from 'jsonwebtoken'
 import { errors } from '../../errors/errors'
-import { ControllerApi } from '../../interfaces/ControllerApi'
 import { Accounts } from '../../modules/Accounts/Accounts.interface'
 import { logger } from '../../utils/Logger/Logger'
 import { Vault } from '../../utils/Vault/Vault'
@@ -19,48 +19,46 @@ const encryptApiTokens = async (tokens: ReadonlyArray<string>) => {
   return await Promise.all(allTokens)
 }
 
-export class RemoveToken implements ControllerApi {
-  async handler(ctx: any, next: any): Promise<any> {
-    const { ResourceNotFound } = errors
-    try {
-      const { user, jwtSecret } = ctx.state
-      const { tokenId } = ctx.params
+export const RemoveTokenSchema = () => ({
+  tokenId: Joi.string().required(),
+})
 
-      const apiTokensDecrypted = await decryptApiTokens(getApiTokens(user))
-      const apiTokensFiltered = apiTokensDecrypted.filter((token: string) => token !== tokenId)
+export const RemoveToken = () => async (ctx: any, next: any): Promise<any> => {
+  const { ResourceNotFound } = errors
+  try {
+    const { user, jwtSecret } = ctx.state
+    const { tokenId } = ctx.params
 
-      if (apiTokensDecrypted.length === apiTokensFiltered.length) {
-        ctx.status = ResourceNotFound.code
-        ctx.body = ResourceNotFound.message
-        return
-      }
+    const apiTokensDecrypted = await decryptApiTokens(getApiTokens(user))
+    const apiTokensFiltered = apiTokensDecrypted.filter((token: string) => token !== tokenId)
 
-      const { client_token } = verify(tokenId, jwtSecret, {
-        ignoreExpiration: true,
-      }) as {
-        email: string
-        client_token: string
-        iat: number
-      }
-
-      await Vault.revokeToken(client_token)
-
-      const apiTokensEncrypted = await encryptApiTokens(apiTokensFiltered)
-      const updateApiTokens = apiTokensEncrypted.map((token: string) => ({
-        token,
-      }))
-
-      user.apiTokens = updateApiTokens
-      user.save()
-
-      ctx.status = 200
-    } catch (e) {
-      logger.error('api.RemoveToken', e)
-      ctx.status = 500
+    if (apiTokensDecrypted.length === apiTokensFiltered.length) {
+      ctx.status = ResourceNotFound.code
+      ctx.body = ResourceNotFound.message
+      return
     }
-  }
 
-  validate() {
-    return {}
+    const { client_token } = verify(tokenId, jwtSecret, {
+      ignoreExpiration: true,
+    }) as {
+      email: string
+      client_token: string
+      iat: number
+    }
+
+    await Vault.revokeToken(client_token)
+
+    const apiTokensEncrypted = await encryptApiTokens(apiTokensFiltered)
+    const updateApiTokens = apiTokensEncrypted.map((token: string) => ({
+      token,
+    }))
+
+    user.apiTokens = updateApiTokens
+    user.save()
+
+    ctx.status = 200
+  } catch (e) {
+    logger.error('api.RemoveToken', e)
+    ctx.status = 500
   }
 }
