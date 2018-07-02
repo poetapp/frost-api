@@ -1,28 +1,30 @@
 import * as KoaRouter from 'koa-router'
 
-import { Route, Method } from '../utils/Route/Route'
 import { Path } from './Path'
 
 import { authorization } from '../middlewares/authorization'
 import { isLoggedIn } from '../middlewares/isLoggedIn'
 import { requireEmailVerified } from '../middlewares/requireEmailVerified'
-import { CreateAccount } from './accounts/CreateAccount'
-import { ForgotPassword } from './accounts/ForgotPassword'
+import { validate } from '../middlewares/validate'
+
+import { CreateAccount, CreateAccountSchema } from './accounts/CreateAccount'
+import { ForgotPassword, ForgotPasswordSchema } from './accounts/ForgotPassword'
 import { GetProfile } from './accounts/GetProfile'
-import { Login } from './accounts/Login'
-import { PasswordChange } from './accounts/PasswordChange'
-import { PasswordChangeToken } from './accounts/PasswordChangeToken'
+import { Login, LoginSchema } from './accounts/Login'
+import { PasswordChange, PasswordChangeSchema } from './accounts/PasswordChange'
+import { PasswordChangeToken, PasswordChangeTokenSchema } from './accounts/PasswordChangeToken'
 import { VerifyAccount } from './accounts/Verify'
 import { VerifyAccountToken } from './accounts/VerifyToken'
+
 import { CreateToken } from './tokens/CreateToken'
 import { GetToken } from './tokens/GetToken'
-import { RemoveToken } from './tokens/RemoveToken'
-import { CreateWork } from './works/CreateWork'
-import { GetWork } from './works/GetWork'
+import { RemoveToken, RemoveTokenSchema } from './tokens/RemoveToken'
+
+import { CreateWork, CreateWorkSchema } from './works/CreateWork'
+import { GetWork, GetWorkSchema } from './works/GetWork'
 import { GetWorks } from './works/GetWorks'
 
 const router = new KoaRouter()
-const route = new Route(router)
 
 router.use([Path.WORKS, Path.WORKS_WORKID], (ctx: any, next: any) => {
   ctx.set('Access-Control-Allow-Methods', 'POST,GET')
@@ -50,19 +52,21 @@ router.use([Path.WORKS, Path.WORKS_WORKID, Path.PASSWORD_CHANGE, Path.WORKS_WORK
 
 router.use([Path.TOKENS], isLoggedIn())
 
-route.set(Method.POST, Path.ACCOUNTS, new CreateAccount())
-route.set(Method.GET, Path.ACCOUNTS_PROFILE, new GetProfile())
-route.set(Method.POST, Path.ACCOUNTS_VERIFY, new VerifyAccount())
-route.set(Method.GET, Path.ACCOUNTS_VERIFY_TOKEN, new VerifyAccountToken())
-route.set(Method.POST, Path.LOGIN, new Login())
-route.set(Method.POST, Path.PASSWORD_RESET, new ForgotPassword())
-route.set(Method.POST, Path.PASSWORD_CHANGE_TOKEN, new PasswordChangeToken())
-route.set(Method.POST, Path.PASSWORD_CHANGE, new PasswordChange())
-route.set(Method.POST, Path.WORKS, new CreateWork())
-route.set(Method.GET, Path.WORKS, new GetWorks())
-route.set(Method.GET, Path.WORKS_WORKID, new GetWork())
-route.set(Method.GET, Path.TOKENS, new GetToken())
-route.set(Method.DEL, Path.TOKENS_TOKENID, new RemoveToken())
-route.set(Method.POST, Path.TOKENS, new CreateToken())
+router.post(Path.ACCOUNTS, validate({ body: CreateAccountSchema }), CreateAccount())
+router.post(Path.PASSWORD_RESET, validate({ body: ForgotPasswordSchema }), ForgotPassword())
+router.get(Path.ACCOUNTS_PROFILE, GetProfile())
+router.post(Path.LOGIN, validate({ body: LoginSchema }), Login())
+router.post(Path.PASSWORD_CHANGE, validate({ body: PasswordChangeSchema }), PasswordChange())
+router.post(Path.PASSWORD_CHANGE_TOKEN, validate({ body: PasswordChangeTokenSchema }), PasswordChangeToken())
+router.post(Path.ACCOUNTS_VERIFY, VerifyAccount())
+router.get(Path.ACCOUNTS_VERIFY_TOKEN, VerifyAccountToken())
+
+router.post(Path.TOKENS, CreateToken())
+router.get(Path.TOKENS, GetToken())
+router.del(Path.TOKENS_TOKENID, validate({ params: RemoveTokenSchema }), RemoveToken())
+
+router.post(Path.WORKS, validate({ body: CreateWorkSchema, options: { allowUnknown: true } }), CreateWork())
+router.get(Path.WORKS_WORKID, validate({ params: GetWorkSchema }), GetWork())
+router.get(Path.WORKS, GetWorks())
 
 export const routes = router
