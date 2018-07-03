@@ -34,13 +34,15 @@ describe('Forgot Password', function() {
     })
 
     describe('When a user tries to change his password and the account is already verified', function() {
+      const newPassword = 'Ae%12345678'
+
       it('Should log in with the new password and get a token', async function() {
         await createUserVerified(mail, frost)
         await mail.removeAll()
         await frost.sendEmailForgotPassword()
         const token = await getTokenResetPassword(mail)
-        await frost.changePasswordWithToken(token, 'Ae%12345678')
-        const response = await frost.login(email, 'Ae%12345678')
+        await frost.changePasswordWithToken(token, newPassword)
+        const response = await frost.login(email, newPassword)
 
         expect(response.token).to.be.a('string')
       })
@@ -50,7 +52,7 @@ describe('Forgot Password', function() {
         await mail.removeAll()
         await frost.sendEmailForgotPassword()
         const token = await getTokenResetPassword(mail)
-        await frost.changePasswordWithToken(token, 'Ae%12345678')
+        await frost.changePasswordWithToken(token, newPassword)
         await expect(frost.login(email, password)).to.be.throwWith(errorMessages.resourceNotExist)
       })
     })
