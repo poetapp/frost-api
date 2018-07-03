@@ -3,8 +3,8 @@ const PasswordComplexity = require('joi-password-complexity')
 import { configuration } from '../../configuration'
 import { errors } from '../../errors/errors'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
-import { Argon2 } from '../../utils/Argon2/Argon2'
 import { logger } from '../../utils/Logger/Logger'
+import { validate, verify } from '../../utils/Password'
 import { Token } from '../Tokens'
 
 const { passwordComplex } = configuration
@@ -39,11 +39,9 @@ export const PasswordChange = () => async (ctx: any, next: any): Promise<any> =>
     }
 
     const { password, oldPassword } = ctx.request.body
-    const argon2 = new Argon2()
 
-    await argon2.verify(oldPassword, user.password)
-
-    user.password = await argon2.hash(password)
+    await verify(oldPassword, user.password)
+    user.password = await validate(password)
     const usersController = new AccountsController()
     await usersController.update(user.id, user)
 
