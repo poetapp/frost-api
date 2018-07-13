@@ -47,8 +47,6 @@ describe('isPwned', async (should: any) => {
       .get(/.*/)
       .reply(404)
 
-    process.env.PWNEDCHECKER_ROOT = PWNEDCHECKER_ROOT
-
     assert({
       given: 'a known secure password',
       should: 'return false',

@@ -11,7 +11,7 @@ describe('hasher', async (should: any) => {
 
     assert({
       given: 'a password string',
-      should: 'return a hash as a string',
+      should: 'return a hash',
       actual: typeof actual,
       expected: 'object',
     })
