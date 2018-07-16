@@ -14,6 +14,7 @@ const {
   MAX_API_TOKENS,
   MAX_API_REQUEST_LIMIT_FORM,
   MAX_API_REQUEST_LIMIT_JSON,
+  PWNEDCHECKER_ROOT,
 } = process.env
 
 export const configuration = {
@@ -42,4 +43,5 @@ export const configuration = {
     numeric: 1,
     symbol: 1,
   },
+  PWNEDCHECKER_ROOT: PWNEDCHECKER_ROOT || '',
 }
