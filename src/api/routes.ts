@@ -4,6 +4,7 @@ import { Path } from './Path'
 
 import { authorization } from '../middlewares/authorization'
 import { isLoggedIn } from '../middlewares/isLoggedIn'
+import { monitor } from '../middlewares/monitor'
 import { requireEmailVerified } from '../middlewares/requireEmailVerified'
 import { validate } from '../middlewares/validate'
 
@@ -51,6 +52,9 @@ router.use(
 router.use([Path.WORKS, Path.WORKS_WORKID, Path.PASSWORD_CHANGE, Path.WORKS_WORKID], requireEmailVerified())
 
 router.use([Path.TOKENS], isLoggedIn())
+
+const secureKeys = ['password', 'token', 'tokenId']
+router.use(monitor(secureKeys))
 
 router.post(Path.ACCOUNTS, validate({ body: CreateAccountSchema }), CreateAccount())
 router.post(Path.PASSWORD_RESET, validate({ body: ForgotPasswordSchema }), ForgotPassword())
