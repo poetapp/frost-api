@@ -4,7 +4,7 @@ import { configuration } from '../../configuration'
 import { errors } from '../../errors/errors'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
 import { logger } from '../../utils/Logger/Logger'
-import { validate } from '../../utils/Password'
+import { processPassword } from '../../utils/Password'
 import { Vault } from '../../utils/Vault/Vault'
 import { Token } from '../Tokens'
 import { getToken } from './utils/utils'
@@ -36,7 +36,7 @@ export const PasswordChangeToken = () => async (ctx: any, next: any): Promise<an
     }
 
     const { password } = ctx.request.body
-    user.password = await validate(password)
+    user.password = await processPassword(password)
     const usersController = new AccountsController()
     await usersController.update(user.id, user)
     await Vault.revokeToken(tokenData.data.id)

@@ -7,11 +7,9 @@ const UNSAFE = 'Password is not safe'
 export const hasher = (password: string) =>
   new Promise((resolve, reject) => {
     securePassword().hash(Buffer.from(password), (err: any, hash: string) => (err ? reject(err) : resolve(hash)))
-  }).catch(e => {
-    throw e
   })
 
-export const validate = (password: string) =>
+export const processPassword = (password: string) =>
   Promise.all([isPwned(password), hasher(password)])
     .then(([isUnsafe, hashedPassword]) => {
       if (isUnsafe) throw new Error(UNSAFE)

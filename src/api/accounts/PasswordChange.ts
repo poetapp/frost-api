@@ -4,7 +4,7 @@ import { configuration } from '../../configuration'
 import { errors } from '../../errors/errors'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
 import { logger } from '../../utils/Logger/Logger'
-import { validate, verify } from '../../utils/Password'
+import { processPassword, verify } from '../../utils/Password'
 import { Token } from '../Tokens'
 
 const { passwordComplex } = configuration
@@ -41,7 +41,7 @@ export const PasswordChange = () => async (ctx: any, next: any): Promise<any> =>
     const { password, oldPassword } = ctx.request.body
 
     await verify(oldPassword, user.password)
-    user.password = await validate(password)
+    user.password = await processPassword(password)
     const usersController = new AccountsController()
     await usersController.update(user.id, user)
 
