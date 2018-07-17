@@ -10,11 +10,10 @@ export const hasher = (password: string) =>
   })
 
 export const processPassword = (password: string) =>
-  Promise.all([isPwned(password), hasher(password)])
-    .then(([isUnsafe, hashedPassword]) => {
-      if (isUnsafe) throw new Error(UNSAFE)
-      return hashedPassword
-    })
+  Promise.all([isPwned(password), hasher(password)]).then(([isUnsafe, hashedPassword]) => {
+    if (isUnsafe) throw new Error(UNSAFE)
+    return hashedPassword
+  })
 
 export const verify = (password: string, hash: string) => {
   const userPassword = Buffer.from(password)
@@ -25,4 +24,5 @@ export const verify = (password: string, hash: string) => {
       if (err) throw err
       result === securePassword.VALID ? resolve(true) : reject(INVALID)
     })
+  })
 }
