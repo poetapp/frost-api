@@ -195,4 +195,4 @@ const main = async () => {
   }
 }
 
-main()
+main().catch((e: { message: string }) => logger.log('error', e.message))
