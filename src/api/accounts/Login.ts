@@ -1,8 +1,8 @@
 import * as Joi from 'joi'
 import { errors } from '../../errors/errors'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
-import { Argon2 } from '../../utils/Argon2/Argon2'
 import { logger } from '../../utils/Logger/Logger'
+import { verify } from '../../utils/Password'
 import { Token } from '../Tokens'
 import { getToken } from './utils/utils'
 
@@ -18,10 +18,7 @@ export const Login = () => async (ctx: any, next: any) => {
     const user = ctx.request.body
     const usersController = new AccountsController()
     const response = await usersController.get(user.email)
-    const argon2 = new Argon2()
-
-    await argon2.verify(user.password, response.password)
-
+    await verify(user.password, response.password)
     const token = await getToken(user.email, Token.Login)
     ctx.body = { token }
   } catch (e) {
