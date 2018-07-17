@@ -15,9 +15,6 @@ export const processPassword = (password: string) =>
       if (isUnsafe) throw new Error(UNSAFE)
       return hashedPassword
     })
-    .catch((e: any) => {
-      throw e
-    })
 
 export const verify = (password: string, hash: string) => {
   const userPassword = Buffer.from(password)
@@ -28,7 +25,4 @@ export const verify = (password: string, hash: string) => {
       if (err) throw err
       result === securePassword.VALID ? resolve(true) : reject(INVALID)
     })
-  }).catch(e => {
-    throw e
-  })
 }
