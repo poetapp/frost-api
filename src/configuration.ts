@@ -43,5 +43,5 @@ export const configuration = {
     numeric: 1,
     symbol: 1,
   },
-  PWNEDCHECKER_ROOT: PWNEDCHECKER_ROOT || '',
+  pwnedCheckerRoot: PWNEDCHECKER_ROOT || '',
 }
