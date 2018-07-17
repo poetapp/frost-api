@@ -3,8 +3,8 @@ const PasswordComplexity = require('joi-password-complexity')
 import { configuration } from '../../configuration'
 import { errors } from '../../errors/errors'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
-import { Argon2 } from '../../utils/Argon2/Argon2'
 import { logger } from '../../utils/Logger/Logger'
+import { processPassword } from '../../utils/Password'
 import { Vault } from '../../utils/Vault/Vault'
 import { Token } from '../Tokens'
 import { getToken } from './utils/utils'
@@ -36,9 +36,7 @@ export const PasswordChangeToken = () => async (ctx: any, next: any): Promise<an
     }
 
     const { password } = ctx.request.body
-    const argon2 = new Argon2(password)
-
-    user.password = await argon2.hash()
+    user.password = await processPassword(password)
     const usersController = new AccountsController()
     await usersController.update(user.id, user)
     await Vault.revokeToken(tokenData.data.id)
