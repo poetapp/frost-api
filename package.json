@@ -89,7 +89,7 @@
     "maildev": "1.0.0-rc3",
     "mailparser": "2.2.0",
     "mocha": "5.1.1",
-    "nock": "9.4.1",
+    "nock": "9.4.3",
     "nodemon": "1.18.3",
     "prettier": "1.13.7",
     "riteway": "2.0.4",
