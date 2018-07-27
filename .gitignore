@@ -7,3 +7,6 @@ temp.text
 Docker/data
 .env
 vault.json
+.coverage-integration
+.coverage-unit
+.nyc_output
