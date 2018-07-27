@@ -13,8 +13,7 @@ before_script:
   - sudo docker-compose -f ./docker-compose.yml up -d
   - greenkeeper-lockfile-update
 script:
-  - npm run test:unit
-  - docker exec -it poet_frost-api-build npm run test:integration
+  - docker exec -it poet_frost-api-build npm run coverage
 after_script:
   - greenkeeper-lockfile-upload
 after_success:
