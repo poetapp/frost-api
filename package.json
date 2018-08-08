@@ -92,7 +92,7 @@
     "maildev": "1.0.0-rc3",
     "mailparser": "2.3.0",
     "mocha": "5.1.1",
-    "nock": "9.5.0",
+    "nock": "9.6.0",
     "nodemon": "1.18.3",
     "nyc": "github:poetapp/nyc#fbc2ed1",
     "prettier": "1.14.1",
