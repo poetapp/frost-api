@@ -1,6 +1,7 @@
 import '../../src/feature-toggles/configure-koa-handler.test'
 import '../../src/middlewares/isLoggedIn.test'
 import '../../src/middlewares/monitor.test'
+import '../../src/middlewares/requireEmailVerified.test'
 import '../../src/middlewares/validate.test'
 import '../../src/securityHeaders.test'
 import '../../src/utils/Delay/Delay.test'

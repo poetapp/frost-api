@@ -6,6 +6,7 @@ export const requireEmailVerified = () => {
     try {
       const { AccountNotVerify } = errors
       const { user } = ctx.state
+
       if (user.verified) return next()
       else {
         ctx.status = AccountNotVerify.code
