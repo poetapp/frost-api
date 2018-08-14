@@ -58,6 +58,13 @@ For the examples with curl, you need to set $FROST_URL.
 
 ## Accounts
 
+### Health check
+
+* **URL** /health
+* **Method** GET
+* **Response success**
+    * Code: 200
+
 ### Create account
 
 * **URL** /accounts
