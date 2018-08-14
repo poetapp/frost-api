@@ -1,3 +1,4 @@
+import '../../src/api/health/GetHealth.test'
 import '../../src/feature-toggles/configure-koa-handler.test'
 import '../../src/middlewares/isLoggedIn.test'
 import '../../src/middlewares/monitor.test'

@@ -17,6 +17,8 @@ import { PasswordChangeToken, PasswordChangeTokenSchema } from './accounts/Passw
 import { VerifyAccount } from './accounts/Verify'
 import { VerifyAccountToken } from './accounts/VerifyToken'
 
+import { GetHealth } from './health/GetHealth'
+
 import { CreateToken } from './tokens/CreateToken'
 import { GetToken } from './tokens/GetToken'
 import { RemoveToken, RemoveTokenSchema } from './tokens/RemoveToken'
@@ -67,6 +69,7 @@ router.get(Path.ACCOUNTS_VERIFY_TOKEN, VerifyAccountToken())
 
 router.post(Path.TOKENS, CreateToken())
 router.get(Path.TOKENS, GetToken())
+router.get(Path.HEALTH, GetHealth())
 router.del(Path.TOKENS_TOKENID, validate({ params: RemoveTokenSchema }), RemoveToken())
 
 router.post(Path.WORKS, validate({ body: CreateWorkSchema, options: { allowUnknown: true } }), CreateWork())
