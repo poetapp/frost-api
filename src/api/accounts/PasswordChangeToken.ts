@@ -1,5 +1,7 @@
 import * as Joi from 'joi'
+import { isNil, path } from 'ramda'
 const PasswordComplexity = require('joi-password-complexity')
+
 import { configuration } from '../../configuration'
 import { errors } from '../../errors/errors'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
@@ -24,12 +26,21 @@ export const PasswordChangeTokenSchema = (values: { password: string }) => {
   }
 }
 
+export const tokenMatch = (expected: any) => (actual: any) => {
+  const expectedVal = path(['meta', 'name'], expected)
+  const actualVal = path(['data', 'meta', 'name'], actual)
+
+  return isNil(expectedVal) || isNil(actualVal) ? false : expectedVal === actualVal
+}
+
+const hasForgotPasswordToken = tokenMatch(Token.ForgotPassword)
+
 export const PasswordChangeToken = () => async (ctx: any, next: any): Promise<any> => {
   const { InvalidInput, InternalError } = errors
   try {
     const { user, tokenData } = ctx.state
 
-    if (tokenData.data.meta.name !== Token.ForgotPassword.meta.name) {
+    if (!hasForgotPasswordToken(tokenData)) {
       ctx.status = InternalError.code
       ctx.body = InternalError.message
       return
