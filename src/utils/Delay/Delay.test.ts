@@ -20,19 +20,4 @@ describe('Delay', async (should: any) => {
       expected: true,
     })
   }
-
-  {
-    const timeToDelay = 10
-
-    const timeBeforeDelay = new Date().getTime()
-    await delay(timeToDelay)
-    const timeAfterDelay = new Date().getTime()
-
-    assert({
-      given: 'a time in milliseconds',
-      should: 'resolve after the given time',
-      actual: timeBeforeDelay + timeToDelay <= timeAfterDelay,
-      expected: true,
-    })
-  }
 })
