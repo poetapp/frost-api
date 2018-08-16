@@ -6,14 +6,14 @@ import { Vault } from '../utils/Vault/Vault'
 
 const { AuthenticationFailed, ExpiredToken, InvalidToken } = errors
 
+export const extractToken = (ctx: any) => (ctx.header.token ? ctx.header.token : ctx.params.token)
+
 export const authorization = () => {
   return async (ctx: any, next: any) => {
     try {
       const secret = await Vault.readSecret('frost')
       const { jwt } = secret.data
-
-      const token = ctx.header.token ? ctx.header.token : ctx.params.token
-      const decoded = verify(token, jwt)
+      const decoded = verify(extractToken(ctx), jwt)
       const { client_token, email } = decoded as any
 
       const tokenData = await Vault.verifyToken(client_token)

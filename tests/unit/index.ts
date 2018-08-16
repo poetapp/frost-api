@@ -1,5 +1,6 @@
 import '../../src/api/health/GetHealth.test'
 import '../../src/feature-toggles/configure-koa-handler.test'
+import '../../src/middlewares/authorization.test'
 import '../../src/middlewares/isLoggedIn.test'
 import '../../src/middlewares/monitor.test'
 import '../../src/middlewares/requireEmailVerified.test'
