@@ -6,27 +6,28 @@ import { SendEmail } from '../../utils/SendEmail/SendEmail'
 import { Token } from '../Tokens'
 import { getToken } from './utils/utils'
 
+const { ResourceNotFound } = errors
+
 export const ForgotPasswordSchema = () => ({
   email: Joi.string()
     .email()
     .required(),
 })
 
+export const setResponseStatus = (isOk: boolean) => (isOk ? 200 : ResourceNotFound.code)
+
 export const ForgotPassword = () => async (ctx: any, next: any): Promise<any> => {
   try {
     const { email } = ctx.request.body
     const usersController = new AccountsController()
     const user = await usersController.get(email)
-    const { ResourceNotFound } = errors
+
+    ctx.status = setResponseStatus(!!user)
     if (user) {
       const sendEmail = new SendEmail(email)
       const token = await getToken(email, Token.ForgotPassword)
       await sendEmail.sendForgotPassword(token)
-      ctx.status = 200
-    } else {
-      ctx.status = ResourceNotFound.code
-      ctx.body = ResourceNotFound.message
-    }
+    } else ctx.body = ResourceNotFound.message
   } catch (e) {
     const { InternalError } = errors
     logger.error('api.ForgotPassword', e)
