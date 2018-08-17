@@ -1,3 +1,5 @@
+import { lte } from 'ramda'
+
 import { configuration } from '../../configuration'
 import { errors } from '../../errors/errors'
 import { logger } from '../../utils/Logger/Logger'
@@ -5,13 +7,14 @@ import { Vault } from '../../utils/Vault/Vault'
 import { Token } from '../Tokens'
 import { getToken } from '../accounts/utils/utils'
 
+const tooManyApiTokens = lte(configuration.maxApiTokens)
+
 export const CreateToken = () => async (ctx: any, next: any): Promise<any> => {
   const { MaximumApiTokensLimitReached } = errors
   try {
     const { user } = ctx.state
-    const { maxApiTokens } = configuration
 
-    if (user.apiTokens.length >= maxApiTokens) {
+    if (tooManyApiTokens(user.apiTokens.length)) {
       ctx.status = MaximumApiTokensLimitReached.code
       ctx.body = MaximumApiTokensLimitReached.message
       return

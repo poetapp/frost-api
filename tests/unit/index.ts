@@ -1,6 +1,7 @@
 import '../../src/api/accounts/ForgotPassword.test'
 import '../../src/api/accounts/PasswordChangeToken.test'
 import '../../src/api/health/GetHealth.test'
+import '../../src/api/tokens/CreateToken.test'
 import '../../src/feature-toggles/configure-koa-handler.test'
 import '../../src/middlewares/authorization.test'
 import '../../src/middlewares/isLoggedIn.test'
