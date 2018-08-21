@@ -1,4 +1,5 @@
 import '../../src/api/accounts/ForgotPassword.test'
+import '../../src/api/accounts/GetProfile.test'
 import '../../src/api/accounts/PasswordChangeToken.test'
 import '../../src/api/health/GetHealth.test'
 import '../../src/api/tokens/CreateToken.test'

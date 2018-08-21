@@ -3,8 +3,9 @@ import { logger } from '../../utils/Logger/Logger'
 
 export const GetProfile = () => async (ctx: any, next: any) => {
   try {
-    const { user } = ctx.state
-    const { createdAt, verified, email } = user
+    const {
+      user: { createdAt, verified, email },
+    } = ctx.state
     ctx.body = { createdAt, verified, email }
   } catch (e) {
     const { InternalError } = errors
