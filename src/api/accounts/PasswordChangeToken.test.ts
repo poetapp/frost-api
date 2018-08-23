@@ -11,7 +11,7 @@ describe('tokenMatch()', async (should: any) => {
     assert({
       given: 'meta.name properties that match',
       should: 'return true',
-      actual: tokenMatch(targetToken)(tokenData),
+      actual: tokenMatch(targetToken)(tokenData.data),
       expected: true,
     })
   }
@@ -23,7 +23,7 @@ describe('tokenMatch()', async (should: any) => {
     assert({
       given: 'meta.name properties that do not match',
       should: 'return false',
-      actual: tokenMatch(targetToken)(tokenData),
+      actual: tokenMatch(targetToken)(tokenData.data),
       expected: false,
     })
   }
@@ -35,7 +35,7 @@ describe('tokenMatch()', async (should: any) => {
     assert({
       given: 'token data without a name property',
       should: 'return false',
-      actual: tokenMatch(targetToken)(tokenData),
+      actual: tokenMatch(targetToken)(tokenData.data),
       expected: false,
     })
   }
@@ -47,7 +47,7 @@ describe('tokenMatch()', async (should: any) => {
     assert({
       given: 'target token data without a name property',
       should: 'return false',
-      actual: tokenMatch(targetToken)(tokenData),
+      actual: tokenMatch(targetToken)(tokenData.data),
       expected: false,
     })
   }
