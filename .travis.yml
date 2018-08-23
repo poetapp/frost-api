@@ -17,14 +17,12 @@ script:
 after_script:
   - greenkeeper-lockfile-upload
 after_success:
-  - COMMIT_HASH=$(git log -1 --pretty=%h)
-  - REPO="poetapp/frost-api"
-  - TAG_HASH=$(if [ "$TRAVIS_BRANCH" == "master" ]; then echo "${COMMIT_HASH}"; else echo "v-${COMMIT_HASH}-beta"; fi)
-  - TAG_BRANCH=$(if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo "$TRAVIS_BRANCH"; fi)
+  - export REPO=poetapp/frost-api
+  - export TAG=v-$(git log -1 --pretty=%h)-beta
   - docker cp poet_frost-api-build:/usr/src/app/api/dist ./api_dist
   - docker cp poet_frost-api-build:/usr/src/app/api/node_modules ./api_node_modules
   - docker login -u $DOCKER_USER -p $DOCKER_PASS
-  - docker build -t ${REPO}:${TAG_HASH} . || travis_terminate 1
-  - docker tag ${REPO}:${TAG_HASH} ${REPO}:${TAG_BRANCH}
-  - if [ -n "$TRAVIS_TAG" ]; then docker tag ${REPO}:${TAG_HASH} ${REPO}:"$TRAVIS_TAG"; fi
-  - docker push ${REPO}
+  - docker build -t $REPO:${TAG} .
+  - if [ "$TRAVIS_BRANCH" == "master" && $TRAVIS_PULL_REQUEST_BRANCH = "" ]; then docker tag $REPO:${TAG} $REPO:latest; fi
+  - if [ -n "$TRAVIS_TAG" ]; then docker tag $REPO:${TAG} $REPO:${TRAVIS_TAG}; fi
+  - docker push $REPO
