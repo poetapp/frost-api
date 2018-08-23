@@ -1,7 +1,7 @@
 {
-  "name": "api",
+  "name": "frost-api",
   "version": "1.0.0",
-  "description": "Po.et API Layer for Publishers",
+  "description": "Po.et's API layer for publishers",
   "main": "index.js",
   "scripts": {
     "build": "tsc",
@@ -28,15 +28,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/poetapp/api.git"
+    "url": "git+https://github.com/poetapp/frost-api.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/poetapp/api/issues"
+    "url": "https://github.com/poetapp/frost-api/issues"
   },
-  "homepage": "https://github.com/poetapp/api#readme",
   "dependencies": {
     "@paralleldrive/feature-toggles": "1.0.3",
     "@po.et/poet-js": "2.0.0",
