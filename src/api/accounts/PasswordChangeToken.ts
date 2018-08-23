@@ -28,7 +28,7 @@ export const PasswordChangeTokenSchema = (values: { password: string }) => {
 
 export const tokenMatch = (expected: any) => (actual: any) => {
   const expectedVal = path(['meta', 'name'], expected)
-  const actualVal = path(['data', 'meta', 'name'], actual)
+  const actualVal = path(['meta', 'name'], actual)
 
   return isNil(expectedVal) || isNil(actualVal) ? false : expectedVal === actualVal
 }
@@ -40,7 +40,7 @@ export const PasswordChangeToken = () => async (ctx: any, next: any): Promise<an
   try {
     const { user, tokenData } = ctx.state
 
-    if (!hasForgotPasswordToken(tokenData)) {
+    if (!hasForgotPasswordToken(tokenData.data)) {
       ctx.status = InternalError.code
       ctx.body = InternalError.message
       return
