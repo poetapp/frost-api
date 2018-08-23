@@ -1,5 +1,4 @@
 import * as Joi from 'joi'
-import { isNil, path } from 'ramda'
 const PasswordComplexity = require('joi-password-complexity')
 
 import { configuration } from '../../configuration'
@@ -9,7 +8,7 @@ import { logger } from '../../utils/Logger/Logger'
 import { processPassword } from '../../utils/Password'
 import { Vault } from '../../utils/Vault/Vault'
 import { Token } from '../Tokens'
-import { getToken } from './utils/utils'
+import { getToken, tokenMatch } from './utils/utils'
 
 const { passwordComplex } = configuration
 
@@ -24,13 +23,6 @@ export const PasswordChangeTokenSchema = (values: { password: string }) => {
       return value
     }),
   }
-}
-
-export const tokenMatch = (expected: any) => (actual: any) => {
-  const expectedVal = path(['meta', 'name'], expected)
-  const actualVal = path(['meta', 'name'], actual)
-
-  return isNil(expectedVal) || isNil(actualVal) ? false : expectedVal === actualVal
 }
 
 const hasForgotPasswordToken = tokenMatch(Token.ForgotPassword)
