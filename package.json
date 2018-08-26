@@ -77,7 +77,7 @@
     "@types/koa-router": "7.0.31",
     "@types/mocha": "5.2.3",
     "@types/mongodb": "3.1.4",
-    "@types/mongoose": "5.2.6",
+    "@types/mongoose": "5.2.7",
     "@types/node": "10.9.1",
     "@types/node-fetch": "1.6.9",
     "@types/node-vault": "0.5.3",
