@@ -7,15 +7,11 @@ services:
 before_install:
   - pip install --user awscli
   - export PATH=$PATH:$HOME/.local/bin
-  - npm install -g greenkeeper-lockfile@1
 before_script:
   - sudo apt-get update && sudo apt-get install nodejs npm
   - sudo docker-compose -f ./docker-compose.yml up -d
-  - greenkeeper-lockfile-update
 script:
   - docker exec -it poet_frost-api-build npm run coverage
-after_script:
-  - greenkeeper-lockfile-upload
 after_success:
   - export REPO=poetapp/frost-api
   - export TAG=v-$(git log -1 --pretty=%h)-beta

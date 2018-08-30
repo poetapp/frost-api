@@ -1,6 +1,6 @@
 # Frost API
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/poetapp/frost-api.svg?token=09b815bf1efeccc8fdeee2e50782d0f0696ed88d6f3f232294f353c73804742a&ts=1525883681462)](https://greenkeeper.io/) [![Build Status](https://travis-ci.com/poetapp/frost-api.svg?token=FP3fasWY3bH5YsQqyXXz&branch=master)](https://travis-ci.com/poetapp/frost-api)
+[![Build Status](https://travis-ci.com/poetapp/frost-api.svg?token=FP3fasWY3bH5YsQqyXXz&branch=master)](https://travis-ci.com/poetapp/frost-api)
 
 Po.et API Layer for Publishers
 
@@ -44,7 +44,7 @@ npm i
 #### How to Run Frost API (development mode)
 
 Behind-scenes: When you start with development mode. This command will run all dependencies are needed for Frost API.
-Docker Compose will start MongoDB, Consul, Vault and Po.et Node. The Frost API will work with Nodemon and you have the 
+Docker Compose will start MongoDB, Consul, Vault and Po.et Node. The Frost API will work with Nodemon and you have the
 ability to debug in the 5858 port also. If you are a user of VScode, the settings are ready.
 
 
