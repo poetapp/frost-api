@@ -52,7 +52,7 @@
     "@paralleldrive/feature-toggles": "1.0.3",
     "@po.et/poet-js": "2.0.0",
     "bitcore-lib": "0.15.0",
-    "body-parser": "1.18.2",
+    "body-parser": "1.18.3",
     "cli-box": "6.0.8",
     "console.table": "0.10.0",
     "dotenv": "6.0.0",
