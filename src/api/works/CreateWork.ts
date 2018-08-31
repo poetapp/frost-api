@@ -24,7 +24,7 @@ export const CreateWork = () => async (ctx: any, next: any): Promise<any> => {
     const newWork = ctx.request.body
     const privateKey = await Vault.decrypt(user.privateKey)
     const work = new WorksController(privateKey, newWork)
-    const claim = work.generateClaim()
+    const claim = await work.generateClaim()
 
     try {
       await work.create(claim)
