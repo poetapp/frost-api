@@ -76,7 +76,7 @@
     "winston": "3.0.0"
   },
   "devDependencies": {
-    "@po.et/frost-client": "0.1.8",
+    "@po.et/frost-client": "1.1.0",
     "@po.et/tslint-rules": "1.4.1",
     "@types/bitcore-lib": "0.15.1",
     "@types/chai": "4.1.4",
