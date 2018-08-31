@@ -4,21 +4,20 @@ dist: trusty
 services:
   - docker
   - rabbitmq
-before_install:
-  - pip install --user awscli
-  - export PATH=$PATH:$HOME/.local/bin
+env:
+  - REPO=poetapp/frost-api
 before_script:
-  - sudo apt-get update && sudo apt-get install nodejs npm
   - sudo docker-compose -f ./docker-compose.yml up -d
 script:
   - docker exec -it poet_frost-api-build npm run coverage
-after_success:
-  - export REPO=poetapp/frost-api
-  - export TAG=v-$(git log -1 --pretty=%h)-beta
-  - docker cp poet_frost-api-build:/usr/src/app/api/dist ./api_dist
-  - docker cp poet_frost-api-build:/usr/src/app/api/node_modules ./api_node_modules
-  - docker login -u $DOCKER_USER -p $DOCKER_PASS
-  - docker build -t $REPO:${TAG} .
-  - if [ "$TRAVIS_BRANCH" == "master" && $TRAVIS_PULL_REQUEST_BRANCH = "" ]; then docker tag $REPO:${TAG} $REPO:latest; fi
-  - if [ -n "$TRAVIS_TAG" ]; then docker tag $REPO:${TAG} $REPO:${TRAVIS_TAG}; fi
-  - docker push $REPO
+before_deploy:
+  - bash ./scripts/docker-build.sh
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script: 
+      - bash ./scripts/docker-push.sh
+    on:
+      all_branches: true
+after_deploy:
+  - npm run travis-deploy-once "npm run semantic-release"
