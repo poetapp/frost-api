@@ -60,7 +60,7 @@
     "joi": "13.6.0",
     "joi-password-complexity": "2.0.1",
     "jsonwebtoken": "8.3.0",
-    "koa": "2.5.2",
+    "koa": "2.5.3",
     "koa-bodyparser": "4.2.1",
     "koa-helmet": "4.0.0",
     "koa-router": "7.4.0",
