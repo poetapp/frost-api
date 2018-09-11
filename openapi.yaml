@@ -1,0 +1,270 @@
+openapi: 3.0.1
+info:
+  version: '1.0.0'
+  title: 'Frost API'
+  description: 'OpenAPI description of the Frost API'
+servers:
+  - description: Production
+    url: https://api.frost.po.et
+  - description: Staging
+    url: https://frost-api.staging.po.et
+paths:
+  /health:
+    get:
+      operationId: healthCheck
+      summary: An API health check that returns an OK if all is well.
+      responses: 
+        '200':
+          description: OK
+  /accounts:
+    post:
+      operationId: createAccount
+      summary: Create a new account in Frost.
+      description: <b>Email</b> required (must be a valid email address format)<br> <b>Password</b> required (minimum 10 characters, maximum 30 characters, 1 lowercase, 1 uppercase, 1 numeric, 1 symbol)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+            example:
+              email: 'frost@po.et'
+              password: 'gk&dkE23mLk2('
+      responses:
+        '200':
+          description: "{ token: '12345abcde6789FGHI'}"
+        '409':
+          description: The specified account already exists.
+        '422':
+          description: One of the request inputs is not valid.
+        '500':
+          description: The server encountered an internal error. Please retry the request.
+  /accounts/verify/{token}:
+    get:
+      operationId: verifyAccount
+      summary: Verify email address by confirming receipt of a token.
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+            minimum: 1
+      responses:
+        '200':
+          description: OK
+        '500':
+          description: The server encountered an internal error. Please retry the request.
+  /login:
+    post:
+      operationId: loginAccount
+      summary: Login to receive an access token for the API.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+            example:
+              email: 'frost@po.et'
+              password: 'fRoStPa$$w0rD'
+      responses:
+        '200':
+          description: "{ token: '12345abcde6789FGHI'}"
+        '400':
+          description: The specified resource does not exist.
+        '422':
+          description: One of the request inputs is not valid.
+        '500':
+          description: The server encountered an internal error. Please retry the request.
+  /password/reset:
+    post:
+      operationId: passwordReset
+      summary: Reset account password if lost/forgotten.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - 'email'
+              properties:
+                email:
+                  type: string
+            example:
+              email: 'frost@po.et'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: The specified resource does not exist.
+        '500':
+          description: The server encountered an internal error. Please retry the request.
+  /password/change:
+    post:
+      operationId: passwordChange
+      security:
+        - ApiKeyAuth: []
+      summary: Change account password.
+      parameters:
+        - in: header
+          name: token
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - 'password'
+                - 'oldPassword'
+              properties:
+                password:
+                  type: string
+                oldPassword:
+                  type: string
+            example:
+              password: 'NeWpA$sw0rd'
+              oldPassword: 'OlDpa$sw0rd'
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: Server failed to authenticate the request. Make sure the value of the Authorization header is formed correctly including the signature.
+        '409':
+          description: The specified account is not verified.
+        '422':
+          description: One of the request inputs is not valid.
+        '500':
+          description: The server encountered an internal error. Please retry the request.
+  /works:
+    post:
+      operationId: createWork
+      security:
+        - ApiKeyAuth: []
+      summary: Add a new work to the Po.et Network.
+      parameters:
+        - in: header
+          name: token
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Work'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Could not create the work.
+        '403':
+          description: Server failed to authenticate the request. Make sure the value of the Authorization header is formed correctly including the signature.
+        '409':
+          description: The specified account is not verified.
+        '413':
+          description: Request entity is too large.
+        '422':
+          description: One of the request inputs is not valid.
+        '500':
+          description: The server encountered an internal error. Please retry the request.
+    get:
+      operationId: getAllWorks
+      security:
+        - ApiKeyAuth: []
+      summary: Returns an array of all works created by the account.
+      parameters:
+          - in: header
+            name: token
+            schema:
+              type: string
+            required: true
+      responses: 
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Works'
+        '403':
+          description: Server failed to authenticate the request. Make sure the value of the Authorization header is formed correctly including the signature.
+        '409':
+          description: The specified account is not verified.
+        '500':
+          description: The server encountered an internal error. Please retry the request.
+  /works/{workId}:
+    get:
+      operationId: getWork
+      security:
+        - ApiKeyAuth: []
+      summary: Returns a work by Id.
+      parameters:
+        - in: path
+          name: workId
+          schema:
+            type : string
+            minimum: 1
+          required: true
+        - in: header
+          name: token
+          schema:
+            type: string
+          required: true
+      responses: 
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Work'
+        '403':
+          description: Server failed to authenticate the request. Make sure the value of the Authorization header is formed correctly including the signature.
+        '409':
+          description: The specified account is not verified.
+        '500':
+          description: The server encountered an internal error. Please retry the request.
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: token
+  schemas:
+    Account:
+      type: object
+      required:
+        - 'email'
+        - 'password'
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    Work:
+      type: 'object'
+      required:
+        - 'name'
+        - 'datePublished'
+        - 'dateCreated'
+        - 'author'
+        - 'content'
+      properties:
+        name:
+          type: string
+        datePublished:
+          type: string
+          format: date-time
+        dateCreated:
+          type: string
+          format: date-time
+        author:
+          type: string
+        tags:
+          type: string
+        content:
+          type: string
+    Works:
+      type: 'array'
+      items:
+        $ref: '#/components/schemas/Work'
