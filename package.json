@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "@paralleldrive/feature-toggles": "1.0.3",
-    "@po.et/poet-js": "3.0.5",
+    "@po.et/poet-js": "3.1.0",
     "bitcore-lib": "0.15.0",
     "body-parser": "1.18.3",
     "cli-box": "6.0.8",
