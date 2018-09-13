@@ -248,7 +248,7 @@ components:
         - 'datePublished'
         - 'dateCreated'
         - 'author'
-        - 'content'
+        - 'text'
       properties:
         name:
           type: string
@@ -262,7 +262,7 @@ components:
           type: string
         tags:
           type: string
-        content:
+        text:
           type: string
     Works:
       type: 'array'

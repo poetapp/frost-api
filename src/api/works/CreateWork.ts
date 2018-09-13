@@ -14,7 +14,7 @@ export const CreateWorkSchema = () => ({
     .isoDate(),
   author: Joi.string().required(),
   tags: Joi.string().allow(''),
-  content: Joi.string().required(),
+  text: Joi.string().required(),
 })
 
 export const CreateWork = () => async (ctx: any, next: any): Promise<any> => {
