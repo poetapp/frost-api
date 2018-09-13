@@ -49,8 +49,8 @@ describe('Works', async function() {
 
         const works = await frost.getWorks(token)
         expect(works.length).to.eql(2)
-        expect(works[0]).to.have.all.keys('name', 'datePublished', 'dateCreated', 'author', 'tags', 'content')
-        expect(works[1]).to.have.all.keys('name', 'datePublished', 'dateCreated', 'author', 'tags', 'content')
+        expect(works[0]).to.have.all.keys('name', 'datePublished', 'dateCreated', 'author', 'tags', 'text')
+        expect(works[1]).to.have.all.keys('name', 'datePublished', 'dateCreated', 'author', 'tags', 'text')
       })
     })
   })

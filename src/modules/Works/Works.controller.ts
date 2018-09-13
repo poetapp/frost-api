@@ -16,8 +16,8 @@ export class WorksController {
     this.work = work
   }
 
-  generateClaim() {
-    return createClaim(this.privateKey, ClaimType.Work, this.work)
+  async generateClaim() {
+    return await createClaim(this.privateKey, ClaimType.Work, this.work)
   }
 
   async create(workAttributes: any) {

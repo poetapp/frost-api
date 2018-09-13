@@ -6,6 +6,12 @@ services:
   - rabbitmq
 env:
   - REPO=poetapp/frost-api
+before_install:
+  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  - sudo apt-get update
+  - sudo apt-get install gcc-5 g++-5
+  - sudo rm /usr/bin/g++
+  - sudo ln -s /usr/bin/g++-5 /usr/bin/g++
 before_script:
   - sudo docker-compose -f ./docker-compose.yml up -d
 script:
@@ -15,7 +21,7 @@ before_deploy:
 deploy:
   - provider: script
     skip_cleanup: true
-    script: 
+    script:
       - bash ./scripts/docker-push.sh
     on:
       all_branches: true

@@ -68,9 +68,9 @@ describe('Works', function() {
           const user = await createUserVerified(mail, frost)
           const { token } = user
           const contentBuffer = new Buffer(1024 * 100)
-          const content = contentBuffer.toString()
+          const text = contentBuffer.toString()
 
-          await expect(frost.createWork(token, createWork({ content }))).to.be.throwWith(errorMessages.payloadTooLarge)
+          await expect(frost.createWork(token, createWork({ text }))).to.be.throwWith(errorMessages.payloadTooLarge)
         })
       })
 

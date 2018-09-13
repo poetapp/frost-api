@@ -36,7 +36,7 @@ describe('Works', async function() {
         const { token } = user
         const { workId } = await frost.createWork(token, createWork())
         const work = await frost.getWork(token, workId)
-        expect(work).to.have.all.keys('name', 'datePublished', 'dateCreated', 'author', 'tags', 'content')
+        expect(work).to.have.all.keys('name', 'datePublished', 'dateCreated', 'author', 'tags', 'text')
       })
     })
 
@@ -48,7 +48,7 @@ describe('Works', async function() {
         const createdWork = Object.assign({}, createWork(), { extra })
         const { workId } = await frost.createWork(token, createdWork)
         const work = await frost.getWork(token, workId)
-        expect(work).to.have.all.keys('name', 'datePublished', 'dateCreated', 'author', 'tags', 'content', 'extra')
+        expect(work).to.have.all.keys('name', 'datePublished', 'dateCreated', 'author', 'tags', 'text', 'extra')
         expect(work.extra).to.be.eq(extra)
       })
     })
