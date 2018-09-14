@@ -16,11 +16,15 @@ export const template = (link: string) => `
       <tr>
         <td>
           <p style="font-family:Helvetica,Arial,sans-serif;font-weight:normal;color:#525845;font-size:15px;line-height:21px; margin-bottom: 20px;">
-            Welcome to Po.et
+            Welcome to Po.et!
           </p>
 
           <p style="font-family:Helvetica,Arial,sans-serif;font-weight:normal;color:#525845;font-size:15px;line-height:21px;">
-            Please take a second to make sure we've got your email right
+            Thank you for your interest in Po.et, and for taking the time to create a Frost account.
+          </p>
+
+          <p style="font-family:Helvetica,Arial,sans-serif;font-weight:normal;color:#525845;font-size:15px;line-height:21px;">
+            Please help us to make sure we've got your correct email address by clicking the button below:
           </p>
 
           <p style="text-align: center; margin: 60px 0;">
@@ -33,12 +37,12 @@ export const template = (link: string) => `
             Thanks,
           </p>
           <p style="font-family:Helvetica,Arial,sans-serif;font-weight:normal;color:#525845;font-size:15px;line-height:21px;">
-            <strong>Po.et Team</strong>
+            <strong>The Po.et Team</strong>
           </p>
 
           <p style="font-family:Helvetica,Arial,sans-serif;font-weight:normal;color:#525845;font-size:15px;line-height:21px;">
             <strong>P.S.</strong> We also love hearing from you and helping you with any issues you have. Please reply to this
-            email if you want to ask a question or just say hi.</p>
+            email if you want to ask a question, or even just to say hi. :-)</p>
         </td>
       </tr>
     </table>

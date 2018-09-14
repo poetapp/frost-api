@@ -16,36 +16,41 @@ export const template = (link: string) => `
       <tr>
         <td>
           <p style="font-family:Helvetica,Arial,sans-serif;font-weight:normal;color:#525845;font-size:15px;line-height:21px; margin-bottom: 40px;">
-            Hi, dear user.
+            Hi,
           </p>
 
           <p style="font-family:Helvetica,Arial,sans-serif;font-weight:normal;color:#525845;font-size:15px;line-height:21px;">
-            You recently requested to
-            <strong>reset your password</strong> for your
-            <strong>Po.et account</strong>.
+            We have received your request to <strong>reset your password</strong> for your <strong>Po.et account</strong>.
+          </p>
+
+          <p style="font-family:Helvetica,Arial,sans-serif;font-weight:normal;color:#525845;font-size:15px;line-height:21px;">
+            Click on the button below to continue:
           </p>
 
           <p style="text-align: center; margin: 60px 0;">
             <a id='change-password-link' style="font-family:Helvetica,Arial,sans-serif;font-weight:bold;letter-spacing:1px;color:#ffffff;text-decoration:none;font-size:16px;line-height:22px;background-color:#43B980;border-top:18px solid #43B980;border-bottom:18px solid #43B980;border-left:80px solid #43B980;border-right:80px solid #43B980;border-radius:9999px;text-align:center;display:inline-block" href="${link}" target="_blank">
-              CHANGE YOUR PASSWORD
+              RESET YOUR PASSWORD
             </a>
           </p>
 
           <p style="font-family:Helvetica,Arial,sans-serif;font-weight:normal;color:#525845;font-size:15px;line-height:21px;">
-            If you did not request a password reset, please ignore this email or reply to let us know. This token is only valid for the
-            next 30 minutes.
+            You have 30 minutes to click the button above to reset your password.
+          </p>
+
+          <p style="font-family:Helvetica,Arial,sans-serif;font-weight:normal;color:#525845;font-size:15px;line-height:21px;">
+            If you did not request a password reset, you can ignore this email.
           </p>
 
           <p style="font-family:Helvetica,Arial,sans-serif;font-weight:normal;color:#525845;font-size:15px;line-height:21px;">
             Thanks,
           </p>
           <p style="font-family:Helvetica,Arial,sans-serif;font-weight:normal;color:#525845;font-size:15px;line-height:21px;">
-            <strong>Po.et Team</strong>
+            <strong>The Po.et Team</strong>
           </p>
 
           <p style="font-family:Helvetica,Arial,sans-serif;font-weight:normal;color:#525845;font-size:15px;line-height:21px;">
             <strong>P.S.</strong> We also love hearing from you and helping you with any issues you have. Please reply to this
-            email if you want to ask a question or just say hi.</p>
+            email if you want to ask a question, or even just to say hi. :-)</p>
         </td>
       </tr>
     </table>
