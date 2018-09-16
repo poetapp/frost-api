@@ -77,7 +77,7 @@
   },
   "devDependencies": {
     "@po.et/frost-client": "2.0.3",
-    "@po.et/tslint-rules": "1.4.1",
+    "@po.et/tslint-rules": "1.4.2",
     "@types/bitcore-lib": "0.15.1",
     "@types/chai": "4.1.4",
     "@types/cheerio": "0.22.9",
