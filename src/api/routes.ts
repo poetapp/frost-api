@@ -41,17 +41,17 @@ router.use(
     Path.ACCOUNTS_VERIFY_TOKEN,
     Path.ACCOUNTS_VERIFY,
     Path.PASSWORD_CHANGE,
+    Path.PASSWORD_CHANGE_TOKEN,
     Path.WORKS,
     Path.WORKS_WORKID,
     Path.TOKENS,
     Path.ACCOUNTS_PROFILE,
-    Path.PASSWORD_CHANGE_TOKEN,
     Path.TOKENS_TOKENID,
   ],
   authorization()
 )
 
-router.use([Path.WORKS, Path.WORKS_WORKID, Path.PASSWORD_CHANGE, Path.WORKS_WORKID], requireEmailVerified())
+router.use([Path.WORKS, Path.WORKS_WORKID], requireEmailVerified())
 
 router.use([Path.TOKENS], isLoggedIn())
 

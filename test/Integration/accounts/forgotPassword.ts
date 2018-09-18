@@ -57,15 +57,19 @@ describe('Forgot Password', function() {
       })
     })
 
-    describe('When a user tries to change his password and the account is not verified', function() {
-      it(`Should send error message with '${errorMessages.accountIsNotVerified}'`, async function() {
+    describe('When a user tries to change his password through email recovery and is not verified', function() {
+      it(`Should log in with the new password and get a token`, async function() {
+        const newPassword = 'Ae%12345678'
+
         await frost.create()
         await mail.removeAll()
         await frost.sendEmailForgotPassword()
         const token = await getTokenResetPassword(mail)
-        await expect(frost.changePasswordWithToken(token, 'new-password')).to.be.throwWith(
-          errorMessages.accountIsNotVerified
-        )
+        await frost.changePasswordWithToken(token, newPassword)
+
+        const response = await frost.login(email, newPassword)
+
+        expect(response.token).to.be.a('string')
       })
     })
   })
