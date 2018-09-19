@@ -1,15 +1,18 @@
-const { PrivateKey } = require('bitcore-lib')
 const { pipe } = require('ramda')
+import * as bitcoin from 'bitcoinjs-lib'
 import { configuration } from '../../configuration'
 import { processPassword } from '../../utils/Password'
 import { Vault } from '../../utils/Vault/Vault'
 
 const createKeys = (): { privateKey: string; publicKey: string } => {
-  const key = new PrivateKey()
-  const privateKey = key.toWIF()
-  const publicKey = new PrivateKey(privateKey).publicKey.toString()
+  const keyPair = bitcoin.ECPair.makeRandom()
+  const privateKey = keyPair.privateKey.toString('hex')
+  const publicKey = keyPair.publicKey.toString('hex')
 
-  return { privateKey, publicKey }
+  return {
+    privateKey,
+    publicKey,
+  }
 }
 
 export const createCryptoKeys = (obj: any) => ({ ...obj, ...createKeys() })
