@@ -107,7 +107,7 @@
     "nock": "10.0.0",
     "nodemon": "1.18.4",
     "nyc": "github:poetapp/nyc#fbc2ed1",
-    "prettier": "1.14.2",
+    "prettier": "1.14.3",
     "riteway": "2.0.7",
     "semantic-release": "15.9.15",
     "sinon": "6.3.4",
