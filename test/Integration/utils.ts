@@ -103,3 +103,11 @@ export const getHeader = (result: any, property: string) => {
   const value = headers.get(property)
   return value
 }
+
+export enum Method {
+  POST = 'post',
+  GET = 'get',
+  PUT = 'put',
+  DEL = 'delete',
+  ALL = 'all',
+}

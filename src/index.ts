@@ -4,7 +4,6 @@ import * as Koa from 'koa'
 import * as bodyParser from 'koa-bodyparser'
 import * as helmet from 'koa-helmet'
 import * as cors from 'koa2-cors'
-import { Path } from './api/Path'
 import { routes } from './api/routes'
 import { configuration } from './configuration'
 import { MongoDB } from './databases/mongodb/mongodb'
@@ -177,7 +176,7 @@ const main = async () => {
       .use(helmet(securityHeaders))
       .use(
         cors({
-          origin: (ctx: any, next: any) => (ctx.url.includes(Path.WORKS) ? '*' : false),
+          origin: (ctx: any, next: any) => '*',
         })
       )
       .use(
