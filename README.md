@@ -26,8 +26,9 @@ Po.et's API layer for publishers
 
 ### Requirements
 
-* Node.js
-* Docker (with docker-compose)
+* Node.js (see [`.nvmrc`](./.nvmrc) for the version to install)
+* [Docker](https://docs.docker.com/install/) (with [docker-compose](https://docs.docker.com/compose/install/))
+* Frost API token (sign up at [frost.po.et](https://frost.po.et) to create one)
 
 ### Install
 
