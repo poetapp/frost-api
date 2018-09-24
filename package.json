@@ -77,7 +77,7 @@
   },
   "devDependencies": {
     "@po.et/frost-client": "2.0.3",
-    "@po.et/tslint-rules": "1.4.3",
+    "@po.et/tslint-rules": "1.4.4",
     "@types/bitcoinjs-lib": "4.0.0",
     "@types/bitcore-lib": "0.15.1",
     "@types/chai": "4.1.5",
