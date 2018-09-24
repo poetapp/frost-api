@@ -76,7 +76,7 @@
     "winston": "3.1.0"
   },
   "devDependencies": {
-    "@po.et/frost-client": "2.0.3",
+    "@po.et/frost-client": "2.0.4",
     "@po.et/tslint-rules": "1.4.4",
     "@types/bitcoinjs-lib": "4.0.0",
     "@types/bitcore-lib": "0.15.1",
