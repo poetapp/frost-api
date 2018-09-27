@@ -100,7 +100,7 @@
     "@types/winston": "2.4.4",
     "chai": "4.2.0",
     "cheerio": "1.0.0-rc.2",
-    "husky": "1.0.0",
+    "husky": "1.0.1",
     "lint-staged": "7.3.0",
     "maildev": "1.0.0-rc3",
     "mailparser": "2.3.4",
