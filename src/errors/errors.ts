@@ -15,7 +15,7 @@ export const errors = {
   },
   InvalidInput: {
     code: 422,
-    message: 'One of the request inputs is not valid.',
+    message: 'One of the inputs is not valid.',
   },
   ResourceNotFound: {
     code: 400,
