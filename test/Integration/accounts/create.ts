@@ -65,7 +65,7 @@ describe('Account', function() {
 
         features.forEach(feature => {
           describe(feature.context, () => {
-            it(`should return an error message with 'One of the request inputs is not valid...'`, async function() {
+            it(`should return an error message with 'One of the inputs is not valid...'`, async function() {
               await expect(frost.create(email, feature.value)).to.be.throwWith(errorMessages.inputsNotValid)
             })
           })
