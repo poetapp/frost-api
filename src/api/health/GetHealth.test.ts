@@ -3,8 +3,7 @@ import { describe } from 'riteway'
 
 import { GetHealth } from './GetHealth'
 
-describe('GetHealth()', async (should: any) => {
-  const { assert } = should()
+describe('GetHealth()', async (assert: any) => {
   {
     const ctx = {} as Context
     const next = (): any => undefined

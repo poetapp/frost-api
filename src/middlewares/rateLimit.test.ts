@@ -2,9 +2,7 @@ import { describe } from 'riteway'
 
 import { getLimiter, RateLimit, loginLimiter, accountLimiter, passwordLimiter, defaultLimiter } from './rateLimit'
 
-describe('getLimiter', async (should: any) => {
-  const { assert } = should()
-
+describe('getLimiter', async (assert: any) => {
   assert({
     given: `${RateLimit.LOGIN}`,
     should: 'return loginLimiter',

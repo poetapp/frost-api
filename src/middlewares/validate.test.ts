@@ -4,9 +4,7 @@ import { spy } from 'sinon'
 
 import { validate } from './validate'
 
-describe('validate middleware', async (should: any) => {
-  const { assert } = should('')
-
+describe('validate middleware', async (assert: any) => {
   const name = 'Jon Doe'
 
   const schema = () => ({

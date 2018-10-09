@@ -2,8 +2,7 @@ import { describe } from 'riteway'
 import { spy } from 'sinon'
 import { setVerifiedAccountStatus, createCryptoKeys, validate } from './Accounts.hooks'
 
-describe('createCryptoKeys()', async (should: any) => {
-  const { assert } = should('')
+describe('createCryptoKeys()', async (assert: any) => {
   const actual = createCryptoKeys({})
 
   {
@@ -25,8 +24,7 @@ describe('createCryptoKeys()', async (should: any) => {
   }
 })
 
-describe('validate() chaining', async (should: any) => {
-  const { assert } = should('')
+describe('validate() chaining', async (assert: any) => {
   const next = spy()
 
   {
@@ -41,9 +39,7 @@ describe('validate() chaining', async (should: any) => {
   }
 })
 
-describe('setVerifiedAccountStatus()', async (should: any) => {
-  const { assert } = should('')
-
+describe('setVerifiedAccountStatus()', async (assert: any) => {
   {
     const actual = setVerifiedAccountStatus({ verifiedAccount: true })({})
 

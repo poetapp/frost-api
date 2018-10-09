@@ -4,9 +4,7 @@ import { isPwned, result } from './isPwned'
 
 const PWNEDCHECKER_ROOT = 'http://ispwned-checker'
 
-describe('result', async (should: any) => {
-  const { assert } = should()
-
+describe('result', async (assert: any) => {
   {
     assert({
       given: 'a status code of 200',
@@ -26,9 +24,7 @@ describe('result', async (should: any) => {
   }
 })
 
-describe('isPwned', async (should: any) => {
-  const { assert } = should()
-
+describe('isPwned', async (assert: any) => {
   {
     nock(PWNEDCHECKER_ROOT)
       .get(/.*/)
