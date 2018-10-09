@@ -28,7 +28,7 @@ export namespace Token {
     policies: ['verify_account'],
     no_default_policy: true,
     renewable: false,
-    ttl: '30m',
+    ttl: '4611686018s', // ~146 years,
     display_name: 'Verify account',
     num_uses: 2,
     meta: {
