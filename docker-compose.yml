@@ -51,6 +51,14 @@ services:
           - "4001:4001"
           - "5001:5001"
 
+  redis:
+      image: redis:4.0.11-alpine
+      ports:
+      - "6379:6379"
+      volumes:
+        - ./Docker/data/redis:/data
+      command: ["redis-server", "--appendonly", "yes"]
+
   frost-api:
       build:
           context: .

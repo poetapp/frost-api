@@ -2,6 +2,8 @@ export const envMerge = (env: any) => ({
   vaultToken: env.VAULT_TOKEN || undefined,
   vaultUrl: env.VAULT_URL || 'http://localhost:8200',
   mongodbUrl: env.MONGODB_URL || 'mongodb://localhost:27017/frost',
+  redisPort: env.REDIS_PORT ? parseInt(env.REDIS_PORT, 10) : 6379,
+  redisHost: env.REDIS_HOST || 'localhost',
   poetUrl: env.POET_URL || 'http://localhost:18080',
   frostUrl: env.FROST_URL || 'http://localhost:3000',
   frostVerifiedAccount: env.FROST_VERIFIED_ACCOUNT || '',
@@ -25,6 +27,17 @@ export const envMerge = (env: any) => ({
     symbol: 1,
   },
   pwnedCheckerRoot: env.PWNEDCHECKER_ROOT || '',
+  rateLimitDisabled: env.RATE_LIMIT_DISABLED === 'true' ? true : false,
+  loginRateLimitMax: env.LOGIN_RATE_LIMIT_MAX ? parseInt(env.LOGIN_RATE_LIMIT_MAX, 10) : 1000,
+  accountRateLimitMax: env.ACCOUNT_RATE_LIMIT_MAX ? parseInt(env.ACCOUNT_RATE_LIMIT_MAX, 10) : 1000,
+  passwordChangeRateLimitMax: env.PASSWORD_CHANGE_RATE_LIMIT_MAX
+    ? parseInt(env.PASSWORD_CHANGE_RATE_LIMIT_MAX, 10)
+    : 1000,
+  loginRateLimitDuration: env.LOGIN_RATE_LIMIT_DURATION ? parseInt(env.LOGIN_RATE_LIMIT_DURATION, 10) : 3600000,
+  accountRateLimitDuration: env.ACCOUNT_RATE_LIMIT_DURATION ? parseInt(env.ACCOUNT_RATE_LIMIT_DURATION, 10) : 3600000,
+  passwordChangeRateLimitDuration: env.PASSWORD_CHANGE_RATE_LIMIT_DURATION
+    ? parseInt(env.PASSWORD_CHANGE_RATE_LIMIT_DURATION, 10)
+    : 3600000,
 })
 
 export const configuration = envMerge(process.env)
