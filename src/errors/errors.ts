@@ -58,4 +58,8 @@ export const errors = {
     code: 409,
     message: 'The token does not have sufficient permissions for this action.',
   },
+  RateLimitReached: {
+    code: 429,
+    message: 'Too many attempts. Please try again later.',
+  },
 }

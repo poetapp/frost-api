@@ -9,6 +9,8 @@ describe('envMerge', async (should: any) => {
       VAULT_TOKEN: 'vault token',
       VAULT_URL: 'vault url',
       MONGODB_URL: 'mongodb_url',
+      REDIS_PORT: '199',
+      REDIS_HOST: 'redis',
       POET_URL: 'poet url',
       FROST_URL: 'frost url',
       FROST_VERIFIED_ACCOUNT: 'frost verified account',
@@ -24,12 +26,21 @@ describe('envMerge', async (should: any) => {
       MAX_API_REQUEST_LIMIT_FORM: 'max api request limit form',
       MAX_API_REQUEST_LIMIT_JSON: 'max api request limit json',
       PWNEDCHECKER_ROOT: 'pwned checker root',
+      RATE_LIMIT_DISABLED: 'true',
+      LOGIN_RATE_LIMIT_MAX: 199,
+      ACCOUNT_RATE_LIMIT_MAX: 199,
+      PASSWORD_CHANGE_RATE_LIMIT_MAX: 199,
+      LOGIN_RATE_LIMIT_DURATION: 199,
+      ACCOUNT_RATE_LIMIT_DURATION: 199,
+      PASSWORD_CHANGE_RATE_LIMIT_DURATION: 199,
     }
 
     const expected = {
       vaultToken: 'vault token',
       vaultUrl: 'vault url',
       mongodbUrl: 'mongodb_url',
+      redisPort: 199,
+      redisHost: 'redis',
       poetUrl: 'poet url',
       frostUrl: 'frost url',
       frostVerifiedAccount: 'frost verified account',
@@ -46,6 +57,13 @@ describe('envMerge', async (should: any) => {
       maxApiRequestLimitJson: 'max api request limit json',
       passwordComplex: { min: 10, max: 30, lowerCase: 1, upperCase: 1, numeric: 1, symbol: 1 },
       pwnedCheckerRoot: 'pwned checker root',
+      rateLimitDisabled: true,
+      loginRateLimitMax: 199,
+      accountRateLimitMax: 199,
+      passwordChangeRateLimitMax: 199,
+      loginRateLimitDuration: 199,
+      accountRateLimitDuration: 199,
+      passwordChangeRateLimitDuration: 199,
     }
 
     assert({
@@ -60,6 +78,8 @@ describe('envMerge', async (should: any) => {
     const expected = {
       vaultUrl: 'http://localhost:8200',
       mongodbUrl: 'mongodb://localhost:27017/frost',
+      redisPort: 6379,
+      redisHost: 'localhost',
       poetUrl: 'http://localhost:18080',
       frostUrl: 'http://localhost:3000',
       frostVerifiedAccount: '',
@@ -76,6 +96,13 @@ describe('envMerge', async (should: any) => {
       maxApiRequestLimitJson: '500kb',
       passwordComplex: { min: 10, max: 30, lowerCase: 1, upperCase: 1, numeric: 1, symbol: 1 },
       pwnedCheckerRoot: '',
+      rateLimitDisabled: false,
+      loginRateLimitMax: 1000,
+      accountRateLimitMax: 1000,
+      passwordChangeRateLimitMax: 1000,
+      loginRateLimitDuration: 3600000,
+      accountRateLimitDuration: 3600000,
+      passwordChangeRateLimitDuration: 3600000,
     }
 
     assert({

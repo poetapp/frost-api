@@ -5,6 +5,7 @@ import { Path } from './Path'
 import { authorization } from '../middlewares/authorization'
 import { isLoggedIn } from '../middlewares/isLoggedIn'
 import { monitor } from '../middlewares/monitor'
+import { rateLimiter, RateLimit } from '../middlewares/rateLimit'
 import { requireEmailVerified } from '../middlewares/requireEmailVerified'
 import { validate } from '../middlewares/validate'
 
@@ -35,6 +36,10 @@ router.use([Path.WORKS, Path.WORKS_WORKID], (ctx: any, next: any) => {
 
   return next()
 })
+
+router.use([Path.PASSWORD_CHANGE, Path.PASSWORD_CHANGE_TOKEN, Path.PASSWORD_RESET], rateLimiter(RateLimit.PASSWORD))
+router.use([Path.ACCOUNTS], rateLimiter(RateLimit.ACCOUNT))
+router.use([Path.LOGIN], rateLimiter(RateLimit.LOGIN))
 
 router.use(
   [
