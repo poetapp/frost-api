@@ -3,9 +3,7 @@ import { INVALID, hasher, verify } from './Password'
 
 const sekretPassword = 'Ae-12345678'
 
-describe('hasher', async (should: any) => {
-  const { assert } = should()
-
+describe('hasher', async (assert: any) => {
   {
     const actual = await hasher(sekretPassword)
 
@@ -18,9 +16,7 @@ describe('hasher', async (should: any) => {
   }
 })
 
-describe('verify', async (should: any) => {
-  const { assert } = should()
-
+describe('verify', async (assert: any) => {
   const hash = (await hasher(sekretPassword)).toString()
 
   {

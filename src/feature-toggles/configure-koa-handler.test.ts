@@ -5,8 +5,7 @@ import { spy } from 'sinon'
 
 import { configureKOAHandler } from './configure-koa-handler'
 
-describe('configureKOAHandler()', async (should: any) => {
-  const { assert } = should()
+describe('configureKOAHandler()', async (assert: any) => {
   {
     const initialFeatures = [{ name: 'foo', isActive: false }, { name: 'login', isActive: true }]
     const inactiveHandler = spy()

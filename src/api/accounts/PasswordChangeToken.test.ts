@@ -1,9 +1,7 @@
 import { describe } from 'riteway'
 import { PasswordChangeToken } from './PasswordChangeToken'
 
-describe('PasswordChangeToken()', async (should: any) => {
-  const { assert } = should()
-
+describe('PasswordChangeToken()', async (assert: any) => {
   {
     const ctx = {
       state: {

@@ -1,9 +1,7 @@
 import { describe } from 'riteway'
 import { envMerge } from './configuration'
 
-describe('envMerge', async (should: any) => {
-  const { assert } = should()
-
+describe('envMerge', async (assert: any) => {
   {
     const envOverrides = {
       VAULT_TOKEN: 'vault token',
@@ -55,7 +53,14 @@ describe('envMerge', async (should: any) => {
       maxApiTokens: 999,
       maxApiRequestLimitForm: 'max api request limit form',
       maxApiRequestLimitJson: 'max api request limit json',
-      passwordComplex: { min: 10, max: 30, lowerCase: 1, upperCase: 1, numeric: 1, symbol: 1 },
+      passwordComplex: {
+        min: 10,
+        max: 30,
+        lowerCase: 1,
+        upperCase: 1,
+        numeric: 1,
+        symbol: 1,
+      },
       pwnedCheckerRoot: 'pwned checker root',
       rateLimitDisabled: true,
       loginRateLimitMax: 199,
@@ -94,7 +99,14 @@ describe('envMerge', async (should: any) => {
       maxApiTokens: 5,
       maxApiRequestLimitForm: '500kb',
       maxApiRequestLimitJson: '500kb',
-      passwordComplex: { min: 10, max: 30, lowerCase: 1, upperCase: 1, numeric: 1, symbol: 1 },
+      passwordComplex: {
+        min: 10,
+        max: 30,
+        lowerCase: 1,
+        upperCase: 1,
+        numeric: 1,
+        symbol: 1,
+      },
       pwnedCheckerRoot: '',
       rateLimitDisabled: false,
       loginRateLimitMax: 1000,

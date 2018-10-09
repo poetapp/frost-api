@@ -10,9 +10,7 @@ const createCtx = (verified: boolean) => ({
   },
 })
 
-describe('requireEmailVerified() middleware', async (should: any) => {
-  const { assert } = should('')
-
+describe('requireEmailVerified() middleware', async (assert: any) => {
   {
     const next = spy()
 

@@ -2,9 +2,7 @@ import { describe } from 'riteway'
 import { spy } from 'sinon'
 import { injectDao } from './injectDao'
 
-describe('injectDao', async (should: any) => {
-  const { assert } = should()
-
+describe('injectDao', async (assert: any) => {
   const fnSpy = spy()
 
   // tslint:disable:max-classes-per-file

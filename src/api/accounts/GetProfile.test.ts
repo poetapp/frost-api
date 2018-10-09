@@ -4,9 +4,7 @@ import { spy } from 'sinon'
 
 import { GetProfile } from './GetProfile'
 
-describe('GetProfile', async (should: any) => {
-  const { assert } = should()
-
+describe('GetProfile', async (assert: any) => {
   {
     const ctx = {
       state: {

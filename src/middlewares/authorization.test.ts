@@ -1,9 +1,7 @@
 import { describe } from 'riteway'
 import { extractToken } from './authorization'
 
-describe('extractToken()', async (should: any) => {
-  const { assert } = should('')
-
+describe('extractToken()', async (assert: any) => {
   {
     const actual = extractToken({
       header: {

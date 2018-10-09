@@ -1,9 +1,7 @@
 import { describe } from 'riteway'
 import { tokenMatch } from './utils'
 
-describe('tokenMatch()', async (should: any) => {
-  const { assert } = should()
-
+describe('tokenMatch()', async (assert: any) => {
   {
     const tokenData = { data: { meta: { name: 'foo' } } }
     const targetToken = { meta: { name: 'foo' } }

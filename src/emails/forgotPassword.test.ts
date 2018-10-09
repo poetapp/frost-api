@@ -1,8 +1,7 @@
 import { describe } from 'riteway'
 import { template } from './forgotPassword'
 
-describe('forgotPassword', async (should: any) => {
-  const { assert } = should()
+describe('forgotPassword', async (assert: any) => {
   const link = 'the.reset/link/for/passwords'
   const pattern = new RegExp(`href="${link}"`)
   const actual = pattern.test(template(link))

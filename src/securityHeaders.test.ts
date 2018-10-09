@@ -1,9 +1,7 @@
 import { describe } from 'riteway'
 import { securityHeaders } from './securityHeaders'
 
-describe('Security headers', async (should: any) => {
-  const { assert } = should('')
-
+describe('Security headers', async (assert: any) => {
   {
     assert({
       given: 'an object with security header configuration',

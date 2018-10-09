@@ -10,9 +10,7 @@ const createCtx = (numTokens: number) => ({
   status: 1,
 })
 
-describe('CreateToken', async (should: any) => {
-  const { assert } = should()
-
+describe('CreateToken', async (assert: any) => {
   {
     const ctx = createCtx(5)
 

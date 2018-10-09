@@ -1,9 +1,7 @@
 import { describe } from 'riteway'
 import { setResponseStatus } from './ForgotPassword'
 
-describe('setResponseStatus()', async (should: any) => {
-  const { assert } = should()
-
+describe('setResponseStatus()', async (assert: any) => {
   assert({
     given: 'an argument of false',
     should: 'return 400',

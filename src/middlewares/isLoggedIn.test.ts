@@ -16,9 +16,7 @@ const createCtx = (name: string) => ({
   },
 })
 
-describe('isLoggedIn() middleware', async (should: any) => {
-  const { assert } = should('')
-
+describe('isLoggedIn() middleware', async (assert: any) => {
   {
     const next = spy()
 

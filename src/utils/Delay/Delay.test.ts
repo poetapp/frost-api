@@ -1,8 +1,7 @@
 import { describe } from 'riteway'
 import { delay } from './Delay'
 
-describe('Delay', async (should: any) => {
-  const { assert } = should()
+describe('Delay', async (assert: any) => {
   let actual
 
   {

@@ -1,8 +1,7 @@
 import { describe } from 'riteway'
 import { secureSecrets, omitSecretsInUrl } from './monitor'
 
-describe('monitor middleware', async (should: any) => {
-  const { assert } = should('')
+describe('monitor middleware', async (assert: any) => {
   const ctx = {
     method: 'post',
     url: 'url/123456',
