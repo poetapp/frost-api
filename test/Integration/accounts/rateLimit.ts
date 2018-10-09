@@ -114,7 +114,7 @@ if (!rateLimitDisabled)
     })
 
     describe('When an account tries to reset the password with the token', function() {
-      it('Should return X-Rate-Limit-Limit with limit max', async function() {
+      it.skip('Should return X-Rate-Limit-Limit with limit max', async function() {
         await fetch(`${frostUrl}/accounts`, options)
         await mail.removeAll()
         await fetch(`${frostUrl}/password/reset`, optionsResetpassword(email))
