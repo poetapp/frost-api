@@ -84,7 +84,7 @@
     "@types/chai": "4.1.6",
     "@types/cheerio": "0.22.9",
     "@types/handlebars": "4.0.39",
-    "@types/ioredis": "4.0.1",
+    "@types/ioredis": "4.0.3",
     "@types/isomorphic-fetch": "0.0.34",
     "@types/joi": "13.6.0",
     "@types/jsonwebtoken": "7.2.8",
