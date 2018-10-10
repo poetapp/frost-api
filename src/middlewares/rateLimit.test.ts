@@ -1,33 +1,23 @@
 import { describe } from 'riteway'
+import { spy } from 'sinon'
+import { RateLimit } from './rateLimit'
 
-import { getLimiter, RateLimit, loginLimiter, accountLimiter, passwordLimiter, defaultLimiter } from './rateLimit'
+describe('rateLimit middleware', async (assert: any) => {
+  {
+    const next = spy()
+    const ctx = {}
+    const rateLimit = RateLimit({ rateLimitDisabled: true, redisHost: 'localhost', redisPort: 1 })
 
-describe('getLimiter', async (assert: any) => {
-  assert({
-    given: `${RateLimit.LOGIN}`,
-    should: 'return loginLimiter',
-    actual: getLimiter(RateLimit.LOGIN),
-    expected: loginLimiter,
-  })
+    await rateLimit({ max: 1, duration: 1 })(ctx, next)
 
-  assert({
-    given: `${RateLimit.ACCOUNT}`,
-    should: 'return createAccountLimiter',
-    actual: getLimiter(RateLimit.ACCOUNT),
-    expected: accountLimiter,
-  })
+    const actual = next.calledOnce
+    const expected = true
 
-  assert({
-    given: `${RateLimit.PASSWORD}`,
-    should: 'return passwordLimiter',
-    actual: getLimiter(RateLimit.PASSWORD),
-    expected: passwordLimiter,
-  })
-
-  assert({
-    given: 'bad string',
-    should: 'return default limiter',
-    actual: getLimiter('bad string'),
-    expected: defaultLimiter,
-  })
+    assert({
+      given: 'rateLimitDisabled on true',
+      should: 'be called next',
+      actual,
+      expected,
+    })
+  }
 })

@@ -1,18 +1,19 @@
 import * as Joi from 'joi'
 const PasswordComplexity = require('joi-password-complexity')
+
+import { PasswordComplexConfiguration } from 'api/PasswordComplexConfiguration'
 import { errors } from '../../errors/errors'
-import { SendEmail } from '../../utils/SendEmail/SendEmail'
+import { AccountsController } from '../../modules/Accounts/Accounts.controller'
+import { logger } from '../../utils/Logger/Logger'
+import { SendEmailTo } from '../../utils/SendEmail'
+import { Vault } from '../../utils/Vault/Vault'
+
 import { Token } from '../Tokens'
 import { getToken } from './utils/utils'
 
-import { configuration } from '../../configuration'
-import { AccountsController } from '../../modules/Accounts/Accounts.controller'
-import { logger } from '../../utils/Logger/Logger'
-import { Vault } from '../../utils/Vault/Vault'
-
-const { passwordComplex } = configuration
-
-export const CreateAccountSchema = (values: { password: string }): object => {
+export const CreateAccountSchema = (passwordComplex: PasswordComplexConfiguration) => (values: {
+  password: string
+}): object => {
   const { password } = values
   const usersController = new AccountsController()
 
@@ -28,7 +29,7 @@ export const CreateAccountSchema = (values: { password: string }): object => {
   }
 }
 
-export const CreateAccount = () => async (ctx: any, next: any): Promise<any> => {
+export const CreateAccount = (sendEmail: SendEmailTo) => async (ctx: any, next: any): Promise<any> => {
   try {
     const user = ctx.request.body
     const { email } = user
@@ -38,9 +39,8 @@ export const CreateAccount = () => async (ctx: any, next: any): Promise<any> => 
 
     await usersController.create(user)
 
-    const sendEmail = new SendEmail(email)
     const tokenVerifiedAccount = await getToken(email, Token.VerifyAccount)
-    await sendEmail.sendVerified(tokenVerifiedAccount)
+    await sendEmail(email).sendVerified(tokenVerifiedAccount)
     const token = await getToken(email, Token.Login)
     ctx.body = { token }
   } catch (e) {
