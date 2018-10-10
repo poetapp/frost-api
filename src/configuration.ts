@@ -1,43 +1,112 @@
-export const envMerge = (env: any) => ({
-  vaultToken: env.VAULT_TOKEN || undefined,
-  vaultUrl: env.VAULT_URL || 'http://localhost:8200',
-  mongodbUrl: env.MONGODB_URL || 'mongodb://localhost:27017/frost',
-  redisPort: env.REDIS_PORT ? parseInt(env.REDIS_PORT, 10) : 6379,
-  redisHost: env.REDIS_HOST || 'localhost',
-  poetUrl: env.POET_URL || 'http://localhost:18080',
-  frostUrl: env.FROST_URL || 'http://localhost:3000',
-  frostVerifiedAccount: env.FROST_VERIFIED_ACCOUNT || '',
-  frostChangePassword: env.FROST_CHANGE_PASSWORD || '',
-  transactionalMandrill: env.TRANSACTIONAL_MANDRILL || '46mwv_E6dOxrSDUkJD4NOQ',
-  jwt: env.JWT || '2cff77d8f0a411e78c3f9a214cf093ae',
-  verifiedAccount: env.VERIFIED_ACCOUNT === 'true' ? true : false,
-  emailReply: env.EMAIL_REPLY || 'contact@po.et',
-  emailFrom: env.EMAIL_FROM || 'Po.et',
-  sendEmailDisabled: env.SEND_EMAIL_DISABLED === 'true' ? true : false,
-  emailTransportMailDev: env.EMAIL_TRANSPORT_MAIL_DEV === 'true' ? true : false,
-  maxApiTokens: env.MAX_API_TOKENS ? parseInt(env.MAX_API_TOKENS, 10) : 5,
-  maxApiRequestLimitForm: env.MAX_API_REQUEST_LIMIT_FORM || '500kb',
-  maxApiRequestLimitJson: env.MAX_API_REQUEST_LIMIT_JSON || '500kb',
-  passwordComplex: {
-    min: 10,
-    max: 30,
-    lowerCase: 1,
-    upperCase: 1,
-    numeric: 1,
-    symbol: 1,
-  },
-  pwnedCheckerRoot: env.PWNEDCHECKER_ROOT || '',
-  rateLimitDisabled: env.RATE_LIMIT_DISABLED === 'true' ? true : false,
-  loginRateLimitMax: env.LOGIN_RATE_LIMIT_MAX ? parseInt(env.LOGIN_RATE_LIMIT_MAX, 10) : 1000,
-  accountRateLimitMax: env.ACCOUNT_RATE_LIMIT_MAX ? parseInt(env.ACCOUNT_RATE_LIMIT_MAX, 10) : 1000,
-  passwordChangeRateLimitMax: env.PASSWORD_CHANGE_RATE_LIMIT_MAX
-    ? parseInt(env.PASSWORD_CHANGE_RATE_LIMIT_MAX, 10)
-    : 1000,
-  loginRateLimitDuration: env.LOGIN_RATE_LIMIT_DURATION ? parseInt(env.LOGIN_RATE_LIMIT_DURATION, 10) : 3600000,
-  accountRateLimitDuration: env.ACCOUNT_RATE_LIMIT_DURATION ? parseInt(env.ACCOUNT_RATE_LIMIT_DURATION, 10) : 3600000,
-  passwordChangeRateLimitDuration: env.PASSWORD_CHANGE_RATE_LIMIT_DURATION
-    ? parseInt(env.PASSWORD_CHANGE_RATE_LIMIT_DURATION, 10)
-    : 3600000,
-})
+interface RateLimitConfiguration {
+  readonly rateLimitDisabled: boolean
+  readonly loginRateLimitMax: number
+  readonly accountRateLimitMax: number
+  readonly passwordChangeRateLimitMax: number
+  readonly loginRateLimitDuration: number
+  readonly accountRateLimitDuration: number
+  readonly passwordChangeRateLimitDuration: number
+}
 
-export const configuration = envMerge(process.env)
+interface RedisConfiguration {
+  readonly redisPort: number
+  readonly redisHost: string
+}
+interface MaxApiRequestLimitConfiguration {
+  readonly maxApiRequestLimitForm: string
+  readonly maxApiRequestLimitJson: string
+}
+export interface PasswordComplexConfiguration {
+  readonly passwordComplexMin: number
+  readonly passwordComplexMax: number
+  readonly passwordComplexLowerCase: number
+  readonly passwordComplexUpperCase: number
+  readonly passwordComplexNumeric: number
+  readonly passwordComplexSymbol: number
+}
+
+interface MongoDBConfiguration {
+  readonly mongodbUrl: string
+  readonly mongodbSocketTimeoutMS: number
+  readonly mongodbKeepAlive: number
+  readonly mongodbReconnectTries: number
+  readonly mongodbUseNewUrlParser: boolean
+}
+
+interface MaildevConfiguration {
+  readonly maildevPort25TcpAddr: string
+  readonly maildevPort25TcpPort: number
+  readonly maildevIgnoreTLS: boolean
+}
+export interface Configuration
+  extends PasswordComplexConfiguration,
+    MaxApiRequestLimitConfiguration,
+    MongoDBConfiguration,
+    MaildevConfiguration,
+    RateLimitConfiguration,
+    RedisConfiguration {
+  readonly vaultToken: undefined
+  readonly vaultUrl: string
+  readonly vaultApiVersion: string
+  readonly poetUrl: string
+  readonly frostHost: string
+  readonly frostUrl: string
+  readonly frostPort: number
+  readonly frostVerifiedAccount: string
+  readonly frostChangePassword: string
+  readonly verifiedAccount: boolean
+  readonly emailReply: string
+  readonly emailFrom: string
+  readonly sendEmailDisabled: boolean
+  readonly emailTransportMailDev: boolean
+  readonly maxApiTokens: number
+  readonly pwnedCheckerRoot: string
+  readonly transactionalMandrill: string
+  readonly jwt: string
+}
+
+export const configuration: Configuration = {
+  vaultToken: undefined,
+  vaultUrl: 'http://localhost:8200',
+  vaultApiVersion: 'v1',
+  mongodbUrl: 'mongodb://localhost:27017/frost',
+  mongodbSocketTimeoutMS: 0,
+  mongodbKeepAlive: 0,
+  mongodbReconnectTries: 30,
+  mongodbUseNewUrlParser: true,
+  poetUrl: 'http://localhost:18080',
+  frostHost: '0.0.0.0',
+  frostPort: 3000,
+  frostUrl: 'http://localhost:3000',
+  frostVerifiedAccount: '',
+  frostChangePassword: '',
+  verifiedAccount: false,
+  emailReply: 'contact@po.et',
+  emailFrom: 'Po.et',
+  sendEmailDisabled: false,
+  emailTransportMailDev: false,
+  maxApiTokens: 5,
+  maxApiRequestLimitForm: '500kb',
+  maxApiRequestLimitJson: '500kb',
+  passwordComplexMin: 10,
+  passwordComplexMax: 30,
+  passwordComplexLowerCase: 1,
+  passwordComplexUpperCase: 1,
+  passwordComplexNumeric: 1,
+  passwordComplexSymbol: 1,
+  pwnedCheckerRoot: '',
+  transactionalMandrill: '46mwv_E6dOxrSDUkJD4NOQ',
+  jwt: 'example',
+  maildevPort25TcpAddr: 'localhost',
+  maildevPort25TcpPort: 1025,
+  maildevIgnoreTLS: true,
+  redisPort: 6379,
+  redisHost: 'localhost',
+  rateLimitDisabled: true,
+  loginRateLimitMax: 1000,
+  accountRateLimitMax: 1000,
+  passwordChangeRateLimitMax: 1000,
+  loginRateLimitDuration: 3600000,
+  accountRateLimitDuration: 3600000,
+  passwordChangeRateLimitDuration: 3600000,
+}

@@ -1,15 +1,17 @@
 import * as Joi from 'joi'
 const PasswordComplexity = require('joi-password-complexity')
-import { configuration } from '../../configuration'
+
 import { errors } from '../../errors/errors'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
 import { logger } from '../../utils/Logger/Logger'
 import { processPassword, verify } from '../../utils/Password'
+import { PasswordComplexConfiguration } from '../PasswordComplexConfiguration'
 import { Token } from '../Tokens'
 
-const { passwordComplex } = configuration
-
-export const PasswordChangeSchema = (values: { password: string; oldPassword: string }) => {
+export const PasswordChangeSchema = (passwordComplex: PasswordComplexConfiguration) => (values: {
+  password: string
+  oldPassword: string
+}) => {
   const { password, oldPassword } = values
   const usersController = new AccountsController()
 

@@ -86,3 +86,11 @@ services:
         - "1025:1025"
         - "1080:1080"
       command: bin/maildev --web 1080 --smtp 1025
+  
+  redis:
+      image: redis:4.0.11-alpine
+      ports:
+        - "6379:6379"
+      volumes:
+        - ./data/redis:/data
+      command: ["redis-server", "--appendonly", "yes"]

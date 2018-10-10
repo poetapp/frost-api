@@ -1,37 +1,36 @@
 const nodemailer = require('nodemailer')
 const mandrill = require('nodemailer-mandrill-transport')
 
-import { configuration } from '../../configuration'
-import { Email } from './Email'
-import { Options } from './Options'
+import { NodemailerConfiguration, EmailConfiguration } from './NodemailerConfiguration'
 
-export namespace Nodemailer {
-  export function config(options?: Options) {
-    const { emailTransportMailDev } = configuration
+interface NodemailerMethods {
+  start(): NodemailerMethods
+  sendEmail(options?: EmailConfiguration): Promise<{} | boolean>
+}
 
-    const mandrillTransport = mandrill({
-      auth: options,
-    })
+export const Nodemailer = (configuration: NodemailerConfiguration): NodemailerMethods => {
+  return {
+    start(): NodemailerMethods {
+      const { emailTransportMailDev, maildev } = configuration
 
-    const maildev = {
-      host: process.env.MAILDEV_PORT_25_TCP_ADDR || 'localhost',
-      port: process.env.MAILDEV_PORT_25_TCP_PORT || 1025,
-      ignoreTLS: true,
-    }
-
-    const transport = emailTransportMailDev ? maildev : mandrillTransport
-    this.smtpTransport = nodemailer.createTransport(transport)
-  }
-
-  export function sendMail(options?: Email) {
-    const { sendEmailDisabled } = configuration
-    if (sendEmailDisabled) return Promise.resolve()
-    return new Promise((resolve, reject) => {
-      this.smtpTransport.sendMail(options, function(err: any) {
-        return err ? reject(err) : resolve(true)
+      const mandrillTransport = mandrill({
+        auth: configuration.mandrill,
       })
-    }).catch(e => {
-      throw e
-    })
+
+      const transport = emailTransportMailDev ? maildev : mandrillTransport
+      this.smtpTransport = nodemailer.createTransport(transport)
+      return this
+    },
+    sendEmail(options?: EmailConfiguration): Promise<{} | boolean> {
+      const { sendEmailDisabled } = configuration
+      if (sendEmailDisabled) return Promise.resolve(true)
+      return new Promise((resolve, reject) => {
+        this.smtpTransport.sendMail(options, function(err: any) {
+          return err ? reject(err) : resolve(true)
+        })
+      }).catch(e => {
+        throw e
+      })
+    },
   }
 }

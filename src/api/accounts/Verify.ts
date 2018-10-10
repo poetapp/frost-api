@@ -1,16 +1,16 @@
+import { Token } from '../../api/Tokens'
 import { logger } from '../../utils/Logger/Logger'
-import { SendEmail } from '../../utils/SendEmail/SendEmail'
-import { Token } from '../Tokens'
+import { SendEmailTo } from '../../utils/SendEmail'
+
 import { getToken } from './utils/utils'
 
-export const VerifyAccount = () => async (ctx: any, next: any): Promise<any> => {
+export const VerifyAccount = (sendEmail: SendEmailTo) => async (ctx: any, next: any): Promise<any> => {
   try {
     const { user } = ctx.state
     const { email } = user
     const token = await getToken(email, Token.VerifyAccount)
 
-    const sendEmail = new SendEmail(email)
-    await sendEmail.sendVerified(token)
+    await sendEmail(email).sendVerified(token)
     ctx.status = 200
   } catch (e) {
     logger.error('api.VerifyAccount', e)

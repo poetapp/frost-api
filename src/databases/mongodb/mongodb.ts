@@ -1,27 +1,39 @@
 import * as mongoose from 'mongoose'
-import { Options } from './Options'
 
-export class MongoDB {
-  private mongodbUri: string
-  private options: Options
+import { logger } from '../../utils/Logger/Logger'
+import { MongoDBConfiguration } from './mongoDBConfiguration'
 
-  constructor(mongodbUri: string, options: Options) {
-    this.mongodbUri = mongodbUri
-    this.options = options
-  }
+interface APIMethods {
+  start(): Promise<APIMethods>
+  stop(): Promise<APIMethods>
+}
 
-  public start() {
-    return new Promise((resolve, reject) => {
-      require('mongoose').Promise = this.options.promiseLibrary
-      mongoose.connect(
-        this.mongodbUri,
-        this.options,
-        error => {
-          return error ? reject(error) : resolve()
-        }
-      )
-    }).catch(e => {
-      throw e
-    })
+const startMongoDB = async ({ mongodbUrl, options }: MongoDBConfiguration) => {
+  logger.info('Starting connection with MongoDB...')
+  require('mongoose').Promise = Promise
+  const connection = await mongoose.connect(
+    mongodbUrl,
+    options
+  )
+  logger.info('Started connection with MongoDB...')
+  return connection
+}
+
+const stopMongoDB = async (database: any) => {
+  logger.info('Closing connection with MongoDB...')
+  await database.connection.close()
+  logger.info('Closed connection with MongoDB.')
+}
+
+export const MongoDB = (configuration: MongoDBConfiguration): APIMethods => {
+  return {
+    async start(): Promise<APIMethods> {
+      this.database = await startMongoDB(configuration)
+      return this
+    },
+    async stop(): Promise<APIMethods> {
+      await stopMongoDB(this.database)
+      return this
+    },
   }
 }
