@@ -14,7 +14,7 @@ describe('CreateToken', async (assert: any) => {
   {
     const ctx = createCtx(5)
 
-    await CreateToken()(ctx, (): any => undefined)
+    await CreateToken(5)(ctx, (): any => undefined)
 
     assert({
       given: 'exactly max api tokens',
@@ -27,7 +27,7 @@ describe('CreateToken', async (assert: any) => {
   {
     const ctx = createCtx(6)
 
-    await CreateToken()(ctx, (): any => undefined)
+    await CreateToken(5)(ctx, (): any => undefined)
 
     assert({
       given: 'more than max api tokens',
