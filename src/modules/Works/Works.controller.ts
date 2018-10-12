@@ -1,19 +1,18 @@
 import { createClaim, WorkAttributes, ClaimType } from '@po.et/poet-js'
 import fetch from 'node-fetch'
-import { configuration } from '../../configuration'
 import { Method } from '../../constants'
 import { errors } from '../../errors/errors'
 import { logger } from '../../utils/Logger/Logger'
 
-const { poetUrl } = configuration
-
 export class WorksController {
   private work: WorkAttributes
   private privateKey: string
+  private poetUrl: string
 
-  constructor(privateKey?: string, work?: WorkAttributes) {
+  constructor(poetUrl: string, privateKey?: string, work?: WorkAttributes) {
     this.privateKey = privateKey
     this.work = work
+    this.poetUrl = poetUrl
   }
 
   async generateClaim() {
@@ -22,7 +21,7 @@ export class WorksController {
 
   async create(workAttributes: any) {
     try {
-      const createWork = await fetch(poetUrl + '/works/', {
+      const createWork = await fetch(this.poetUrl + '/works/', {
         method: Method.POST,
         headers: {
           Accept: 'application/json',
@@ -46,7 +45,7 @@ export class WorksController {
 
   async get(workId: string) {
     try {
-      const work = await fetch(`${poetUrl}/works/${workId}`)
+      const work = await fetch(`${this.poetUrl}/works/${workId}`)
 
       if (work.ok) return await work.json()
 
@@ -63,7 +62,7 @@ export class WorksController {
 
   async getWorksByPublicKey(publicKey: string) {
     try {
-      const works = await fetch(`${poetUrl}/works/?publicKey=${publicKey}`)
+      const works = await fetch(`${this.poetUrl}/works/?publicKey=${publicKey}`)
 
       if (works.ok) return await works.json()
 

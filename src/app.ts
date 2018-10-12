@@ -206,6 +206,7 @@ export async function app(localVars: any = {}) {
         duration: configuration.passwordChangeRateLimitDuration,
       },
     },
+    poetUrl: configuration.poetUrl,
   }
 
   const mongoDB = await MongoDB(configurationMongoDB).start()

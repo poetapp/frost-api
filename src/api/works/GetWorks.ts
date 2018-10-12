@@ -3,12 +3,12 @@ import { errors } from '../../errors/errors'
 import { WorksController } from '../../modules/Works/Works.controller'
 import { logger } from '../../utils/Logger/Logger'
 
-export const GetWorks = () => async (ctx: any, next: any): Promise<any> => {
+export const GetWorks = (poetUrl: string) => async (ctx: any, next: any): Promise<any> => {
   try {
     const { user } = ctx.state
     const { publicKey } = user
 
-    const worksController = new WorksController()
+    const worksController = new WorksController(poetUrl)
     try {
       const response = await worksController.getWorksByPublicKey(publicKey)
 
