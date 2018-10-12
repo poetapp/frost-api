@@ -35,7 +35,8 @@ export const routes = (
   sendEmailConfiguration: SendEmailConfiguration,
   rateLimitConfiguration: RateLimitConfiguration,
   limiters: { [name: string]: LimiterConfiguration },
-  poetUrl: string
+  poetUrl: string,
+  maxApiTokens: number
 ) => {
   const router = new KoaRouter()
   const sendEmail = SendEmail(sendEmailConfiguration)
@@ -96,7 +97,7 @@ export const routes = (
   router.post(Path.ACCOUNTS_VERIFY, VerifyAccount(sendEmail))
   router.get(Path.ACCOUNTS_VERIFY_TOKEN, VerifyAccountToken())
 
-  router.post(Path.TOKENS, CreateToken())
+  router.post(Path.TOKENS, CreateToken(maxApiTokens))
   router.get(Path.TOKENS, GetToken())
   router.get(Path.HEALTH, GetHealth())
   router.del(Path.TOKENS_TOKENID, validate({ params: RemoveTokenSchema }), RemoveToken())
