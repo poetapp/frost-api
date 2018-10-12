@@ -34,7 +34,8 @@ export const routes = (
   passwordComplexConfiguration: PasswordComplexConfiguration,
   sendEmailConfiguration: SendEmailConfiguration,
   rateLimitConfiguration: RateLimitConfiguration,
-  limiters: { [name: string]: LimiterConfiguration }
+  limiters: { [name: string]: LimiterConfiguration },
+  poetUrl: string
 ) => {
   const router = new KoaRouter()
   const sendEmail = SendEmail(sendEmailConfiguration)
@@ -100,9 +101,9 @@ export const routes = (
   router.get(Path.HEALTH, GetHealth())
   router.del(Path.TOKENS_TOKENID, validate({ params: RemoveTokenSchema }), RemoveToken())
 
-  router.post(Path.WORKS, validate({ body: CreateWorkSchema, options: { allowUnknown: true } }), CreateWork())
-  router.get(Path.WORKS_WORKID, validate({ params: GetWorkSchema }), GetWork())
-  router.get(Path.WORKS, GetWorks())
+  router.post(Path.WORKS, validate({ body: CreateWorkSchema, options: { allowUnknown: true } }), CreateWork(poetUrl))
+  router.get(Path.WORKS_WORKID, validate({ params: GetWorkSchema }), GetWork(poetUrl))
+  router.get(Path.WORKS, GetWorks(poetUrl))
 
   return router
 }

@@ -17,13 +17,13 @@ export const CreateWorkSchema = () => ({
   text: Joi.string().required(),
 })
 
-export const CreateWork = () => async (ctx: any, next: any): Promise<any> => {
+export const CreateWork = (poetUrl: string) => async (ctx: any, next: any): Promise<any> => {
   try {
     const { user } = ctx.state
     const { WorkError } = errors
     const newWork = ctx.request.body
     const privateKey = await Vault.decrypt(user.privateKey)
-    const work = new WorksController(privateKey, newWork)
+    const work = new WorksController(poetUrl, privateKey, newWork)
     const claim = await work.generateClaim()
 
     try {

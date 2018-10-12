@@ -7,10 +7,10 @@ export const GetWorkSchema = () => ({
   workId: Joi.string().required(),
 })
 
-export const GetWork = () => async (ctx: any, next: any): Promise<any> => {
+export const GetWork = (poetUrl: string) => async (ctx: any, next: any): Promise<any> => {
   try {
     const { workId } = ctx.params
-    const worksController = new WorksController()
+    const worksController = new WorksController(poetUrl)
     try {
       const response = await worksController.get(workId)
       ctx.body = response.attributes
