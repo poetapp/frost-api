@@ -1,6 +1,5 @@
 const { pipe } = require('ramda')
 import * as bitcoin from 'bitcoinjs-lib'
-import { configuration } from '../../configuration'
 import { processPassword } from '../../utils/Password'
 import { Vault } from '../../utils/Vault/Vault'
 
@@ -16,24 +15,25 @@ const createKeys = (): { privateKey: string; publicKey: string } => {
 }
 
 export const createCryptoKeys = (obj: any) => ({ ...obj, ...createKeys() })
-export const setVerifiedAccountStatus = (configuration: any) => (obj: any) => ({
+export const setVerifiedAccountStatus = (verified: boolean = false) => (obj: any) => ({
   ...obj,
-  verified: !!configuration.verifiedAccount,
+  verified,
 })
 
-export const validate = async function(next: any) {
-  if (this.isNew) {
-    const { verified, privateKey, publicKey } = pipe(
-      createCryptoKeys,
-      setVerifiedAccountStatus(configuration)
-    )({})
+export const validate = (verifiedAccount: boolean) =>
+  async function(next: any) {
+    if (this.isNew) {
+      const { verified, privateKey, publicKey } = pipe(
+        createCryptoKeys,
+        setVerifiedAccountStatus(verifiedAccount)
+      )({})
 
-    this.verified = verified
-    this.publicKey = publicKey
-    this.privateKey = await Vault.encrypt(privateKey)
-    this.password = await processPassword(this.password)
-    this.createdAt = Date.now()
+      this.verified = verified
+      this.publicKey = publicKey
+      this.privateKey = await Vault.encrypt(privateKey)
+      this.password = await processPassword(this.password)
+      this.createdAt = Date.now()
+    }
+
+    next()
   }
-
-  next()
-}

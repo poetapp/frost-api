@@ -12,11 +12,12 @@ import { Vault } from '../../utils/Vault/Vault'
 import { Token } from '../Tokens'
 import { getToken } from './utils/utils'
 
-export const CreateAccountSchema = (passwordComplex: PasswordComplexConfiguration) => (values: {
-  password: string
-}): object => {
+export const CreateAccountSchema = (
+  passwordComplex: PasswordComplexConfiguration,
+  verifiedAccount: boolean
+) => (values: { password: string }): object => {
   const { password } = values
-  const usersController = new AccountsController()
+  const usersController = new AccountsController(verifiedAccount)
 
   return {
     email: Joi.string()
@@ -30,13 +31,16 @@ export const CreateAccountSchema = (passwordComplex: PasswordComplexConfiguratio
   }
 }
 
-export const CreateAccount = (sendEmail: SendEmailTo) => async (ctx: any, next: any): Promise<any> => {
+export const CreateAccount = (sendEmail: SendEmailTo, verifiedAccount: boolean) => async (
+  ctx: any,
+  next: any
+): Promise<any> => {
   try {
     const user = ctx.request.body
     const { email } = user
     const apiToken = await getToken(email, Token.ApiKey, Network.TEST)
     user.testApiTokens = [{ token: await Vault.encrypt(`TEST_${apiToken}`) }]
-    const usersController = new AccountsController()
+    const usersController = new AccountsController(verifiedAccount)
 
     await usersController.create(user)
 

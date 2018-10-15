@@ -13,10 +13,10 @@ export const LoginSchema = () => ({
   password: Joi.string().required(),
 })
 
-export const Login = () => async (ctx: any, next: any) => {
+export const Login = (verifiedAccount: boolean) => async (ctx: any, next: any) => {
   try {
     const user = ctx.request.body
-    const usersController = new AccountsController()
+    const usersController = new AccountsController(verifiedAccount)
     const response = await usersController.get(user.email)
     await verify(user.password, response.password)
     const token = await getToken(user.email, Token.Login)

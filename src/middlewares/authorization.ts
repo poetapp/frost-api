@@ -8,7 +8,7 @@ const { AuthenticationFailed, ExpiredToken, InvalidToken } = errors
 
 export const extractToken = (ctx: any) => (ctx.header.token ? ctx.header.token : ctx.params.token)
 
-export const authorization = () => {
+export const authorization = (verifiedAccount: boolean) => {
   return async (ctx: any, next: any) => {
     try {
       const secret = await Vault.readSecret('frost')
@@ -17,7 +17,7 @@ export const authorization = () => {
       const { client_token, email } = decoded as any
 
       const tokenData = await Vault.verifyToken(client_token)
-      const usersController = new AccountsController()
+      const usersController = new AccountsController(verifiedAccount)
       ctx.state.tokenData = tokenData
       ctx.state.user = await usersController.get(email)
       ctx.state.jwtSecret = jwt
