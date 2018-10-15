@@ -36,6 +36,7 @@ export const routes = (
   rateLimitConfiguration: RateLimitConfiguration,
   limiters: { [name: string]: LimiterConfiguration },
   poetUrl: string,
+  testPoetUrl: string,
   maxApiTokens: number
 ) => {
   const router = new KoaRouter()
@@ -102,9 +103,13 @@ export const routes = (
   router.get(Path.HEALTH, GetHealth())
   router.del(Path.TOKENS_TOKENID, validate({ params: RemoveTokenSchema }), RemoveToken())
 
-  router.post(Path.WORKS, validate({ body: CreateWorkSchema, options: { allowUnknown: true } }), CreateWork(poetUrl))
-  router.get(Path.WORKS_WORKID, validate({ params: GetWorkSchema }), GetWork(poetUrl))
-  router.get(Path.WORKS, GetWorks(poetUrl))
+  router.post(
+    Path.WORKS,
+    validate({ body: CreateWorkSchema, options: { allowUnknown: true } }),
+    CreateWork(poetUrl, testPoetUrl)
+  )
+  router.get(Path.WORKS_WORKID, validate({ params: GetWorkSchema }), GetWork(poetUrl, testPoetUrl))
+  router.get(Path.WORKS, GetWorks(poetUrl, testPoetUrl))
 
   return router
 }

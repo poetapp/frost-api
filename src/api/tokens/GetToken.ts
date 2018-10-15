@@ -8,11 +8,12 @@ export const GetToken = () => async (ctx: any, next: any): Promise<any> => {
     const { email } = user
     const accountsController = new AccountsController()
     const currentUser = await accountsController.get(email)
-    const allTokens = currentUser.apiTokens.map(({ token }) => Vault.decrypt(token))
-    const apiTokens = await Promise.all(allTokens)
-
+    const apiTokensPromise = currentUser.apiTokens.map(({ token }) => Vault.decrypt(token))
+    const testApiTokensPromise = currentUser.testApiTokens.map(({ token }) => Vault.decrypt(token))
+    const apiTokens = await Promise.all(apiTokensPromise)
+    const testApiTokens = await Promise.all(testApiTokensPromise)
     ctx.body = {
-      apiTokens,
+      apiTokens: apiTokens.concat(testApiTokens),
     }
   } catch (e) {
     logger.error('api.GetToken', e)

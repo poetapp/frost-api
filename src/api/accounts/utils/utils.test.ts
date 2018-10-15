@@ -1,5 +1,5 @@
 import { describe } from 'riteway'
-import { tokenMatch } from './utils'
+import { tokenMatch, isLiveNetwork } from './utils'
 
 describe('tokenMatch()', async (assert: any) => {
   {
@@ -49,4 +49,27 @@ describe('tokenMatch()', async (assert: any) => {
       expected: false,
     })
   }
+})
+
+describe('isLiveNetwork()', async assert => {
+  assert({
+    given: 'test',
+    should: 'return false',
+    actual: isLiveNetwork('test'),
+    expected: false,
+  })
+
+  assert({
+    given: 'live',
+    should: 'return true',
+    actual: isLiveNetwork('live'),
+    expected: true,
+  })
+
+  assert({
+    given: 'random string',
+    should: 'return false',
+    actual: isLiveNetwork('random string'),
+    expected: false,
+  })
 })

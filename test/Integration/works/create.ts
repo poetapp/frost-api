@@ -11,6 +11,7 @@ import {
   createWorkEmptyTags,
   createWorkNoTags,
 } from 'test/Integration/utils'
+import { Network } from '../../../src/interfaces/Network'
 
 const { frostUrl, frostAccount } = configuration
 const { email, password } = frostAccount
@@ -30,24 +31,49 @@ describe('Works', function() {
 
   describe('When create a new work', function() {
     describe('When account is verified', function() {
-      describe('When token is valid and work is right', function() {
+      describe('When ApiToken is valid and work is right', function() {
         it('Should return workId', async function() {
           const user = await createUserVerified(mail, frost)
           const { token } = user
+          const { apiToken } = await frost.createApiToken(token, Network.LIVE)
 
-          const response = await frost.createWork(token, createWork())
+          const response = await frost.createWork(apiToken, createWork())
 
           expect(response).to.have.property('workId')
           expect(response.workId).to.be.a('string')
         })
       })
 
-      describe('When token is valid and the work has date wrong', function() {
+      describe('When ApiToken is valid and the work has date wrong', function() {
         it(`Should return a message with '${errorMessages.badDate}'`, async function() {
           const user = await createUserVerified(mail, frost)
           const { token } = user
+          const { apiToken } = await frost.createApiToken(token, Network.LIVE)
 
-          await expect(frost.createWork(token, createWorkWrong())).to.be.throwWith(errorMessages.badDate)
+          await expect(frost.createWork(apiToken, createWorkWrong())).to.be.throwWith(errorMessages.badDate)
+        })
+      })
+
+      describe('When testApiToken is valid and work is right', function() {
+        it('Should return workId', async function() {
+          const user = await createUserVerified(mail, frost)
+          const { token } = user
+          const { apiToken } = await frost.createApiToken(token, Network.TEST)
+
+          const response = await frost.createWork(apiToken, createWork())
+
+          expect(response).to.have.property('workId')
+          expect(response.workId).to.be.a('string')
+        })
+      })
+
+      describe('When testApiToken is valid and the work has date wrong', function() {
+        it(`Should return a message with '${errorMessages.badDate}'`, async function() {
+          const user = await createUserVerified(mail, frost)
+          const { token } = user
+          const { apiToken } = await frost.createApiToken(token, Network.TEST)
+
+          await expect(frost.createWork(apiToken, createWorkWrong())).to.be.throwWith(errorMessages.badDate)
         })
       })
 
@@ -55,8 +81,9 @@ describe('Works', function() {
         it('Should return workId', async function() {
           const user = await createUserVerified(mail, frost)
           const { token } = user
+          const { apiToken } = await frost.createApiToken(token, Network.LIVE)
 
-          const response = await frost.createWork(token, createWorkEmptyTags())
+          const response = await frost.createWork(apiToken, createWorkEmptyTags())
 
           expect(response).to.have.property('workId')
           expect(response.workId).to.be.a('string')
@@ -67,10 +94,12 @@ describe('Works', function() {
         it(`should return a message with '${errorMessages.payloadTooLarge}'`, async () => {
           const user = await createUserVerified(mail, frost)
           const { token } = user
+          const { apiToken } = await frost.createApiToken(token, Network.LIVE)
+
           const contentBuffer = new Buffer(1024 * 100)
           const text = contentBuffer.toString()
 
-          await expect(frost.createWork(token, createWork({ text }))).to.be.throwWith(errorMessages.payloadTooLarge)
+          await expect(frost.createWork(apiToken, createWork({ text }))).to.be.throwWith(errorMessages.payloadTooLarge)
         })
       })
 
@@ -78,8 +107,9 @@ describe('Works', function() {
         it('Should return workId', async function() {
           const user = await createUserVerified(mail, frost)
           const { token } = user
+          const { apiToken } = await frost.createApiToken(token, Network.LIVE)
 
-          const response = await frost.createWork(token, createWorkNoTags())
+          const response = await frost.createWork(apiToken, createWorkNoTags())
 
           expect(response).to.have.property('workId')
           expect(response.workId).to.be.a('string')
@@ -91,7 +121,9 @@ describe('Works', function() {
       it(`Should send error message with '${errorMessages.accountIsNotVerified}'`, async () => {
         const user = await frost.create()
         const { token } = user
-        await expect(frost.createWork(token, createWork())).to.be.throwWith(errorMessages.accountIsNotVerified)
+        const { apiToken } = await frost.createApiToken(token, Network.LIVE)
+
+        await expect(frost.createWork(apiToken, createWork())).to.be.throwWith(errorMessages.accountIsNotVerified)
       })
     })
 

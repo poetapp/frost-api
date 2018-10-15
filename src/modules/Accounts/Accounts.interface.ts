@@ -12,4 +12,5 @@ export interface Accounts extends Document {
   readonly apiToken: string
   readonly createdAt: string
   readonly apiTokens: [Token]
+  readonly testApiTokens: [Token]
 }

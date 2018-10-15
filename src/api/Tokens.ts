@@ -1,4 +1,6 @@
 // Docs: https://www.vaultproject.io/api/auth/token/index.html
+import { Network } from '../interfaces/Network'
+
 export interface TokenOptions {
   readonly role_name: string
   readonly policies: string[]
@@ -7,7 +9,7 @@ export interface TokenOptions {
   readonly ttl: string
   readonly display_name: string
   readonly num_uses: number
-  readonly meta: { name: string }
+  readonly meta: { name: string; network?: string }
 }
 
 export namespace Token {
@@ -57,6 +59,21 @@ export namespace Token {
     num_uses: 0, // The value of 0 has no limit to the number of uses.
     meta: {
       name: 'api_key',
+      network: Network.LIVE,
+    },
+  }
+
+  export const TestApiKey: TokenOptions = {
+    role_name: 'test',
+    policies: ['test_api_key'],
+    no_default_policy: true,
+    renewable: true,
+    ttl: '4611686018s', // ~146 years
+    display_name: 'Test Api key',
+    num_uses: 0, // The value of 0 has no limit to the number of uses.
+    meta: {
+      name: 'test_api_key',
+      network: Network.TEST,
     },
   }
 }

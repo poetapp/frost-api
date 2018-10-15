@@ -30,6 +30,7 @@ interface APIConfiguration extends APIConnection {
     passwordChangeLimiter: LimiterConfiguration
   }
   poetUrl: string
+  testPoetUrl: string
   maxApiTokens: number
 }
 
@@ -46,10 +47,11 @@ const init = ({
   rateLimit,
   limiters,
   poetUrl,
+  testPoetUrl,
   maxApiTokens,
 }: APIConfiguration) => {
   const app = new Koa()
-  const route = routes(passwordComplex, sendEmail, rateLimit, limiters, poetUrl, maxApiTokens)
+  const route = routes(passwordComplex, sendEmail, rateLimit, limiters, poetUrl, testPoetUrl, maxApiTokens)
 
   app
     .use(helmet(securityHeaders))

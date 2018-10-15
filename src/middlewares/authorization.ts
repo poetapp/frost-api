@@ -13,7 +13,7 @@ export const authorization = () => {
     try {
       const secret = await Vault.readSecret('frost')
       const { jwt } = secret.data
-      const decoded = verify(extractToken(ctx), jwt)
+      const decoded = verify(extractToken(ctx).replace('TEST_', ''), jwt)
       const { client_token, email } = decoded as any
 
       const tokenData = await Vault.verifyToken(client_token)

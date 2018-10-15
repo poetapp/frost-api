@@ -39,6 +39,7 @@ export const AccountsSchema = new Schema({
     type: String,
   },
   apiTokens: [Tokens],
+  testApiTokens: [Tokens],
 })
 
 AccountsSchema.pre('validate', validate)

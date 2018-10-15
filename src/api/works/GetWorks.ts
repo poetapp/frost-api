@@ -2,13 +2,22 @@ import { WorkAttributes } from '@po.et/poet-js'
 import { errors } from '../../errors/errors'
 import { WorksController } from '../../modules/Works/Works.controller'
 import { logger } from '../../utils/Logger/Logger'
+import { isLiveNetwork } from '../accounts/utils/utils'
 
-export const GetWorks = (poetUrl: string) => async (ctx: any, next: any): Promise<any> => {
+export const GetWorks = (poetUrl: string, testPoetUrl: string) => async (ctx: any, next: any): Promise<any> => {
   try {
-    const { user } = ctx.state
+    const { user, tokenData } = ctx.state
     const { publicKey } = user
+    const {
+      data: {
+        meta: { network },
+      },
+    } = tokenData
 
-    const worksController = new WorksController(poetUrl)
+    const nodeNetwork = isLiveNetwork(network) ? poetUrl : testPoetUrl
+
+    const worksController = new WorksController(nodeNetwork)
+
     try {
       const response = await worksController.getWorksByPublicKey(publicKey)
 
