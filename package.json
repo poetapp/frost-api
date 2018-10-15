@@ -59,7 +59,7 @@
     "dotenv": "6.1.0",
     "ioredis": "4.0.2",
     "isomorphic-fetch": "2.2.1",
-    "joi": "13.7.0",
+    "joi": "14.0.0",
     "joi-password-complexity": "2.0.1",
     "jsonwebtoken": "8.3.0",
     "koa": "2.5.3",
