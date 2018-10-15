@@ -57,7 +57,7 @@
     "cli-box": "6.0.8",
     "console.table": "0.10.0",
     "dotenv": "6.1.0",
-    "ioredis": "4.0.2",
+    "ioredis": "4.1.0",
     "isomorphic-fetch": "2.2.1",
     "joi": "14.0.0",
     "joi-password-complexity": "2.0.1",
