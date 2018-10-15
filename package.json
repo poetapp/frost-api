@@ -86,7 +86,7 @@
     "@types/handlebars": "4.0.39",
     "@types/ioredis": "4.0.3",
     "@types/isomorphic-fetch": "0.0.34",
-    "@types/joi": "13.6.0",
+    "@types/joi": "13.6.1",
     "@types/jsonwebtoken": "7.2.8",
     "@types/koa": "2.0.46",
     "@types/koa-bodyparser": "5.0.1",
