@@ -7,12 +7,12 @@ import { logger } from '../../utils/Logger/Logger'
 export class WorksController {
   private work: WorkAttributes
   private privateKey: string
-  private poetUrl: string
+  private network: string
 
-  constructor(poetUrl: string, privateKey?: string, work?: WorkAttributes) {
+  constructor(network: string, privateKey?: string, work?: WorkAttributes) {
     this.privateKey = privateKey
     this.work = work
-    this.poetUrl = poetUrl
+    this.network = network
   }
 
   async generateClaim() {
@@ -21,7 +21,7 @@ export class WorksController {
 
   async create(workAttributes: any) {
     try {
-      const createWork = await fetch(this.poetUrl + '/works/', {
+      const createWork = await fetch(this.network + '/works/', {
         method: Method.POST,
         headers: {
           Accept: 'application/json',
@@ -45,7 +45,7 @@ export class WorksController {
 
   async get(workId: string) {
     try {
-      const work = await fetch(`${this.poetUrl}/works/${workId}`)
+      const work = await fetch(`${this.network}/works/${workId}`)
 
       if (work.ok) return await work.json()
 
@@ -62,7 +62,7 @@ export class WorksController {
 
   async getWorksByPublicKey(publicKey: string) {
     try {
-      const works = await fetch(`${this.poetUrl}/works/?publicKey=${publicKey}`)
+      const works = await fetch(`${this.network}/works/?publicKey=${publicKey}`)
 
       if (works.ok) return await works.json()
 

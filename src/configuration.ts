@@ -49,6 +49,7 @@ export interface Configuration
   readonly vaultUrl: string
   readonly vaultApiVersion: string
   readonly poetUrl: string
+  readonly testPoetUrl: string
   readonly frostHost: string
   readonly frostUrl: string
   readonly frostPort: number
@@ -75,6 +76,7 @@ export const configuration: Configuration = {
   mongodbReconnectTries: 30,
   mongodbUseNewUrlParser: true,
   poetUrl: 'http://localhost:18080',
+  testPoetUrl: 'http://localhost:18080',
   frostHost: '0.0.0.0',
   frostPort: 3000,
   frostUrl: 'http://localhost:3000',

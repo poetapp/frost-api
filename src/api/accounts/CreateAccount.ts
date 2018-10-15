@@ -3,6 +3,7 @@ const PasswordComplexity = require('joi-password-complexity')
 
 import { PasswordComplexConfiguration } from 'api/PasswordComplexConfiguration'
 import { errors } from '../../errors/errors'
+import { Network } from '../../interfaces/Network'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
 import { logger } from '../../utils/Logger/Logger'
 import { SendEmailTo } from '../../utils/SendEmail'
@@ -33,8 +34,8 @@ export const CreateAccount = (sendEmail: SendEmailTo) => async (ctx: any, next: 
   try {
     const user = ctx.request.body
     const { email } = user
-    const apiToken = await getToken(email, Token.ApiKey)
-    user.apiTokens = [{ token: await Vault.encrypt(apiToken) }]
+    const apiToken = await getToken(email, Token.ApiKey, Network.TEST)
+    user.testApiTokens = [{ token: await Vault.encrypt(`TEST_${apiToken}`) }]
     const usersController = new AccountsController()
 
     await usersController.create(user)

@@ -9,6 +9,10 @@ const getApiTokens = (user: Accounts) => {
   return user.apiTokens.map(({ token }) => token)
 }
 
+const getTestApiTokens = (user: Accounts) => {
+  return user.testApiTokens.map(({ token }) => token)
+}
+
 const decryptApiTokens = async (tokens: ReadonlyArray<string>) => {
   const allTokens = tokens.map(Vault.decrypt, Vault)
   return await Promise.all(allTokens)
@@ -30,15 +34,21 @@ export const RemoveToken = () => async (ctx: any, next: any): Promise<any> => {
     const { tokenId } = ctx.params
 
     const apiTokensDecrypted = await decryptApiTokens(getApiTokens(user))
-    const apiTokensFiltered = apiTokensDecrypted.filter((token: string) => token !== tokenId)
+    const testApiTokensDecrypted = await decryptApiTokens(getTestApiTokens(user))
 
-    if (apiTokensDecrypted.length === apiTokensFiltered.length) {
+    const apiTokensFiltered = apiTokensDecrypted.filter((token: string) => token !== tokenId)
+    const testApiTokensFiltered = testApiTokensDecrypted.filter((token: string) => token !== tokenId)
+
+    if (
+      apiTokensDecrypted.length === apiTokensFiltered.length &&
+      testApiTokensDecrypted.length === testApiTokensFiltered.length
+    ) {
       ctx.status = ResourceNotFound.code
       ctx.body = ResourceNotFound.message
       return
     }
 
-    const { client_token } = verify(tokenId, jwtSecret, {
+    const { client_token } = verify(tokenId.replace('TEST_', ''), jwtSecret, {
       ignoreExpiration: true,
     }) as {
       email: string
@@ -47,13 +57,22 @@ export const RemoveToken = () => async (ctx: any, next: any): Promise<any> => {
     }
 
     await Vault.revokeToken(client_token)
+    if (apiTokensDecrypted.length !== apiTokensFiltered.length) {
+      const apiTokensEncrypted = await encryptApiTokens(apiTokensFiltered)
+      const updateApiTokens = apiTokensEncrypted.map((token: string) => ({
+        token,
+      }))
 
-    const apiTokensEncrypted = await encryptApiTokens(apiTokensFiltered)
-    const updateApiTokens = apiTokensEncrypted.map((token: string) => ({
-      token,
-    }))
+      user.apiTokens = updateApiTokens
+    } else {
+      const testApiTokensEncrypted = await encryptApiTokens(testApiTokensFiltered)
+      const updateTestApiTokens = testApiTokensEncrypted.map((token: string) => ({
+        token,
+      }))
 
-    user.apiTokens = updateApiTokens
+      user.testApiTokens = updateTestApiTokens
+    }
+
     user.save()
 
     ctx.status = 200

@@ -5,6 +5,7 @@ import { deleteUser } from 'test/Integration/UserDao'
 import { configuration } from 'test/Integration/configuration'
 import { errorMessages } from 'test/Integration/errorMessages'
 import { createUserVerified, createWork } from 'test/Integration/utils'
+import { Network } from '../../../src/interfaces/Network'
 
 const { frostUrl, frostAccount } = configuration
 const { email, password } = frostAccount
@@ -22,11 +23,12 @@ describe('Works', async function() {
     await mail.removeAll()
   })
 
-  describe('When get a work', function() {
+  describe('When get a work with API Token', function() {
     describe('When an account is not verified', function() {
       it(`Should send error message with '${errorMessages.accountIsNotVerified}'`, async function() {
         const response = await frost.create()
-        await expect(frost.getWork(response.token, '123456')).to.be.throwWith(errorMessages.accountIsNotVerified)
+        const { apiToken } = await frost.createApiToken(response.token, Network.LIVE)
+        await expect(frost.getWork(apiToken, '123456')).to.be.throwWith(errorMessages.accountIsNotVerified)
       })
     })
 
@@ -34,8 +36,9 @@ describe('Works', async function() {
       it('Should return the work', async function() {
         const user = await createUserVerified(mail, frost)
         const { token } = user
-        const { workId } = await frost.createWork(token, createWork())
-        const work = await frost.getWork(token, workId)
+        const { apiToken } = await frost.createApiToken(token, Network.LIVE)
+        const { workId } = await frost.createWork(apiToken, createWork())
+        const work = await frost.getWork(apiToken, workId)
         expect(work).to.have.all.keys('name', 'datePublished', 'dateCreated', 'author', 'tags', 'text')
       })
     })
@@ -45,9 +48,10 @@ describe('Works', async function() {
         const user = await createUserVerified(mail, frost)
         const { token } = user
         const extra = 'something'
+        const { apiToken } = await frost.createApiToken(token, Network.LIVE)
         const createdWork = Object.assign({}, createWork(), { extra })
-        const { workId } = await frost.createWork(token, createdWork)
-        const work = await frost.getWork(token, workId)
+        const { workId } = await frost.createWork(apiToken, createdWork)
+        const work = await frost.getWork(apiToken, workId)
         expect(work).to.have.all.keys('name', 'datePublished', 'dateCreated', 'author', 'tags', 'text', 'extra')
         expect(work.extra).to.be.eq(extra)
       })
@@ -57,7 +61,52 @@ describe('Works', async function() {
       it(`Should return a error message '${errorMessages.workNotFound}'`, async function() {
         const user = await createUserVerified(mail, frost)
         const { token } = user
-        await expect(frost.getWork(token, 'invalidWorkId')).to.be.throwWith(errorMessages.workNotFound)
+        const { apiToken } = await frost.createApiToken(token, Network.LIVE)
+        await expect(frost.getWork(apiToken, 'invalidWorkId')).to.be.throwWith(errorMessages.workNotFound)
+      })
+    })
+  })
+
+  describe('When get a work with testToken', function() {
+    describe('When an account is not verified', function() {
+      it(`Should send error message with '${errorMessages.accountIsNotVerified}'`, async function() {
+        const response = await frost.create()
+        const { apiToken } = await frost.createApiToken(response.token, Network.TEST)
+        await expect(frost.getWork(apiToken, '123456')).to.be.throwWith(errorMessages.accountIsNotVerified)
+      })
+    })
+
+    describe('When work exists', function() {
+      it('Should return the work', async function() {
+        const user = await createUserVerified(mail, frost)
+        const { token } = user
+        const { apiToken } = await frost.createApiToken(token, Network.TEST)
+        const { workId } = await frost.createWork(apiToken, createWork())
+        const work = await frost.getWork(apiToken, workId)
+        expect(work).to.have.all.keys('name', 'datePublished', 'dateCreated', 'author', 'tags', 'text')
+      })
+    })
+
+    describe('When work exists & has extra attributes', function() {
+      it('Should return the work with extra attributes', async function() {
+        const user = await createUserVerified(mail, frost)
+        const { token } = user
+        const extra = 'something'
+        const { apiToken } = await frost.createApiToken(token, Network.TEST)
+        const createdWork = Object.assign({}, createWork(), { extra })
+        const { workId } = await frost.createWork(apiToken, createdWork)
+        const work = await frost.getWork(apiToken, workId)
+        expect(work).to.have.all.keys('name', 'datePublished', 'dateCreated', 'author', 'tags', 'text', 'extra')
+        expect(work.extra).to.be.eq(extra)
+      })
+    })
+
+    describe('When work does not exist', function() {
+      it(`Should return a error message '${errorMessages.workNotFound}'`, async function() {
+        const user = await createUserVerified(mail, frost)
+        const { token } = user
+        const { apiToken } = await frost.createApiToken(token, Network.LIVE)
+        await expect(frost.getWork(apiToken, 'invalidWorkId')).to.be.throwWith(errorMessages.workNotFound)
       })
     })
   })
