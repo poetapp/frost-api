@@ -18,10 +18,13 @@ export const ForgotPasswordSchema = () => ({
 
 export const setResponseStatus = (isOk: boolean) => (isOk ? 200 : ResourceNotFound.code)
 
-export const ForgotPassword = (sendEmail: SendEmailTo) => async (ctx: any, next: any): Promise<any> => {
+export const ForgotPassword = (sendEmail: SendEmailTo, verifiedAccount: boolean) => async (
+  ctx: any,
+  next: any
+): Promise<any> => {
   try {
     const { email } = ctx.request.body
-    const usersController = new AccountsController()
+    const usersController = new AccountsController(verifiedAccount)
     const user = await usersController.get(email)
 
     ctx.status = setResponseStatus(!!user)

@@ -1,12 +1,14 @@
-import { injectDao } from '../../decorators/injectDao/injectDao'
 import { ComplexityOptions } from '../../interfaces/ComplexityOptions'
 import { GenericDAO } from '../../interfaces/GenericDAO'
 import { AccountsDAO } from './Accounts.dao'
 import { Accounts } from './Accounts.interface'
 
-@injectDao(AccountsDAO)
 export class AccountsController {
   private dao: GenericDAO<Accounts>
+
+  constructor(verifiedAccount: boolean) {
+    this.dao = new AccountsDAO(verifiedAccount)
+  }
 
   public create(account: Accounts) {
     return this.dao.create(account)

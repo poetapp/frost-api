@@ -28,7 +28,7 @@ describe('validate() chaining', async (assert: any) => {
   const next = spy()
 
   {
-    await validate.call({ isNew: false }, next)
+    await validate(true).call({ isNew: false }, next)
 
     assert({
       given: 'a context of isNew=false and a function',
@@ -41,7 +41,7 @@ describe('validate() chaining', async (assert: any) => {
 
 describe('setVerifiedAccountStatus()', async (assert: any) => {
   {
-    const actual = setVerifiedAccountStatus({ verifiedAccount: true })({})
+    const actual = setVerifiedAccountStatus(true)({})
 
     assert({
       given: 'an object with "verifiedAccount" set to true',
@@ -52,7 +52,7 @@ describe('setVerifiedAccountStatus()', async (assert: any) => {
   }
 
   {
-    const actual = setVerifiedAccountStatus({ verifiedAccount: false })({})
+    const actual = setVerifiedAccountStatus(false)({})
 
     assert({
       given: 'an object with "verifiedAccount" set to false',
@@ -63,7 +63,7 @@ describe('setVerifiedAccountStatus()', async (assert: any) => {
   }
 
   {
-    const actual = setVerifiedAccountStatus({})({})
+    const actual = setVerifiedAccountStatus()({})
 
     assert({
       given: 'an object without a "verifiedAccount" property',
