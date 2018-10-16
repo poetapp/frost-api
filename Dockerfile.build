@@ -8,7 +8,7 @@ RUN echo 'PS1="\u@${POET_SERVICE:-noService}:\w# "' >> ~/.bashrc
 WORKDIR /usr/src/app/api
 
 COPY package*.json ./
-RUN npm i --quiet
+RUN npm ci
 COPY . .
 RUN npm run build
 RUN npm run lint
