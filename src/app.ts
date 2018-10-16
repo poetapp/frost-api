@@ -175,8 +175,8 @@ export async function app(localVars: any = {}) {
           apiKey: secret.data.transactionalMandrill,
         },
         maildev: {
-          host: configuration.maildevPort25TcpAddr,
-          port: configuration.maildevPort25TcpPort,
+          host: configuration.maildevPortTcpAddr,
+          port: configuration.maildevPortTcpPort,
           ignoreTLS: configuration.maildevIgnoreTLS,
         },
         sendEmailDisabled: configuration.sendEmailDisabled,

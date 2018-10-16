@@ -34,8 +34,8 @@ interface MongoDBConfiguration {
 }
 
 interface MaildevConfiguration {
-  readonly maildevPort25TcpAddr: string
-  readonly maildevPort25TcpPort: number
+  readonly maildevPortTcpAddr: string
+  readonly maildevPortTcpPort: number
   readonly maildevIgnoreTLS: boolean
 }
 export interface Configuration
@@ -99,8 +99,8 @@ export const configuration: Configuration = {
   pwnedCheckerRoot: '',
   transactionalMandrill: '***REMOVED***',
   jwt: 'example',
-  maildevPort25TcpAddr: 'localhost',
-  maildevPort25TcpPort: 1025,
+  maildevPortTcpAddr: 'localhost',
+  maildevPortTcpPort: 1025,
   maildevIgnoreTLS: true,
   redisPort: 6379,
   redisHost: 'localhost',
