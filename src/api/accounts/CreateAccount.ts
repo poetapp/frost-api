@@ -14,10 +14,11 @@ import { getToken } from './utils/utils'
 
 export const CreateAccountSchema = (
   passwordComplex: PasswordComplexConfiguration,
-  verifiedAccount: boolean
+  verifiedAccount: boolean,
+  pwnedCheckerRoot: string
 ) => (values: { password: string }): object => {
   const { password } = values
-  const usersController = new AccountsController(verifiedAccount)
+  const usersController = new AccountsController(verifiedAccount, pwnedCheckerRoot)
 
   return {
     email: Joi.string()
@@ -31,7 +32,7 @@ export const CreateAccountSchema = (
   }
 }
 
-export const CreateAccount = (sendEmail: SendEmailTo, verifiedAccount: boolean) => async (
+export const CreateAccount = (sendEmail: SendEmailTo, verifiedAccount: boolean, pwnedCheckerRoot: string) => async (
   ctx: any,
   next: any
 ): Promise<any> => {
@@ -40,7 +41,7 @@ export const CreateAccount = (sendEmail: SendEmailTo, verifiedAccount: boolean) 
     const { email } = user
     const apiToken = await getToken(email, Token.TestApiKey, Network.TEST)
     user.testApiTokens = [{ token: await Vault.encrypt(`TEST_${apiToken}`) }]
-    const usersController = new AccountsController(verifiedAccount)
+    const usersController = new AccountsController(verifiedAccount, pwnedCheckerRoot)
 
     await usersController.create(user)
 

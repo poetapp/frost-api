@@ -20,7 +20,7 @@ export const setVerifiedAccountStatus = (verified: boolean = false) => (obj: any
   verified,
 })
 
-export const validate = (verifiedAccount: boolean) =>
+export const validate = (verifiedAccount: boolean, pwnedCheckerRoot: string) =>
   async function(next: any) {
     if (this.isNew) {
       const { verified, privateKey, publicKey } = pipe(
@@ -31,7 +31,7 @@ export const validate = (verifiedAccount: boolean) =>
       this.verified = verified
       this.publicKey = publicKey
       this.privateKey = await Vault.encrypt(privateKey)
-      this.password = await processPassword(this.password)
+      this.password = await processPassword(this.password, pwnedCheckerRoot)
       this.createdAt = Date.now()
     }
 

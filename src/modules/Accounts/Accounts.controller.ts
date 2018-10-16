@@ -6,8 +6,8 @@ import { Accounts } from './Accounts.interface'
 export class AccountsController {
   private dao: GenericDAO<Accounts>
 
-  constructor(verifiedAccount: boolean) {
-    this.dao = new AccountsDAO(verifiedAccount)
+  constructor(verifiedAccount: boolean, pwnedCheckerRoot: string) {
+    this.dao = new AccountsDAO(verifiedAccount, pwnedCheckerRoot)
   }
 
   public create(account: Accounts) {

@@ -210,6 +210,7 @@ export async function app(localVars: any = {}) {
     testPoetUrl: configuration.testPoetUrl,
     maxApiTokens: configuration.maxApiTokens,
     verifiedAccount: configuration.verifiedAccount,
+    pwnedCheckerRoot: configuration.pwnedCheckerRoot,
   }
 
   const mongoDB = await MongoDB(configurationMongoDB).start()
