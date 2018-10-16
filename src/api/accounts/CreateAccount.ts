@@ -38,7 +38,7 @@ export const CreateAccount = (sendEmail: SendEmailTo, verifiedAccount: boolean) 
   try {
     const user = ctx.request.body
     const { email } = user
-    const apiToken = await getToken(email, Token.ApiKey, Network.TEST)
+    const apiToken = await getToken(email, Token.TestApiKey, Network.TEST)
     user.testApiTokens = [{ token: await Vault.encrypt(`TEST_${apiToken}`) }]
     const usersController = new AccountsController(verifiedAccount)
 
