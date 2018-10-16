@@ -10,10 +10,11 @@ import { Token } from '../Tokens'
 
 export const PasswordChangeSchema = (
   passwordComplex: PasswordComplexConfiguration,
-  verifiedAccount: boolean
+  verifiedAccount: boolean,
+  pwnedCheckerRoot: string
 ) => (values: { password: string; oldPassword: string }) => {
   const { password, oldPassword } = values
-  const usersController = new AccountsController(verifiedAccount)
+  const usersController = new AccountsController(verifiedAccount, pwnedCheckerRoot)
 
   return {
     password: Joi.validate(password, new PasswordComplexity(passwordComplex), (err, value) => {
@@ -29,7 +30,10 @@ export const PasswordChangeSchema = (
   }
 }
 
-export const PasswordChange = (verifiedAccount: boolean) => async (ctx: any, next: any): Promise<any> => {
+export const PasswordChange = (verifiedAccount: boolean, pwnedCheckerRoot: string) => async (
+  ctx: any,
+  next: any
+): Promise<any> => {
   const { InvalidInput, InternalError } = errors
   try {
     const { user, tokenData } = ctx.state
@@ -43,8 +47,8 @@ export const PasswordChange = (verifiedAccount: boolean) => async (ctx: any, nex
     const { password, oldPassword } = ctx.request.body
 
     await verify(oldPassword, user.password)
-    user.password = await processPassword(password)
-    const usersController = new AccountsController(verifiedAccount)
+    user.password = await processPassword(password, pwnedCheckerRoot)
+    const usersController = new AccountsController(verifiedAccount, pwnedCheckerRoot)
     await usersController.update(user.id, user)
 
     ctx.status = 200

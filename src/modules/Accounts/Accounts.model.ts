@@ -42,6 +42,8 @@ export const AccountsSchema = new Schema({
   testApiTokens: [Tokens],
 })
 
-const createSchema = (verifiedAccount: boolean) => AccountsSchema.pre('validate', validate(verifiedAccount))
+const createSchema = (verifiedAccount: boolean, pwnedCheckerRoot: string) =>
+  AccountsSchema.pre('validate', validate(verifiedAccount, pwnedCheckerRoot))
 
-export const AccountsModel = (verifiedAccount: boolean) => model<Accounts>('Accounts', createSchema(verifiedAccount))
+export const AccountsModel = (verifiedAccount: boolean, pwnedCheckerRoot: string) =>
+  model<Accounts>('Accounts', createSchema(verifiedAccount, pwnedCheckerRoot))

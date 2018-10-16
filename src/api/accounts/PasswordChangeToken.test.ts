@@ -10,7 +10,10 @@ describe('PasswordChangeToken()', async (assert: any) => {
       status: 1,
     }
 
-    await PasswordChangeToken(false)(ctx, (): any => undefined)
+    const pwnedCheckerRoot = ''
+    const accountVerified = false
+
+    await PasswordChangeToken(accountVerified, pwnedCheckerRoot)(ctx, (): any => undefined)
 
     assert({
       given: 'a missing password change token in the context state',

@@ -38,7 +38,8 @@ export const routes = (
   poetUrl: string,
   maxApiTokens: number,
   testPoetUrl: string,
-  verifiedAccount: boolean
+  verifiedAccount: boolean,
+  pwnedCheckerRoot: string
 ) => {
   const router = new KoaRouter()
   const sendEmail = SendEmail(sendEmailConfiguration)
@@ -68,7 +69,7 @@ export const routes = (
       Path.ACCOUNTS_PROFILE,
       Path.TOKENS_TOKENID,
     ],
-    authorization(verifiedAccount)
+    authorization(verifiedAccount, pwnedCheckerRoot)
   )
 
   router.use([Path.WORKS, Path.WORKS_WORKID], requireEmailVerified())
@@ -80,27 +81,31 @@ export const routes = (
 
   router.post(
     Path.ACCOUNTS,
-    validate({ body: CreateAccountSchema(passwordComplexConfiguration, verifiedAccount) }),
-    CreateAccount(sendEmail, verifiedAccount)
+    validate({ body: CreateAccountSchema(passwordComplexConfiguration, verifiedAccount, pwnedCheckerRoot) }),
+    CreateAccount(sendEmail, verifiedAccount, pwnedCheckerRoot)
   )
-  router.post(Path.PASSWORD_RESET, validate({ body: ForgotPasswordSchema }), ForgotPassword(sendEmail, verifiedAccount))
+  router.post(
+    Path.PASSWORD_RESET,
+    validate({ body: ForgotPasswordSchema }),
+    ForgotPassword(sendEmail, verifiedAccount, pwnedCheckerRoot)
+  )
   router.get(Path.ACCOUNTS_PROFILE, GetProfile())
-  router.post(Path.LOGIN, validate({ body: LoginSchema }), Login(verifiedAccount))
+  router.post(Path.LOGIN, validate({ body: LoginSchema }), Login(verifiedAccount, pwnedCheckerRoot))
   router.post(
     Path.PASSWORD_CHANGE,
-    validate({ body: PasswordChangeSchema(passwordComplexConfiguration, verifiedAccount) }),
-    PasswordChange(verifiedAccount)
+    validate({ body: PasswordChangeSchema(passwordComplexConfiguration, verifiedAccount, pwnedCheckerRoot) }),
+    PasswordChange(verifiedAccount, pwnedCheckerRoot)
   )
   router.post(
     Path.PASSWORD_CHANGE_TOKEN,
-    validate({ body: PasswordChangeTokenSchema(passwordComplexConfiguration, verifiedAccount) }),
-    PasswordChangeToken(verifiedAccount)
+    validate({ body: PasswordChangeTokenSchema(passwordComplexConfiguration, verifiedAccount, pwnedCheckerRoot) }),
+    PasswordChangeToken(verifiedAccount, pwnedCheckerRoot)
   )
   router.post(Path.ACCOUNTS_VERIFY, VerifyAccount(sendEmail))
-  router.get(Path.ACCOUNTS_VERIFY_TOKEN, VerifyAccountToken(verifiedAccount))
+  router.get(Path.ACCOUNTS_VERIFY_TOKEN, VerifyAccountToken(verifiedAccount, pwnedCheckerRoot))
 
   router.post(Path.TOKENS, CreateToken(maxApiTokens))
-  router.get(Path.TOKENS, GetToken(verifiedAccount))
+  router.get(Path.TOKENS, GetToken(verifiedAccount, pwnedCheckerRoot))
   router.get(Path.HEALTH, GetHealth())
   router.del(Path.TOKENS_TOKENID, validate({ params: RemoveTokenSchema }), RemoveToken())
 

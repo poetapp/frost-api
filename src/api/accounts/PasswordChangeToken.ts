@@ -12,10 +12,11 @@ import { getToken, tokenMatch } from './utils/utils'
 
 export const PasswordChangeTokenSchema = (
   passwordComplex: PasswordComplexConfiguration,
-  verifiedAccount: boolean
+  verifiedAccount: boolean,
+  pwnedCheckerRoot: string
 ) => (values: { password: string }) => {
   const { password } = values
-  const usersController = new AccountsController(verifiedAccount)
+  const usersController = new AccountsController(verifiedAccount, pwnedCheckerRoot)
 
   return {
     password: Joi.validate(password, new PasswordComplexity(passwordComplex), (err, value) => {
@@ -28,7 +29,10 @@ export const PasswordChangeTokenSchema = (
 
 const hasForgotPasswordToken = tokenMatch(Token.ForgotPassword)
 
-export const PasswordChangeToken = (verifiedAccount: boolean) => async (ctx: any, next: any): Promise<any> => {
+export const PasswordChangeToken = (verifiedAccount: boolean, pwnedCheckerRoot: string) => async (
+  ctx: any,
+  next: any
+): Promise<any> => {
   const { InvalidInput, InternalError } = errors
   try {
     const { user, tokenData } = ctx.state
@@ -40,8 +44,8 @@ export const PasswordChangeToken = (verifiedAccount: boolean) => async (ctx: any
     }
 
     const { password } = ctx.request.body
-    user.password = await processPassword(password)
-    const usersController = new AccountsController(verifiedAccount)
+    user.password = await processPassword(password, pwnedCheckerRoot)
+    const usersController = new AccountsController(verifiedAccount, pwnedCheckerRoot)
     await usersController.update(user.id, user)
     await Vault.revokeToken(tokenData.data.id)
 

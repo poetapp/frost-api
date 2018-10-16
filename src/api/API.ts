@@ -33,6 +33,7 @@ interface APIConfiguration extends APIConnection {
   testPoetUrl: string
   maxApiTokens: number
   verifiedAccount: boolean
+  pwnedCheckerRoot: string
 }
 
 interface APIMethods {
@@ -51,6 +52,7 @@ const init = ({
   testPoetUrl,
   maxApiTokens,
   verifiedAccount,
+  pwnedCheckerRoot,
 }: APIConfiguration) => {
   const app = new Koa()
   const route = routes(
@@ -61,7 +63,8 @@ const init = ({
     poetUrl,
     maxApiTokens,
     testPoetUrl,
-    verifiedAccount
+    verifiedAccount,
+    pwnedCheckerRoot
   )
 
   app

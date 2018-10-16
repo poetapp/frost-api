@@ -28,7 +28,10 @@ describe('validate() chaining', async (assert: any) => {
   const next = spy()
 
   {
-    await validate(true).call({ isNew: false }, next)
+    const pwnedCheckerRoot = ''
+    const accountVerified = true
+
+    await validate(accountVerified, pwnedCheckerRoot).call({ isNew: false }, next)
 
     assert({
       given: 'a context of isNew=false and a function',

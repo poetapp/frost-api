@@ -8,8 +8,8 @@ import { AccountsModel } from './Accounts.model'
 export class AccountsDAO implements GenericDAO<Accounts> {
   private readonly accountsModel: Model<Accounts>
 
-  constructor(verifiedAccount: boolean) {
-    this.accountsModel = AccountsModel(verifiedAccount)
+  constructor(verifiedAccount: boolean, pwnedCheckerRoot: string) {
+    this.accountsModel = AccountsModel(verifiedAccount, pwnedCheckerRoot)
   }
 
   public async create(model: Accounts): Promise<Accounts> {
