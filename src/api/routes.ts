@@ -99,7 +99,7 @@ export const routes = (
   router.post(
     Path.PASSWORD_CHANGE_TOKEN,
     validate({ body: PasswordChangeTokenSchema(passwordComplexConfiguration, verifiedAccount, pwnedCheckerRoot) }),
-    PasswordChangeToken(verifiedAccount, pwnedCheckerRoot)
+    PasswordChangeToken(sendEmail, verifiedAccount, pwnedCheckerRoot)
   )
   router.post(Path.ACCOUNTS_VERIFY, VerifyAccount(sendEmail))
   router.get(Path.ACCOUNTS_VERIFY_TOKEN, VerifyAccountToken(verifiedAccount, pwnedCheckerRoot))

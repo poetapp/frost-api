@@ -12,8 +12,15 @@ describe('PasswordChangeToken()', async (assert: any) => {
 
     const pwnedCheckerRoot = ''
     const accountVerified = false
+    const sendEmail = (email: string) => {
+      return {
+        changePassword: () => Promise.resolve(),
+        sendForgotPassword: () => Promise.resolve(),
+        sendVerified: () => Promise.resolve(),
+      }
+    }
 
-    await PasswordChangeToken(accountVerified, pwnedCheckerRoot)(ctx, (): any => undefined)
+    await PasswordChangeToken(sendEmail, accountVerified, pwnedCheckerRoot)(ctx, (): any => undefined)
 
     assert({
       given: 'a missing password change token in the context state',
