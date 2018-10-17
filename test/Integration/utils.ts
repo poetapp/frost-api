@@ -111,3 +111,8 @@ export enum Method {
   DEL = 'delete',
   ALL = 'all',
 }
+
+export enum Network {
+  LIVE = 'live',
+  TEST = 'test',
+}

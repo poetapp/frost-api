@@ -4,7 +4,7 @@ import { deleteUser } from 'test/Integration/UserDao'
 import { errorMessages } from 'test/Integration/errorMessages'
 
 import { configuration } from 'test/Integration/configuration'
-import { Network } from '../../../node_modules/@po.et/frost-client/dist/utils/utils'
+import { Network } from 'test/Integration/utils'
 
 const { frostUrl, frostAccount } = configuration
 const { email, password } = frostAccount
