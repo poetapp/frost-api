@@ -3,8 +3,14 @@ import { expect } from 'chai'
 import { Mail } from 'test/Integration/Mail'
 import { deleteUser } from 'test/Integration/UserDao'
 import { configuration } from 'test/Integration/configuration'
-import { createUserVerified, createWork, optionsGetWork, optionsCreateWork, getHeader } from 'test/Integration/utils'
-import { Network } from '../../../node_modules/@po.et/frost-client/dist/utils/utils'
+import {
+  createUserVerified,
+  createWork,
+  optionsGetWork,
+  optionsCreateWork,
+  getHeader,
+  Network,
+} from 'test/Integration/utils'
 
 const { frostUrl, frostAccount } = configuration
 const { email, password } = frostAccount
