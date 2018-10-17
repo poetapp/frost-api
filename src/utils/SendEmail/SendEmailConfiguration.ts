@@ -3,6 +3,7 @@ import { NodemailerConfiguration } from 'utils/Nodemailer/NodemailerConfiguratio
 export interface Emails {
   readonly sendForgotPassword: (token: string) => Promise<void>
   readonly sendVerified: (token: string) => Promise<void>
+  readonly changePassword: () => Promise<void>
 }
 
 export type SendEmailTo = (to: string) => Emails

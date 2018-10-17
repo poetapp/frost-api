@@ -5,6 +5,7 @@ import { errors } from '../../errors/errors'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
 import { logger } from '../../utils/Logger/Logger'
 import { processPassword } from '../../utils/Password'
+import { SendEmailTo } from '../../utils/SendEmail'
 import { Vault } from '../../utils/Vault/Vault'
 import { PasswordComplexConfiguration } from '../PasswordComplexConfiguration'
 import { Token } from '../Tokens'
@@ -29,10 +30,11 @@ export const PasswordChangeTokenSchema = (
 
 const hasForgotPasswordToken = tokenMatch(Token.ForgotPassword)
 
-export const PasswordChangeToken = (verifiedAccount: boolean, pwnedCheckerRoot: string) => async (
-  ctx: any,
-  next: any
-): Promise<any> => {
+export const PasswordChangeToken = (
+  sendEmail: SendEmailTo,
+  verifiedAccount: boolean,
+  pwnedCheckerRoot: string
+) => async (ctx: any, next: any): Promise<any> => {
   const { InvalidInput, InternalError } = errors
   try {
     const { user, tokenData } = ctx.state
@@ -50,6 +52,7 @@ export const PasswordChangeToken = (verifiedAccount: boolean, pwnedCheckerRoot: 
     await Vault.revokeToken(tokenData.data.id)
 
     const token = await getToken(user.email, Token.Login)
+    await sendEmail(user.email).changePassword()
     ctx.body = { token }
     ctx.status = 200
   } catch (e) {

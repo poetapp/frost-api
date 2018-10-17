@@ -1,3 +1,4 @@
+import * as changePassword from '../../emails/changePassword'
 import * as forgotPassword from '../../emails/forgotPassword'
 import * as verify from '../../emails/verify'
 import { Nodemailer } from '../Nodemailer'
@@ -26,6 +27,17 @@ export const SendEmail = (configuration: SendEmailConfiguration): SendEmailTo =>
         const { frostVerifiedAccount } = configuration
         const html = verify.template(`${frostVerifiedAccount}?token=${token}`)
         const subject = verify.subject
+        const data = { to, from, subject, html }
+
+        await nodemailer.sendEmail(data)
+      } catch (e) {
+        throw e
+      }
+    },
+    async changePassword() {
+      try {
+        const html = changePassword.template()
+        const subject = changePassword.subject
         const data = { to, from, subject, html }
 
         await nodemailer.sendEmail(data)
