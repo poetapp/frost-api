@@ -75,7 +75,7 @@ services:
       network_mode: "host"
 
   poet-node:
-      image: "poetapp/node:latest"
+      image: "poetapp/node:v1.8.3"
       container_name: "poet_node"
       ports:
           - "18080:18080"
