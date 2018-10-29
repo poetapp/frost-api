@@ -24,7 +24,7 @@ export const GetWork = (poetUrl: string, testPoetUrl: string) => async (ctx: any
 
     try {
       const response = await worksController.get(workId)
-      ctx.body = response.attributes
+      ctx.body = response.claim
       return
     } catch (e) {
       const { WorkNotFound } = errors

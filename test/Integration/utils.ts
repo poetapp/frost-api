@@ -1,5 +1,4 @@
 import { Frost } from '@po.et/frost-client'
-import { WorkAttributes } from '@po.et/poet-js'
 import { load } from 'cheerio'
 
 export const createUserVerified = async (mail: any, frost: Frost) => {
@@ -17,7 +16,7 @@ export const createUserVerified = async (mail: any, frost: Frost) => {
   return user
 }
 
-export const createWork = ({ text = 'test' } = {}): WorkAttributes => {
+export const createWork = ({ text = 'test' } = {}): any => {
   return {
     name: 'test',
     datePublished: '2017-11-24T00:38:41.595Z',
@@ -28,7 +27,7 @@ export const createWork = ({ text = 'test' } = {}): WorkAttributes => {
   }
 }
 
-export const createWorkWrong = (): WorkAttributes => {
+export const createWorkWrong = (): any => {
   return {
     name: 'test',
     datePublished: 'aaaa',
@@ -39,7 +38,7 @@ export const createWorkWrong = (): WorkAttributes => {
   }
 }
 
-export const createWorkNoTags = (): WorkAttributes => {
+export const createWorkNoTags = (): any => {
   return {
     name: 'test',
     datePublished: '2017-11-24T00:38:41.595Z',
@@ -49,7 +48,25 @@ export const createWorkNoTags = (): WorkAttributes => {
   }
 }
 
-export const createWorkEmptyTags = (): WorkAttributes => {
+export const createWorkNoText = (): any => ({
+  name: 'test',
+  datePublished: '2017-11-24T00:38:41.595Z',
+  dateCreated: '2017-11-24T00:38:41.595Z',
+  author: 'test',
+  tags: '1,1,1',
+})
+
+export const createWorkArchiveUrlHash = (archiveUrl: string = 'http://archive.example.com'): any => ({
+  name: 'test',
+  datePublished: '2017-11-24T00:38:41.595Z',
+  dateCreated: '2017-11-24T00:38:41.595Z',
+  author: 'test',
+  tags: '1,1,1',
+  hash: 'this-is-a-hash',
+  archiveUrl,
+})
+
+export const createWorkEmptyTags = (): any => {
   return {
     name: 'test',
     datePublished: '2017-11-24T00:38:41.595Z',

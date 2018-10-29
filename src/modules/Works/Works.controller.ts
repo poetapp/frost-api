@@ -1,22 +1,46 @@
-import { createClaim, WorkAttributes, ClaimType } from '@po.et/poet-js'
+import {
+  getVerifiableClaimSigner,
+  configureCreateVerifiableClaim,
+  createIssuerFromPrivateKey,
+  SignedVerifiableClaim,
+} from '@po.et/poet-js'
 import fetch from 'node-fetch'
+import { isNil, not, pipe, pipeP } from 'ramda'
+
 import { Method } from '../../constants'
 import { errors } from '../../errors/errors'
 import { logger } from '../../utils/Logger/Logger'
 
-export class WorksController {
-  private work: WorkAttributes
-  private privateKey: string
-  private network: string
+const legacyContext = {
+  text: 'schema:text',
+  content: 'schema:text',
+}
 
-  constructor(network: string, privateKey?: string, work?: WorkAttributes) {
-    this.privateKey = privateKey
+const isNotNil = pipe(
+  isNil,
+  not
+)
+
+export class WorksController {
+  private work: object
+  private network: string
+  private issuer: string
+  private createAndSignClaim: (doc: object) => SignedVerifiableClaim
+
+  constructor(network: string, privateKey?: string, work?: object) {
     this.work = work
     this.network = network
+    if (isNotNil(privateKey)) {
+      this.issuer = createIssuerFromPrivateKey(privateKey)
+      this.createAndSignClaim = pipeP(
+        configureCreateVerifiableClaim({ issuer: this.issuer, context: legacyContext }),
+        getVerifiableClaimSigner().configureSignVerifiableClaim({ privateKey })
+      )
+    }
   }
 
   async generateClaim() {
-    return await createClaim(this.privateKey, ClaimType.Work, this.work)
+    return await this.createAndSignClaim(this.work)
   }
 
   async create(workAttributes: any) {
@@ -60,19 +84,19 @@ export class WorksController {
     }
   }
 
-  async getWorksByPublicKey(publicKey: string) {
+  async getWorksByIssuer() {
     try {
-      const works = await fetch(`${this.network}/works/?publicKey=${publicKey}`)
+      const works = await fetch(`${this.network}/works/?issuer=${this.issuer}`)
 
       if (works.ok) return await works.json()
 
       const errorText = await works.text()
       const data = { ...works, errorText, method: Method.GET }
-      logger.error('WorksController.getWorksByPublicKey', data, { publicKey })
+      logger.error('WorksController.getWorksByIssuer', data, { issuer: this.issuer })
 
       throw new Error('Works not found')
     } catch (e) {
-      logger.error('WorksController.getWorksByPublicKey', e)
+      logger.error('WorksController.getWorksByIssuer', e)
       throw e
     }
   }

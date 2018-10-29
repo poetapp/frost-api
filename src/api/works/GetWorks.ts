@@ -1,13 +1,14 @@
-import { WorkAttributes } from '@po.et/poet-js'
+import { SignedVerifiableClaim } from '@po.et/poet-js'
 import { errors } from '../../errors/errors'
 import { WorksController } from '../../modules/Works/Works.controller'
 import { logger } from '../../utils/Logger/Logger'
+import { Vault } from '../../utils/Vault/Vault'
 import { isLiveNetwork } from '../accounts/utils/utils'
 
 export const GetWorks = (poetUrl: string, testPoetUrl: string) => async (ctx: any, next: any): Promise<any> => {
   try {
     const { user, tokenData } = ctx.state
-    const { publicKey } = user
+    const privateKey = await Vault.decrypt(user.privateKey)
     const {
       data: {
         meta: { network },
@@ -16,12 +17,12 @@ export const GetWorks = (poetUrl: string, testPoetUrl: string) => async (ctx: an
 
     const nodeNetwork = isLiveNetwork(network) ? poetUrl : testPoetUrl
 
-    const worksController = new WorksController(nodeNetwork)
+    const worksController = new WorksController(nodeNetwork, privateKey)
 
     try {
-      const response = await worksController.getWorksByPublicKey(publicKey)
+      const response = await worksController.getWorksByIssuer()
 
-      ctx.body = response.map((work: WorkAttributes) => work.attributes)
+      ctx.body = response.map((work: SignedVerifiableClaim) => work.claim)
       return
     } catch (e) {
       const { WorkNotFound } = errors
