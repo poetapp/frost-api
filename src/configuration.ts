@@ -1,3 +1,5 @@
+import { LoggingConfiguration } from './utils/Logger/Logging'
+
 interface RateLimitConfiguration {
   readonly rateLimitDisabled: boolean
   readonly loginRateLimitMax: number
@@ -44,7 +46,8 @@ export interface Configuration
     MongoDBConfiguration,
     MaildevConfiguration,
     RateLimitConfiguration,
-    RedisConfiguration {
+    RedisConfiguration,
+    LoggingConfiguration {
   readonly vaultToken: undefined
   readonly vaultUrl: string
   readonly vaultApiVersion: string
@@ -111,4 +114,6 @@ export const configuration: Configuration = {
   loginRateLimitDuration: 3600000,
   accountRateLimitDuration: 3600000,
   passwordChangeRateLimitDuration: 3600000,
+  loggingLevel: 'info',
+  loggingPretty: true,
 }
