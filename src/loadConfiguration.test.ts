@@ -83,6 +83,8 @@ describe('mergeConfigs', async (assert: any) => {
       PASSWORD_COMPLEX_NUMERIC: 'override',
       PASSWORD_COMPLEX_SYMBOL: 'override',
       PWNED_CHECKER_ROOT: 'override',
+      LOGGING_LEVEL: 'override',
+      LOGGING_PRETTY: 'override',
     }
 
     const expected = {
@@ -109,6 +111,8 @@ describe('mergeConfigs', async (assert: any) => {
       passwordComplexNumeric: 'override',
       passwordComplexSymbol: 'override',
       pwnedCheckerRoot: 'override',
+      loggingLevel: 'override',
+      loggingPretty: 'override',
     }
 
     const keys = Object.keys(expected)
