@@ -1,12 +1,13 @@
 require('dotenv').config({ path: '.env' })
 import * as fs from 'fs'
 
+import * as Pino from 'pino'
 import { API } from './api/API'
 import { Configuration } from './configuration'
 import { MongoDB } from './databases/mongodb/mongodb'
 import { loadConfigurationWithDefaults } from './loadConfiguration'
 import { delay } from './utils/Delay/Delay'
-import { logger } from './utils/Logger/Logger'
+import { createModuleLogger } from './utils/Logger/Logging'
 import { Vault } from './utils/Vault/Vault'
 const Box = require('cli-box')
 require('console.table')
@@ -16,7 +17,7 @@ interface InitVault {
   jwt: string
 }
 
-const initVault = async ({ transactionalMandrill, jwt }: InitVault) => {
+const initVault = async ({ transactionalMandrill, jwt }: InitVault, logger: Pino.Logger) => {
   try {
     let initialized = false
     let sealed = true
@@ -26,16 +27,16 @@ const initVault = async ({ transactionalMandrill, jwt }: InitVault) => {
 
     while (!initialized)
       try {
-        logger.log('info', 'waiting vault')
+        logger.info('info', 'waiting vault')
         status = await Vault.status()
         initialized = status.initialized
         if (!status.initialized) {
           config = await Vault.init()
-          logger.log('info', 'Vault is initialized')
+          logger.info('info', 'Vault is initialized')
         }
       } catch (e) {
-        logger.log('error', e.message)
-        logger.log('info', 'Retry in 5 seconds')
+        logger.info('error', e.message)
+        logger.info('info', 'Retry in 5 seconds')
         await delay(5000)
       }
 
@@ -72,13 +73,13 @@ const initVault = async ({ transactionalMandrill, jwt }: InitVault) => {
           status = await Vault.status()
           sealed = status.sealed
           if (status.sealed) {
-            logger.log('info', 'vault trying unseal')
+            logger.info('info', 'vault trying unseal')
             await Vault.unseal(keys[0])
-            logger.log('info', 'Vault is unseal')
+            logger.info('info', 'Vault is unseal')
           }
         } catch (e) {
-          logger.log('error', e.message)
-          logger.log('info', 'Retry in 5 seconds')
+          logger.info('error', e.message)
+          logger.info('info', 'Retry in 5 seconds')
           await delay(5000)
         }
 
@@ -86,8 +87,8 @@ const initVault = async ({ transactionalMandrill, jwt }: InitVault) => {
         status = await Vault.status()
         standby = status.standby
         if (standby) {
-          logger.log('info', 'Vault is in standby')
-          logger.log('info', 'Retry in 5 seconds')
+          logger.info('info', 'Vault is in standby')
+          logger.info('info', 'Retry in 5 seconds')
           await delay(5000)
         }
       }
@@ -103,22 +104,29 @@ const initVault = async ({ transactionalMandrill, jwt }: InitVault) => {
       await Vault.writeSecret('frost', value)
       return true
     } else if (status.initialized)
-      logger.log(
+      logger.info(
         'error',
         'Vault was initialized. Check file vault.json in the root project. \
          You have to set the environment variable VAULT_TOKEN '
       )
   } catch (e) {
-    logger.log('error', e.message)
+    logger.info('error', e.message)
   }
 }
 
 export async function app(localVars: any = {}) {
+  const configuration: Configuration = loadConfigurationWithDefaults(localVars)
+
+  const loggingConfiguration = {
+    loggingLevel: configuration.loggingLevel,
+    loggingPretty: configuration.loggingPretty,
+  }
+
+  const logger = createModuleLogger(loggingConfiguration)(__dirname)
+
   logger.info('Running Frost API')
   logger.info('')
   logger.info('Loading Configuration...')
-
-  const configuration: Configuration = loadConfigurationWithDefaults(localVars)
 
   logger.info(configuration)
 
@@ -138,10 +146,10 @@ export async function app(localVars: any = {}) {
 
     // Init vault and unseal
     // https://www.vaultproject.io/intro/getting-started/deploy.html
-    if (!configurationVault.token) await initVault(configurationInitVault)
+    if (!configurationVault.token) await initVault(configurationInitVault, logger)
     await Vault.mountAuthTune()
   } catch (e) {
-    logger.log('error', e.message)
+    logger.error(e.message)
   }
 
   const secret = await Vault.readSecret('frost')
