@@ -7,9 +7,10 @@ import { errorMessages } from 'test/Integration/errorMessages'
 import {
   createUserVerified,
   createWork,
-  createWorkWrong,
   createWorkEmptyTags,
   createWorkNoTags,
+  createWorkWrong,
+  createWorkNoText,
 } from 'test/Integration/utils'
 import { Network } from '../../../src/interfaces/Network'
 
@@ -51,6 +52,18 @@ describe('Works', function() {
           const { apiToken } = await frost.createApiToken(token, Network.LIVE)
 
           await expect(frost.createWork(apiToken, createWorkWrong())).to.be.throwWith(errorMessages.badDate)
+        })
+      })
+
+      describe('When ApiToken is valid and work has no text field', function() {
+        it('Should return workId', async function() {
+          const user = await createUserVerified(mail, frost)
+          const { token } = user
+          const { apiToken } = await frost.createApiToken(token, Network.LIVE)
+
+          const response = await frost.createWork(apiToken, createWorkNoText())
+          expect(response).to.have.property('workId')
+          expect(response.workId).to.be.a('string')
         })
       })
 

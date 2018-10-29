@@ -1,20 +1,9 @@
+import { generateED25519Base58Keys } from '@po.et/poet-js'
 const { pipe } = require('ramda')
-import * as bitcoin from 'bitcoinjs-lib'
 import { processPassword } from '../../utils/Password'
 import { Vault } from '../../utils/Vault/Vault'
 
-const createKeys = (): { privateKey: string; publicKey: string } => {
-  const keyPair = bitcoin.ECPair.makeRandom()
-  const privateKey = keyPair.privateKey.toString('hex')
-  const publicKey = keyPair.publicKey.toString('hex')
-
-  return {
-    privateKey,
-    publicKey,
-  }
-}
-
-export const createCryptoKeys = (obj: any) => ({ ...obj, ...createKeys() })
+export const createCryptoKeys = (obj: any) => ({ ...obj, ...generateED25519Base58Keys() })
 export const setVerifiedAccountStatus = (verified: boolean = false) => (obj: any) => ({
   ...obj,
   verified,

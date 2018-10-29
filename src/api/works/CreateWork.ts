@@ -16,7 +16,12 @@ export const CreateWorkSchema = () => ({
     .isoDate(),
   author: Joi.string().required(),
   tags: Joi.string().allow(''),
-  text: Joi.string().required(),
+  text: Joi.string().optional(),
+  content: Joi.any().optional(),
+  hash: Joi.string().optional(),
+  archiveUrl: Joi.string()
+    .uri({ scheme: ['https', 'http', 'ipfs'] })
+    .optional(),
 })
 
 export const CreateWork = (poetUrl: string, testPoetUrl: string) => async (ctx: any, next: any): Promise<any> => {
