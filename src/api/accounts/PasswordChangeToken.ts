@@ -3,7 +3,6 @@ const PasswordComplexity = require('joi-password-complexity')
 
 import { errors } from '../../errors/errors'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
-import { logger } from '../../utils/Logger/Logger'
 import { processPassword } from '../../utils/Password'
 import { SendEmailTo } from '../../utils/SendEmail'
 import { Vault } from '../../utils/Vault/Vault'
@@ -35,7 +34,9 @@ export const PasswordChangeToken = (
   verifiedAccount: boolean,
   pwnedCheckerRoot: string,
 ) => async (ctx: any, next: any): Promise<any> => {
+  const logger = ctx.logger(__dirname)
   const { InvalidInput, InternalError } = errors
+
   try {
     const { user, tokenData } = ctx.state
 
@@ -55,8 +56,8 @@ export const PasswordChangeToken = (
     await sendEmail(user.email).changePassword()
     ctx.body = { token }
     ctx.status = 200
-  } catch (e) {
-    logger.error('api.PasswordChangeToken', e)
-    ctx.throw(InvalidInput.code, InvalidInput.message + ' ' + e.message)
+  } catch (exception) {
+    logger.error({ exception }, 'api.PasswordChangeToken')
+    ctx.throw(InvalidInput.code, InvalidInput.message + ' ' + exception.message)
   }
 }

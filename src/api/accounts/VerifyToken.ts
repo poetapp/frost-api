@@ -1,6 +1,5 @@
 import { errors } from '../../errors/errors'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
-import { logger } from '../../utils/Logger/Logger'
 import { Token } from '../Tokens'
 import { getToken } from './utils/utils'
 
@@ -8,7 +7,9 @@ export const VerifyAccountToken = (verifiedAccount: boolean, pwnedCheckerRoot: s
   ctx: any,
   next: any,
 ): Promise<any> => {
+  const logger = ctx.logger(__dirname)
   const { EmailVerfied, InternalError } = errors
+
   try {
     const { user, tokenData } = ctx.state
 
@@ -29,8 +30,8 @@ export const VerifyAccountToken = (verifiedAccount: boolean, pwnedCheckerRoot: s
     await usersController.update(user.id, user)
     const token = await getToken(user.email, Token.Login)
     ctx.body = { token }
-  } catch (e) {
-    logger.error('api.VerifyAccountToken', e)
-    throw e
+  } catch (exception) {
+    logger.error({ exception }, 'api.VerifyAccountToken')
+    throw exception
   }
 }

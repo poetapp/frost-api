@@ -1,7 +1,6 @@
 import * as Joi from 'joi'
 import { errors } from '../../errors/errors'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
-import { logger } from '../../utils/Logger/Logger'
 import { verify } from '../../utils/Password'
 import { Token } from '../Tokens'
 import { getToken } from './utils/utils'
@@ -14,6 +13,8 @@ export const LoginSchema = () => ({
 })
 
 export const Login = (verifiedAccount: boolean, pwnedCheckerRoot: string) => async (ctx: any, next: any) => {
+  const logger = ctx.logger(__dirname)
+
   try {
     const user = ctx.request.body
     const usersController = new AccountsController(verifiedAccount, pwnedCheckerRoot)
@@ -21,9 +22,9 @@ export const Login = (verifiedAccount: boolean, pwnedCheckerRoot: string) => asy
     await verify(user.password, response.password)
     const token = await getToken(user.email, Token.Login)
     ctx.body = { token }
-  } catch (e) {
+  } catch (exception) {
     const { ResourceNotFound } = errors
-    logger.error('api.Login', e)
+    logger.error({ exception }, 'api.Login')
     ctx.throw(ResourceNotFound.code, ResourceNotFound.message)
   }
 }
