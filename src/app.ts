@@ -162,6 +162,7 @@ export async function app(localVars: any = {}) {
       reconnectTries: configuration.mongodbReconnectTries,
       useNewUrlParser: configuration.mongodbUseNewUrlParser,
     },
+    loggingConfiguration,
   }
 
   const configurationFrostAPI = {
