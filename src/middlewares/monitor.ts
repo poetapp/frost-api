@@ -1,5 +1,4 @@
 import * as Koa from 'koa'
-import { logger } from '../utils/Logger/Logger'
 const { map, lensPath, ifElse, compose, view, set, identity } = require('ramda')
 
 export const omitSecretsInUrl = (secrets: ReadonlyArray<string> = [], url: string = '') => {
@@ -62,10 +61,12 @@ export const secureSecrets = (secrets: ReadonlyArray<string>) =>
   )
 
 export const monitor = (secrets: ReadonlyArray<string> = []) => {
-  return (ctx: Koa.Context, next: () => void) => {
+  return (ctx: any, next: () => void) => {
+    const logger = ctx.logger(__dirname)
+
     logger.info({
       monitor: secureSecrets(secrets)(ctx),
-    })
+    }, 'Monitor Middleware')
 
     return next()
   }
