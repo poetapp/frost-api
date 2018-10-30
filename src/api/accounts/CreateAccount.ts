@@ -5,7 +5,6 @@ import { PasswordComplexConfiguration } from 'api/PasswordComplexConfiguration'
 import { errors } from '../../errors/errors'
 import { Network } from '../../interfaces/Network'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
-import { logger } from '../../utils/Logger/Logger'
 import { SendEmailTo } from '../../utils/SendEmail'
 import { Vault } from '../../utils/Vault/Vault'
 
@@ -36,6 +35,8 @@ export const CreateAccount = (sendEmail: SendEmailTo, verifiedAccount: boolean, 
   ctx: any,
   next: any,
 ): Promise<any> => {
+  const logger = ctx.logger(__dirname)
+
   try {
     const user = ctx.request.body
     const { email } = user
@@ -49,9 +50,9 @@ export const CreateAccount = (sendEmail: SendEmailTo, verifiedAccount: boolean, 
     await sendEmail(email).sendVerified(tokenVerifiedAccount)
     const token = await getToken(email, Token.Login)
     ctx.body = { token }
-  } catch (e) {
+  } catch (exception) {
     const { AccountAlreadyExists } = errors
-    logger.error('api.CreateAccount', e)
+    logger.error({ exception }, 'api.CreateAccount')
     ctx.throw(AccountAlreadyExists.code, AccountAlreadyExists.message)
   }
 }

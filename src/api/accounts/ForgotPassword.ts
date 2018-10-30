@@ -2,7 +2,6 @@ import * as Joi from 'joi'
 
 import { errors } from '../../errors/errors'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
-import { logger } from '../../utils/Logger/Logger'
 import { SendEmailTo } from '../../utils/SendEmail'
 import { Token } from '../Tokens'
 
@@ -22,6 +21,8 @@ export const ForgotPassword = (sendEmail: SendEmailTo, verifiedAccount: boolean,
   ctx: any,
   next: any,
 ): Promise<any> => {
+  const logger = ctx.logger(__dirname)
+
   try {
     const { email } = ctx.request.body
     const usersController = new AccountsController(verifiedAccount, pwnedCheckerRoot)
@@ -32,9 +33,9 @@ export const ForgotPassword = (sendEmail: SendEmailTo, verifiedAccount: boolean,
       const token = await getToken(email, Token.ForgotPassword)
       await sendEmail(email).sendForgotPassword(token)
     } else ctx.body = ResourceNotFound.message
-  } catch (e) {
+  } catch (exception) {
     const { InternalError } = errors
-    logger.error('api.ForgotPassword', e)
+    logger.error({ exception }, 'api.ForgotPassword')
     ctx.throw(InternalError.code, InternalError.message)
   }
 }
