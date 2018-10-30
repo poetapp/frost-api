@@ -5,6 +5,7 @@ import * as cors from 'koa2-cors'
 
 import { securityHeaders } from '../securityHeaders'
 import { logger } from '../utils/Logger/Logger'
+import { LoggingConfiguration } from '../utils/Logger/Logging'
 import { SendEmailConfiguration } from '../utils/SendEmail'
 
 import { LimiterConfiguration, RateLimitConfiguration } from '../middlewares/rateLimit'
@@ -34,6 +35,7 @@ interface APIConfiguration extends APIConnection {
   maxApiTokens: number
   verifiedAccount: boolean
   pwnedCheckerRoot: string
+  loggingConfiguration: LoggingConfiguration
 }
 
 interface APIMethods {
