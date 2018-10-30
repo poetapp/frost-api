@@ -2,7 +2,6 @@ import * as Joi from 'joi'
 
 import { errors } from '../../errors/errors'
 import { WorksController } from '../../modules/Works/Works.controller'
-import { logger } from '../../utils/Logger/Logger'
 import { Vault } from '../../utils/Vault/Vault'
 import { isLiveNetwork } from '../accounts/utils/utils'
 
@@ -25,6 +24,8 @@ export const CreateWorkSchema = () => ({
 })
 
 export const CreateWork = (poetUrl: string, testPoetUrl: string) => async (ctx: any, next: any): Promise<any> => {
+  const logger = ctx.logger(__dirname)
+
   try {
     const { user, tokenData } = ctx.state
     const {
@@ -51,8 +52,8 @@ export const CreateWork = (poetUrl: string, testPoetUrl: string) => async (ctx: 
 
     ctx.status = 200
     ctx.body = { workId: claim.id }
-  } catch (e) {
-    logger.error('api.CreateWork', e)
+  } catch (exception) {
+    logger.error({ exception }, 'api.CreateWork')
     ctx.status = 500
   }
 }

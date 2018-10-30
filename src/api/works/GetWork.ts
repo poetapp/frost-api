@@ -1,7 +1,6 @@
 import * as Joi from 'joi'
 import { errors } from '../../errors/errors'
 import { WorksController } from '../../modules/Works/Works.controller'
-import { logger } from '../../utils/Logger/Logger'
 import { isLiveNetwork } from '../accounts/utils/utils'
 
 export const GetWorkSchema = () => ({
@@ -9,6 +8,8 @@ export const GetWorkSchema = () => ({
 })
 
 export const GetWork = (poetUrl: string, testPoetUrl: string) => async (ctx: any, next: any): Promise<any> => {
+  const logger = ctx.logger(__dirname)
+
   try {
     const { workId } = ctx.params
     const { tokenData } = ctx.state
@@ -31,8 +32,8 @@ export const GetWork = (poetUrl: string, testPoetUrl: string) => async (ctx: any
       ctx.status = WorkNotFound.code
       ctx.body = WorkNotFound.message
     }
-  } catch (e) {
-    logger.error('api.GetWork', e)
+  } catch (exception) {
+    logger.error({ exception }, 'api.GetWork')
     ctx.status = 500
   }
 }
