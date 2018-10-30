@@ -2,12 +2,13 @@ import * as Koa from 'koa'
 import * as bodyParser from 'koa-bodyparser'
 import * as helmet from 'koa-helmet'
 import * as cors from 'koa2-cors'
+import * as Pino from 'pino'
 
 import { securityHeaders } from '../securityHeaders'
-import { logger } from '../utils/Logger/Logger'
-import { LoggingConfiguration } from '../utils/Logger/Logging'
+import { createModuleLogger, LoggingConfiguration } from '../utils/Logger/Logging'
 import { SendEmailConfiguration } from '../utils/SendEmail'
 
+import { logger } from '../middlewares/logger'
 import { LimiterConfiguration, RateLimitConfiguration } from '../middlewares/rateLimit'
 import { PasswordComplexConfiguration } from './PasswordComplexConfiguration'
 import { routes } from './routes'
@@ -55,6 +56,7 @@ const init = ({
   maxApiTokens,
   verifiedAccount,
   pwnedCheckerRoot,
+  loggingConfiguration,
 }: APIConfiguration) => {
   const app = new Koa()
   const route = routes(
@@ -70,6 +72,7 @@ const init = ({
   )
 
   app
+    .use(logger(createModuleLogger(loggingConfiguration)))
     .use(helmet(securityHeaders))
     .use(
       cors({
@@ -88,28 +91,31 @@ const init = ({
   return app
 }
 
-const startAPI = async (app: any, configuration: APIConnection) => {
+const startAPI = async (app: any, configuration: APIConnection, logger: Pino.Logger) => {
   logger.info('Starting API...')
   const server = await app.listen(configuration.port, configuration.host)
   logger.info('Started API.')
   return server
 }
 
-const stopAPI = async (server: any) => {
+const stopAPI = async (server: any, logger: Pino.Logger) => {
   logger.info('Stopping API...')
   await server.close()
   logger.info('Stopped API.')
 }
 
 export const API = (configuration: APIConfiguration): APIMethods => {
+  const { loggingConfiguration } = configuration
+  const logger = createModuleLogger(loggingConfiguration)(__dirname)
+
   return {
     async start(): Promise<APIMethods> {
       const app = init(configuration)
-      this.server = await startAPI(app, configuration)
+      this.server = await startAPI(app, configuration, logger)
       return this
     },
     async stop(): Promise<APIMethods> {
-      await stopAPI(this.server)
+      await stopAPI(this.server, logger)
       return this
     },
   }
