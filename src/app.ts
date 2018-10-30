@@ -219,6 +219,7 @@ export async function app(localVars: any = {}) {
     maxApiTokens: configuration.maxApiTokens,
     verifiedAccount: configuration.verifiedAccount,
     pwnedCheckerRoot: configuration.pwnedCheckerRoot,
+    loggingConfiguration,
   }
 
   const mongoDB = await MongoDB(configurationMongoDB).start()
