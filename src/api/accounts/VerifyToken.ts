@@ -6,7 +6,7 @@ import { getToken } from './utils/utils'
 
 export const VerifyAccountToken = (verifiedAccount: boolean, pwnedCheckerRoot: string) => async (
   ctx: any,
-  next: any
+  next: any,
 ): Promise<any> => {
   const { EmailVerfied, InternalError } = errors
   try {

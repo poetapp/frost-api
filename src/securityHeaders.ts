@@ -3,7 +3,7 @@ export const securityHeaders = {
   referrerPolicy: { policy: 'same-origin' },
   contentSecurityPolicy: {
     directives: {
-      scriptSrc: ["'self'"],
+      scriptSrc: ['\'self\''],
     },
   },
 }

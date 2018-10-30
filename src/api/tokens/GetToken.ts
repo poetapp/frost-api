@@ -4,7 +4,7 @@ import { Vault } from '../../utils/Vault/Vault'
 
 export const GetToken = (verifiedAccount: boolean, pwnedCheckerRoot: string) => async (
   ctx: any,
-  next: any
+  next: any,
 ): Promise<any> => {
   try {
     const { user } = ctx.state

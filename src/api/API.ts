@@ -27,7 +27,7 @@ interface APIConfiguration extends APIConnection {
   limiters: {
     loginLimiter: LimiterConfiguration
     accountLimiter: LimiterConfiguration
-    passwordChangeLimiter: LimiterConfiguration
+    passwordChangeLimiter: LimiterConfiguration,
   }
   poetUrl: string
   testPoetUrl: string
@@ -64,7 +64,7 @@ const init = ({
     maxApiTokens,
     testPoetUrl,
     verifiedAccount,
-    pwnedCheckerRoot
+    pwnedCheckerRoot,
   )
 
   app
@@ -72,13 +72,13 @@ const init = ({
     .use(
       cors({
         origin: (ctx: any, next: any) => '*',
-      })
+      }),
     )
     .use(
       bodyParser({
         formLimit: maxApiRequestLimitForm,
         jsonLimit: maxApiRequestLimitJson,
-      })
+      }),
     )
     .use(route.routes())
     .use(route.allowedMethods())

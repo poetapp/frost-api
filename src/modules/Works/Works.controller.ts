@@ -18,7 +18,7 @@ const legacyContext = {
 
 const isNotNil = pipe(
   isNil,
-  not
+  not,
 )
 
 export class WorksController {
@@ -34,7 +34,7 @@ export class WorksController {
       this.issuer = createIssuerFromPrivateKey(privateKey)
       this.createAndSignClaim = pipeP(
         configureCreateVerifiableClaim({ issuer: this.issuer, context: legacyContext }),
-        getVerifiableClaimSigner().configureSignVerifiableClaim({ privateKey })
+        getVerifiableClaimSigner().configureSignVerifiableClaim({ privateKey }),
       )
     }
   }

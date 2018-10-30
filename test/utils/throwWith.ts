@@ -15,7 +15,7 @@ export const throwWith = (chai: any, utils: any) => {
         `expected a string with: ${expectation}`,
         '',
         expectation,
-        error
+        error,
       )
     }
   })

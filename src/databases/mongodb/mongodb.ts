@@ -13,7 +13,7 @@ const startMongoDB = async ({ mongodbUrl, options }: MongoDBConfiguration) => {
   require('mongoose').Promise = Promise
   const connection = await mongoose.connect(
     mongodbUrl,
-    options
+    options,
   )
   logger.info('Started connection with MongoDB...')
   return connection
