@@ -107,7 +107,7 @@ const initVault = async ({ transactionalMandrill, jwt }: InitVault, logger: Pino
       logger.info(
         'error',
         'Vault was initialized. Check file vault.json in the root project. \
-         You have to set the environment variable VAULT_TOKEN '
+         You have to set the environment variable VAULT_TOKEN ',
       )
   } catch (e) {
     logger.info('error', e.message)

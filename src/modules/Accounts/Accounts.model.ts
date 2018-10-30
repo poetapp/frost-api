@@ -6,7 +6,7 @@ const Tokens = new Schema(
   {
     token: String,
   },
-  { _id: false }
+  { _id: false },
 )
 
 export const AccountsSchema = new Schema({

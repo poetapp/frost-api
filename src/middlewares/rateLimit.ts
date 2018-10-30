@@ -26,7 +26,7 @@ const limiter = ({ redisPort, redisHost }: RedisConfiguration) => ({ max = 2500,
   })
 
 export const RateLimit = (rateLimitConfiguration: RateLimitConfiguration) => (
-  limiterConfiguration: LimiterConfiguration
+  limiterConfiguration: LimiterConfiguration,
 ) => {
   const { redisPort, redisHost, rateLimitDisabled } = rateLimitConfiguration
   const limiters = limiter({ redisPort, redisHost })

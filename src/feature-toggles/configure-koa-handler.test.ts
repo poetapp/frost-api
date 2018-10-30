@@ -132,7 +132,7 @@ describe('configureKOAHandler()', async (assert: any) => {
     const handlerComposition = compose(
       fooFeatureOr404,
       barFeatureOr404,
-      bazFeatureOr404
+      bazFeatureOr404,
     )
 
     const featureHandler = spy()
@@ -184,7 +184,7 @@ describe('configureKOAHandler()', async (assert: any) => {
     const handlerComposition = compose(
       fooFeatureOr404,
       barFeatureOr404,
-      bazFeatureOr404
+      bazFeatureOr404,
     )
 
     const featureHandler = spy()

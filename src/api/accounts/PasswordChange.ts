@@ -11,7 +11,7 @@ import { Token } from '../Tokens'
 export const PasswordChangeSchema = (
   passwordComplex: PasswordComplexConfiguration,
   verifiedAccount: boolean,
-  pwnedCheckerRoot: string
+  pwnedCheckerRoot: string,
 ) => (values: { password: string; oldPassword: string }) => {
   const { password, oldPassword } = values
   const usersController = new AccountsController(verifiedAccount, pwnedCheckerRoot)
@@ -32,7 +32,7 @@ export const PasswordChangeSchema = (
 
 export const PasswordChange = (verifiedAccount: boolean, pwnedCheckerRoot: string) => async (
   ctx: any,
-  next: any
+  next: any,
 ): Promise<any> => {
   const { InvalidInput, InternalError } = errors
   try {

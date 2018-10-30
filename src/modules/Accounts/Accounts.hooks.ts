@@ -14,7 +14,7 @@ export const validate = (verifiedAccount: boolean, pwnedCheckerRoot: string) =>
     if (this.isNew) {
       const { verified, privateKey, publicKey } = pipe(
         createCryptoKeys,
-        setVerifiedAccountStatus(verifiedAccount)
+        setVerifiedAccountStatus(verifiedAccount),
       )({})
 
       this.verified = verified

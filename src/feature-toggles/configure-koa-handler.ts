@@ -13,6 +13,6 @@ const isActive = (initialFeatures: InitialFeatures, featureName: string, ctx: an
   isActiveFeatureName(featureName, getCurrentActiveFeatureNames({ initialFeatures, req: ctx }))
 
 export const configureKOAHandler = ({ initialFeatures }: Configuration) => (inactiveHandler: handler) => (
-  featureName: string
+  featureName: string,
 ) => (activeHandler: handler): handler => async (ctx, next) =>
   isActive(initialFeatures, featureName, ctx) ? await activeHandler(ctx, next) : await inactiveHandler(ctx, next)

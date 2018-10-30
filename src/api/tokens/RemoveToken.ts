@@ -53,7 +53,7 @@ export const RemoveToken = () => async (ctx: any, next: any): Promise<any> => {
     }) as {
       email: string
       client_token: string
-      iat: number
+      iat: number,
     }
 
     await Vault.revokeToken(client_token)

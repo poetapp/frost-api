@@ -11,14 +11,14 @@ const getValuesOfSecrets = (
   params: { [index: string]: string },
   query: { [index: string]: string },
   body: { [index: string]: string },
-  headers: { [index: string]: string }
+  headers: { [index: string]: string },
 ): ReadonlyArray<string> =>
   // prettier-ignore
   [
-    ...Object.entries(params), 
-    ...Object.entries(query), 
-    ...Object.entries(body), 
-    ...Object.entries(headers)
+    ...Object.entries(params),
+    ...Object.entries(query),
+    ...Object.entries(body),
+    ...Object.entries(headers),
   ]
   .filter(([key, value]) => keys.includes(key))
   .map(([key, value]) => value)
@@ -58,7 +58,7 @@ export const secureSecrets = (secrets: ReadonlyArray<string>) =>
     ...map(secureText, map(getParamsLens, secrets)),
     ...map(secureText, map(getQueryLens, secrets)),
     ...map(secureText, map(getHeadersLens, secrets)),
-    collectDataForLogging(secrets)
+    collectDataForLogging(secrets),
   )
 
 export const monitor = (secrets: ReadonlyArray<string> = []) => {

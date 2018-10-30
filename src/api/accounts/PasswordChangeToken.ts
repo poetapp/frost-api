@@ -14,7 +14,7 @@ import { getToken, tokenMatch } from './utils/utils'
 export const PasswordChangeTokenSchema = (
   passwordComplex: PasswordComplexConfiguration,
   verifiedAccount: boolean,
-  pwnedCheckerRoot: string
+  pwnedCheckerRoot: string,
 ) => (values: { password: string }) => {
   const { password } = values
   const usersController = new AccountsController(verifiedAccount, pwnedCheckerRoot)
@@ -33,7 +33,7 @@ const hasForgotPasswordToken = tokenMatch(Token.ForgotPassword)
 export const PasswordChangeToken = (
   sendEmail: SendEmailTo,
   verifiedAccount: boolean,
-  pwnedCheckerRoot: string
+  pwnedCheckerRoot: string,
 ) => async (ctx: any, next: any): Promise<any> => {
   const { InvalidInput, InternalError } = errors
   try {

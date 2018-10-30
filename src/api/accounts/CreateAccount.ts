@@ -15,7 +15,7 @@ import { getToken } from './utils/utils'
 export const CreateAccountSchema = (
   passwordComplex: PasswordComplexConfiguration,
   verifiedAccount: boolean,
-  pwnedCheckerRoot: string
+  pwnedCheckerRoot: string,
 ) => (values: { password: string }): object => {
   const { password } = values
   const usersController = new AccountsController(verifiedAccount, pwnedCheckerRoot)
@@ -34,7 +34,7 @@ export const CreateAccountSchema = (
 
 export const CreateAccount = (sendEmail: SendEmailTo, verifiedAccount: boolean, pwnedCheckerRoot: string) => async (
   ctx: any,
-  next: any
+  next: any,
 ): Promise<any> => {
   try {
     const user = ctx.request.body

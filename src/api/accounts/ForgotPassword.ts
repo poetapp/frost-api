@@ -20,7 +20,7 @@ export const setResponseStatus = (isOk: boolean) => (isOk ? 200 : ResourceNotFou
 
 export const ForgotPassword = (sendEmail: SendEmailTo, verifiedAccount: boolean, pwnedCheckerRoot: string) => async (
   ctx: any,
-  next: any
+  next: any,
 ): Promise<any> => {
   try {
     const { email } = ctx.request.body

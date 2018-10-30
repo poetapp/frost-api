@@ -25,7 +25,7 @@ describe('Security headers', async (assert: any) => {
       given: 'an object with security header configuration',
       should: 'have the content security policy scriptSrc set to "self"',
       actual: securityHeaders.contentSecurityPolicy.directives.scriptSrc,
-      expected: ["'self'"],
+      expected: ['\'self\''],
     })
   }
 })

@@ -39,7 +39,7 @@ export const routes = (
   maxApiTokens: number,
   testPoetUrl: string,
   verifiedAccount: boolean,
-  pwnedCheckerRoot: string
+  pwnedCheckerRoot: string,
 ) => {
   const router = new KoaRouter()
   const sendEmail = SendEmail(sendEmailConfiguration)
@@ -69,7 +69,7 @@ export const routes = (
       Path.ACCOUNTS_PROFILE,
       Path.TOKENS_TOKENID,
     ],
-    authorization(verifiedAccount, pwnedCheckerRoot)
+    authorization(verifiedAccount, pwnedCheckerRoot),
   )
 
   router.use([Path.WORKS, Path.WORKS_WORKID], requireEmailVerified())
@@ -82,24 +82,24 @@ export const routes = (
   router.post(
     Path.ACCOUNTS,
     validate({ body: CreateAccountSchema(passwordComplexConfiguration, verifiedAccount, pwnedCheckerRoot) }),
-    CreateAccount(sendEmail, verifiedAccount, pwnedCheckerRoot)
+    CreateAccount(sendEmail, verifiedAccount, pwnedCheckerRoot),
   )
   router.post(
     Path.PASSWORD_RESET,
     validate({ body: ForgotPasswordSchema }),
-    ForgotPassword(sendEmail, verifiedAccount, pwnedCheckerRoot)
+    ForgotPassword(sendEmail, verifiedAccount, pwnedCheckerRoot),
   )
   router.get(Path.ACCOUNTS_PROFILE, GetProfile())
   router.post(Path.LOGIN, validate({ body: LoginSchema }), Login(verifiedAccount, pwnedCheckerRoot))
   router.post(
     Path.PASSWORD_CHANGE,
     validate({ body: PasswordChangeSchema(passwordComplexConfiguration, verifiedAccount, pwnedCheckerRoot) }),
-    PasswordChange(verifiedAccount, pwnedCheckerRoot)
+    PasswordChange(verifiedAccount, pwnedCheckerRoot),
   )
   router.post(
     Path.PASSWORD_CHANGE_TOKEN,
     validate({ body: PasswordChangeTokenSchema(passwordComplexConfiguration, verifiedAccount, pwnedCheckerRoot) }),
-    PasswordChangeToken(sendEmail, verifiedAccount, pwnedCheckerRoot)
+    PasswordChangeToken(sendEmail, verifiedAccount, pwnedCheckerRoot),
   )
   router.post(Path.ACCOUNTS_VERIFY, VerifyAccount(sendEmail))
   router.get(Path.ACCOUNTS_VERIFY_TOKEN, VerifyAccountToken(verifiedAccount, pwnedCheckerRoot))
@@ -112,7 +112,7 @@ export const routes = (
   router.post(
     Path.WORKS,
     validate({ body: CreateWorkSchema, options: { allowUnknown: true } }),
-    CreateWork(poetUrl, testPoetUrl)
+    CreateWork(poetUrl, testPoetUrl),
   )
   router.get(Path.WORKS_WORKID, validate({ params: GetWorkSchema }), GetWork(poetUrl, testPoetUrl))
   router.get(Path.WORKS, GetWorks(poetUrl, testPoetUrl))

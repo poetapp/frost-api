@@ -5,7 +5,7 @@ const toPair = (s: string) => [camelCaseToScreamingSnakeCase(s), s]
 
 export const createEnvToConfigurationKeyMap: (keys: ReadonlyArray<string>) => { [index: string]: string } = pipe(
   map(toPair),
-  fromPairs
+  fromPairs,
 )
 
 export const camelCaseToScreamingSnakeCase = (camelCase: string = '') =>
@@ -31,7 +31,7 @@ const loadConfigurationFromEnv = (env: any): Partial<Configuration> => {
         ...previousValue,
         [map[key]]: extractValue(value),
       }),
-      {}
+      {},
     )
 
   return configurationFromEnv

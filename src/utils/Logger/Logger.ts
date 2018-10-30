@@ -12,7 +12,7 @@ const customFormat = printf((info: any) => {
       requestError: info.requestError,
     },
     null,
-    2
+    2,
   )
 })
 
