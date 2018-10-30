@@ -2,7 +2,6 @@ import * as Joi from 'joi'
 import { verify } from 'jsonwebtoken'
 import { errors } from '../../errors/errors'
 import { Accounts } from '../../modules/Accounts/Accounts.interface'
-import { logger } from '../../utils/Logger/Logger'
 import { Vault } from '../../utils/Vault/Vault'
 
 const getApiTokens = (user: Accounts) => {
@@ -28,7 +27,9 @@ export const RemoveTokenSchema = () => ({
 })
 
 export const RemoveToken = () => async (ctx: any, next: any): Promise<any> => {
+  const logger = ctx.logger(__dirname)
   const { ResourceNotFound } = errors
+
   try {
     const { user, jwtSecret } = ctx.state
     const { tokenId } = ctx.params
@@ -76,8 +77,8 @@ export const RemoveToken = () => async (ctx: any, next: any): Promise<any> => {
     user.save()
 
     ctx.status = 200
-  } catch (e) {
-    logger.error('api.RemoveToken', e)
+  } catch (exception) {
+    logger.error(exception, 'api.RemoveToken')
     ctx.status = 500
   }
 }

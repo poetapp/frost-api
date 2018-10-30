@@ -3,7 +3,6 @@ import { lte } from 'ramda'
 
 import { errors } from '../../errors/errors'
 import { Network } from '../../interfaces/Network'
-import { logger } from '../../utils/Logger/Logger'
 import { Vault } from '../../utils/Vault/Vault'
 import { Token } from '../Tokens'
 import { getToken, isLiveNetwork } from '../accounts/utils/utils'
@@ -16,9 +15,12 @@ export const getTokenByNetwork = (network: string, apiToken: string) =>
   isLiveNetwork(network) ? apiToken : addPrefixTest(apiToken)
 export const getApiKeyByNetwork = (network: string) => (isLiveNetwork(network) ? Token.ApiKey : Token.TestApiKey)
 export const extractNetwork = (ctx: any) => (isEmptyObject(ctx.request.body) ? Network.TEST : ctx.request.body.network)
+
 export const CreateToken = (maxApiTokens: number) => async (ctx: any, next: any): Promise<any> => {
+  const logger = ctx.logger(__dirname)
   const tooManyApiTokens = lte(maxApiTokens)
   const { MaximumApiTokensLimitReached } = errors
+
   try {
     const { user } = ctx.state
     const network = extractNetwork(ctx)
@@ -40,8 +42,8 @@ export const CreateToken = (maxApiTokens: number) => async (ctx: any, next: any)
     ctx.body = {
       apiToken: testOrMainApiToken,
     }
-  } catch (e) {
-    logger.error('api.CreateToken', e)
+  } catch (exception) {
+    logger.error({ exception }, 'api.CreateToken')
     ctx.status = 500
   }
 }
