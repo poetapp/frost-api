@@ -1,8 +1,9 @@
 import { errors } from '../errors/errors'
-import { logger } from '../utils/Logger/Logger'
 
 export const requireEmailVerified = () => {
   return (ctx: any, next: any) => {
+    const logger = ctx.logger(__dirname)
+
     try {
       const { AccountNotVerify } = errors
       const { user } = ctx.state
@@ -12,9 +13,9 @@ export const requireEmailVerified = () => {
         ctx.status = AccountNotVerify.code
         ctx.body = AccountNotVerify.message
       }
-    } catch (e) {
+    } catch (exception) {
       const { InternalError } = errors
-      logger.error('middleware.requireEmailVerified', e)
+      logger.error({ exception }, 'middleware.requireEmailVerified')
       ctx.throw(InternalError.code, InternalError.message)
     }
   }
