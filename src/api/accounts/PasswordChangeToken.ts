@@ -14,9 +14,9 @@ export const PasswordChangeTokenSchema = (
   passwordComplex: PasswordComplexConfiguration,
   verifiedAccount: boolean,
   pwnedCheckerRoot: string,
-) => (values: { password: string }) => {
+) => (values: { password: string }, ctx: any) => {
   const { password } = values
-  const usersController = new AccountsController(verifiedAccount, pwnedCheckerRoot)
+  const usersController = new AccountsController(ctx.logger, verifiedAccount, pwnedCheckerRoot)
 
   return {
     password: Joi.validate(password, new PasswordComplexity(passwordComplex), (err, value) => {
@@ -48,7 +48,7 @@ export const PasswordChangeToken = (
 
     const { password } = ctx.request.body
     user.password = await processPassword(password, pwnedCheckerRoot)
-    const usersController = new AccountsController(verifiedAccount, pwnedCheckerRoot)
+    const usersController = new AccountsController(ctx.logger, verifiedAccount, pwnedCheckerRoot)
     await usersController.update(user.id, user)
     await Vault.revokeToken(tokenData.data.id)
 

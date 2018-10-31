@@ -17,7 +17,7 @@ export const Login = (verifiedAccount: boolean, pwnedCheckerRoot: string) => asy
 
   try {
     const user = ctx.request.body
-    const usersController = new AccountsController(verifiedAccount, pwnedCheckerRoot)
+    const usersController = new AccountsController(ctx.logger, verifiedAccount, pwnedCheckerRoot)
     const response = await usersController.get(user.email)
     await verify(user.password, response.password)
     const token = await getToken(user.email, Token.Login)

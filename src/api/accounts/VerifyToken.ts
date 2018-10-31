@@ -26,7 +26,7 @@ export const VerifyAccountToken = (verifiedAccount: boolean, pwnedCheckerRoot: s
     }
 
     user.verified = true
-    const usersController = new AccountsController(verifiedAccount, pwnedCheckerRoot)
+    const usersController = new AccountsController(ctx.logger, verifiedAccount, pwnedCheckerRoot)
     await usersController.update(user.id, user)
     const token = await getToken(user.email, Token.Login)
     ctx.body = { token }
