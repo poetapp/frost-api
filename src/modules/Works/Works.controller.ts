@@ -5,11 +5,11 @@ import {
   SignedVerifiableClaim,
 } from '@po.et/poet-js'
 import fetch from 'node-fetch'
+import * as Pino from 'pino'
 import { isNil, not, pipe, pipeP } from 'ramda'
 
 import { Method } from '../../constants'
 import { errors } from '../../errors/errors'
-import { logger } from '../../utils/Logger/Logger'
 
 const legacyContext = {
   text: 'schema:text',
@@ -26,8 +26,10 @@ export class WorksController {
   private network: string
   private issuer: string
   private createAndSignClaim: (doc: object) => SignedVerifiableClaim
+  private logger: Pino.Logger
 
-  constructor(network: string, privateKey?: string, work?: object) {
+  constructor(createLogger: (dirname: string) => Pino.Logger, network: string, privateKey?: string, work?: object) {
+    this.logger = createLogger(__dirname)
     this.work = work
     this.network = network
     if (isNotNil(privateKey)) {
@@ -58,12 +60,12 @@ export class WorksController {
 
       const errorText = await createWork.text()
       const data = { ...createWork, errorText, method: Method.POST }
-      logger.error('WorksController.create', data, workAttributes)
+      this.logger.error({ data, workAttributes }, 'WorksController.create')
 
       throw new Error(errors.InternalErrorExternalAPI.message)
-    } catch (e) {
-      logger.error('WorksController.create', e)
-      throw e
+    } catch (exception) {
+      this.logger.error({ exception }, 'WorksController.create')
+      throw exception
     }
   }
 
@@ -75,12 +77,12 @@ export class WorksController {
 
       const errorText = await work.text()
       const data = { ...work, errorText, method: Method.GET }
-      logger.error('WorksController.get', data, { workId })
+      this.logger.error({ data, workId }, 'WorksController.get')
 
       throw new Error('Work not found')
-    } catch (e) {
-      logger.error('WorksController.get', e)
-      throw e
+    } catch (exception) {
+      this.logger.error({ exception }, 'WorksController.get')
+      throw exception
     }
   }
 
@@ -92,12 +94,12 @@ export class WorksController {
 
       const errorText = await works.text()
       const data = { ...works, errorText, method: Method.GET }
-      logger.error('WorksController.getWorksByIssuer', data, { issuer: this.issuer })
+      this.logger.error({ data, issuer: this.issuer }, 'WorksController.getWorksByIssuer')
 
       throw new Error('Works not found')
-    } catch (e) {
-      logger.error('WorksController.getWorksByIssuer', e)
-      throw e
+    } catch (exception) {
+      this.logger.error({ exception }, 'WorksController.getWorksByIssuer')
+      throw exception
     }
   }
 }
