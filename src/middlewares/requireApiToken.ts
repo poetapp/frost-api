@@ -1,7 +1,6 @@
 import { Token } from '../../src/api/Tokens'
 import { tokenMatch } from '../../src/api/accounts/utils/utils'
 import { errors } from '../errors/errors'
-import { logger } from '../utils/Logger/Logger'
 
 const isApiKey = tokenMatch(Token.ApiKey)
 const isTestApiKey = tokenMatch(Token.TestApiKey)
@@ -9,6 +8,8 @@ export const isRequiredToken = (tokenData: any) => isApiKey(tokenData.data) || i
 
 export const requireApiToken = () => {
   return (ctx: any, next: any) => {
+    const logger = ctx.logger(__dirname)
+
     try {
       const { InternalError } = errors
       const { tokenData } = ctx.state
@@ -18,9 +19,9 @@ export const requireApiToken = () => {
         ctx.status = InternalError.code
         ctx.body = InternalError.message
       }
-    } catch (e) {
+    } catch (exception) {
       const { InternalError } = errors
-      logger.error('middleware.requireApiToken', e)
+      logger.error({ exception }, 'middleware.requireApiToken')
       ctx.throw(InternalError.code, InternalError.message)
     }
   }
