@@ -76,8 +76,7 @@
     "pino-pretty": "2.2.3",
     "protobufjs": "6.8.8",
     "ramda": "0.25.0",
-    "secure-password": "3.1.0",
-    "winston": "3.1.0"
+    "secure-password": "3.1.0"
   },
   "devDependencies": {
     "@po.et/frost-client": "2.1.0",
@@ -102,7 +101,6 @@
     "@types/node-vault": "0.5.3",
     "@types/pino": "5.8.0",
     "@types/sinon": "5.0.5",
-    "@types/winston": "2.4.4",
     "chai": "4.2.0",
     "cheerio": "1.0.0-rc.2",
     "husky": "1.1.2",
