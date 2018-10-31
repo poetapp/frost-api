@@ -39,7 +39,7 @@ export const CreateWork = (poetUrl: string, testPoetUrl: string) => async (ctx: 
     const privateKey = await Vault.decrypt(user.privateKey)
     const nodeNetwork = isLiveNetwork(network) ? poetUrl : testPoetUrl
 
-    const work = new WorksController(nodeNetwork, privateKey, newWork)
+    const work = new WorksController(ctx.logger, nodeNetwork, privateKey, newWork)
     const claim = await work.generateClaim()
 
     try {

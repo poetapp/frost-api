@@ -18,7 +18,7 @@ export const GetWorks = (poetUrl: string, testPoetUrl: string) => async (ctx: an
 
     const nodeNetwork = isLiveNetwork(network) ? poetUrl : testPoetUrl
 
-    const worksController = new WorksController(nodeNetwork, privateKey)
+    const worksController = new WorksController(ctx.logger, nodeNetwork, privateKey)
 
     try {
       const response = await worksController.getWorksByIssuer()
