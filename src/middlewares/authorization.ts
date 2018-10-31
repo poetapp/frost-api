@@ -19,7 +19,7 @@ export const authorization = (verifiedAccount: boolean, pwnedCheckerRoot: string
       const { client_token, email } = decoded as any
 
       const tokenData = await Vault.verifyToken(client_token)
-      const usersController = new AccountsController(verifiedAccount, pwnedCheckerRoot)
+      const usersController = new AccountsController(ctx.logger, verifiedAccount, pwnedCheckerRoot)
       ctx.state.tokenData = tokenData
       ctx.state.user = await usersController.get(email)
       ctx.state.jwtSecret = jwt

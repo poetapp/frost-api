@@ -25,7 +25,7 @@ export const ForgotPassword = (sendEmail: SendEmailTo, verifiedAccount: boolean,
 
   try {
     const { email } = ctx.request.body
-    const usersController = new AccountsController(verifiedAccount, pwnedCheckerRoot)
+    const usersController = new AccountsController(ctx.logger, verifiedAccount, pwnedCheckerRoot)
     const user = await usersController.get(email)
 
     ctx.status = setResponseStatus(!!user)

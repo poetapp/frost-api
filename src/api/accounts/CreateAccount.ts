@@ -15,9 +15,9 @@ export const CreateAccountSchema = (
   passwordComplex: PasswordComplexConfiguration,
   verifiedAccount: boolean,
   pwnedCheckerRoot: string,
-) => (values: { password: string }): object => {
+) => (values: { password: string }, ctx: any): object => {
   const { password } = values
-  const usersController = new AccountsController(verifiedAccount, pwnedCheckerRoot)
+  const usersController = new AccountsController(ctx.logger, verifiedAccount, pwnedCheckerRoot)
 
   return {
     email: Joi.string()
@@ -42,7 +42,7 @@ export const CreateAccount = (sendEmail: SendEmailTo, verifiedAccount: boolean, 
     const { email } = user
     const apiToken = await getToken(email, Token.TestApiKey, Network.TEST)
     user.testApiTokens = [{ token: await Vault.encrypt(`TEST_${apiToken}`) }]
-    const usersController = new AccountsController(verifiedAccount, pwnedCheckerRoot)
+    const usersController = new AccountsController(ctx.logger, verifiedAccount, pwnedCheckerRoot)
 
     await usersController.create(user)
 

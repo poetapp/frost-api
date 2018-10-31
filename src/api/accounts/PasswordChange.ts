@@ -11,9 +11,9 @@ export const PasswordChangeSchema = (
   passwordComplex: PasswordComplexConfiguration,
   verifiedAccount: boolean,
   pwnedCheckerRoot: string,
-) => (values: { password: string; oldPassword: string }) => {
+) => (values: { password: string; oldPassword: string }, ctx: any) => {
   const { password, oldPassword } = values
-  const usersController = new AccountsController(verifiedAccount, pwnedCheckerRoot)
+  const usersController = new AccountsController(ctx.logger, verifiedAccount, pwnedCheckerRoot)
 
   return {
     password: Joi.validate(password, new PasswordComplexity(passwordComplex), (err, value) => {
@@ -49,7 +49,7 @@ export const PasswordChange = (verifiedAccount: boolean, pwnedCheckerRoot: strin
 
     await verify(oldPassword, user.password)
     user.password = await processPassword(password, pwnedCheckerRoot)
-    const usersController = new AccountsController(verifiedAccount, pwnedCheckerRoot)
+    const usersController = new AccountsController(ctx.logger, verifiedAccount, pwnedCheckerRoot)
     await usersController.update(user.id, user)
 
     ctx.status = 200

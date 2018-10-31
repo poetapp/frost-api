@@ -1,3 +1,5 @@
+import * as Pino from 'pino'
+
 import { ComplexityOptions } from '../../interfaces/ComplexityOptions'
 import { GenericDAO } from '../../interfaces/GenericDAO'
 import { AccountsDAO } from './Accounts.dao'
@@ -6,8 +8,8 @@ import { Accounts } from './Accounts.interface'
 export class AccountsController {
   private dao: GenericDAO<Accounts>
 
-  constructor(verifiedAccount: boolean, pwnedCheckerRoot: string) {
-    this.dao = new AccountsDAO(verifiedAccount, pwnedCheckerRoot)
+  constructor(createLogger: (dirname: string) => Pino.Logger, verifiedAccount: boolean, pwnedCheckerRoot: string) {
+    this.dao = new AccountsDAO(createLogger, verifiedAccount, pwnedCheckerRoot)
   }
 
   public create(account: Accounts) {
