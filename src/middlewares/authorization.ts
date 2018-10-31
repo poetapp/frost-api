@@ -1,7 +1,6 @@
 import { verify } from 'jsonwebtoken'
 import { errors } from '../errors/errors'
 import { AccountsController } from '../modules/Accounts/Accounts.controller'
-import { logger } from '../utils/Logger/Logger'
 import { Vault } from '../utils/Vault/Vault'
 
 const { AuthenticationFailed, ExpiredToken, InvalidToken } = errors
@@ -9,7 +8,10 @@ const { AuthenticationFailed, ExpiredToken, InvalidToken } = errors
 export const extractToken = (ctx: any) => (ctx.header.token ? ctx.header.token : ctx.params.token)
 
 export const authorization = (verifiedAccount: boolean, pwnedCheckerRoot: string) => {
+
   return async (ctx: any, next: any) => {
+    const logger = ctx.logger(__dirname)
+
     try {
       const secret = await Vault.readSecret('frost')
       const { jwt } = secret.data
@@ -22,10 +24,10 @@ export const authorization = (verifiedAccount: boolean, pwnedCheckerRoot: string
       ctx.state.user = await usersController.get(email)
       ctx.state.jwtSecret = jwt
       return ctx.state.user ? next() : (ctx.status = 404)
-    } catch (e) {
-      logger.error('middleware.authorization', e)
+    } catch (exception) {
+      logger.error({ exception }, 'middleware.authorization')
 
-      switch (e.message) {
+      switch (exception.message) {
         case 'bad token':
           ctx.throw(ExpiredToken.code, ExpiredToken.message)
           break
