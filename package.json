@@ -100,7 +100,7 @@
     "@types/node": "10.12.1",
     "@types/node-fetch": "1.6.9",
     "@types/node-vault": "0.5.3",
-    "@types/pino": "5.6.1",
+    "@types/pino": "5.8.0",
     "@types/sinon": "5.0.5",
     "@types/winston": "2.4.4",
     "chai": "4.2.0",
