@@ -13,6 +13,7 @@ const optionsWithToken = (token: string) => getOptions(Method.POST, { token }, {
 const optionsResetpasswordToken = (token: string, password: string) => getOptions(Method.POST, { token }, { password })
 const optionsPasswordChange = (token: string, password: string, oldPassword: string) =>
   getOptions(Method.POST, { token }, { password, oldPassword })
+const badOptions = (email: string, password: string) => getOptions(Method.POST, {}, { email, password })
 
 describe('Accounts CORS', function() {
   const mail = new Mail()
@@ -23,6 +24,17 @@ describe('Accounts CORS', function() {
   })
 
   describe('When create an account', function() {
+    it('Should return Access-Control-Allow-Origin with *', async function() {
+      const result = await fetch(`${frostUrl}/accounts`, options)
+
+      const actual = getHeader(result, 'Access-Control-Allow-Origin')
+      const expected = '*'
+
+      expect(actual).to.eq(expected)
+    })
+  })
+
+  describe('When create an account that already exists', function() {
     it('Should return Access-Control-Allow-Origin with *', async function() {
       const result = await fetch(`${frostUrl}/accounts`, options)
 
@@ -45,10 +57,34 @@ describe('Accounts CORS', function() {
     })
   })
 
+  describe('When login with an account that does not exist', function() {
+    it('Should return Access-Control-Allow-Origin with *', async function() {
+      await fetch(`${frostUrl}/accounts`, options)
+      const result = await fetch(`${frostUrl}/login`, badOptions('', ''))
+
+      const actual = getHeader(result, 'Access-Control-Allow-Origin')
+      const expected = '*'
+
+      expect(actual).to.eq(expected)
+    })
+  })
+
   describe('When get profile account', function() {
     it('Should return Access-Control-Allow-Origin with *', async function() {
       await fetch(`${frostUrl}/accounts`, options)
       const result = await fetch(`${frostUrl}/accounts/profile`, options)
+
+      const actual = getHeader(result, 'Access-Control-Allow-Origin')
+      const expected = '*'
+
+      expect(actual).to.eq(expected)
+    })
+  })
+
+  describe('When get profile account with incorrect info', function() {
+    it('Should return Access-Control-Allow-Origin with *', async function() {
+      await fetch(`${frostUrl}/accounts`, options)
+      const result = await fetch(`${frostUrl}/accounts/profile`, badOptions('', ''))
 
       const actual = getHeader(result, 'Access-Control-Allow-Origin')
       const expected = '*'
