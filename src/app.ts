@@ -7,7 +7,7 @@ import { Configuration } from './configuration'
 import { MongoDB } from './databases/mongodb/mongodb'
 import { loadConfigurationWithDefaults } from './loadConfiguration'
 import { delay } from './utils/Delay/Delay'
-import { createModuleLogger } from './utils/Logger/Logging'
+import { createModuleLogger } from './utils/Logging/Logging'
 import { Vault } from './utils/Vault/Vault'
 const Box = require('cli-box')
 require('console.table')

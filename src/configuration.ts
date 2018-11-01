@@ -1,4 +1,4 @@
-import { LoggingConfiguration } from './utils/Logger/Logging'
+import { LoggingConfiguration } from './utils/Logging/Logging'
 
 interface RateLimitConfiguration {
   readonly rateLimitDisabled: boolean

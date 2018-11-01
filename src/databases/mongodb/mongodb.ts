@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose'
 import * as Pino from 'pino'
 
-import { createModuleLogger } from '../../utils/Logger/Logging'
+import { createModuleLogger } from '../../utils/Logging/Logging'
 import { MongoDBConfiguration } from './mongoDBConfiguration'
 
 interface APIMethods {
