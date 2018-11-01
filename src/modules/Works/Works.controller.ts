@@ -25,6 +25,7 @@ export class WorksController {
   private work: object
   private network: string
   private issuer: string
+  private privateKey: string
   private createAndSignClaim: (doc: object) => SignedVerifiableClaim
   private logger: Pino.Logger
 
@@ -32,13 +33,15 @@ export class WorksController {
     this.logger = createLogger(__dirname)
     this.work = work
     this.network = network
-    if (isNotNil(privateKey)) {
-      this.issuer = createIssuerFromPrivateKey(privateKey)
-      this.createAndSignClaim = pipeP(
-        configureCreateVerifiableClaim({ issuer: this.issuer, context: legacyContext }),
-        getVerifiableClaimSigner().configureSignVerifiableClaim({ privateKey }),
-      )
-    }
+    this.privateKey = privateKey
+    if (isNotNil(privateKey)) this.issuer = createIssuerFromPrivateKey(privateKey)
+  }
+
+  start() {
+    this.createAndSignClaim = pipeP(
+      configureCreateVerifiableClaim({ issuer: this.issuer, context: legacyContext }),
+      getVerifiableClaimSigner().configureSignVerifiableClaim({ privateKey: this.privateKey }),
+    )
   }
 
   async generateClaim() {
