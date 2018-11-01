@@ -5,7 +5,7 @@ import * as cors from 'koa2-cors'
 import * as Pino from 'pino'
 
 import { securityHeaders } from '../securityHeaders'
-import { createModuleLogger, LoggingConfiguration } from '../utils/Logger/Logging'
+import { createModuleLogger, LoggingConfiguration } from '../utils/Logging/Logging'
 import { SendEmailConfiguration } from '../utils/SendEmail'
 
 import { logger } from '../middlewares/logger'
