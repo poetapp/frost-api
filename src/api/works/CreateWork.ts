@@ -40,6 +40,7 @@ export const CreateWork = (poetUrl: string, testPoetUrl: string) => async (ctx: 
     const nodeNetwork = isLiveNetwork(network) ? poetUrl : testPoetUrl
 
     const work = new WorksController(ctx.logger, nodeNetwork, privateKey, newWork)
+    work.start()
     const claim = await work.generateClaim()
 
     try {
