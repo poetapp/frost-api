@@ -16,14 +16,14 @@ export const createUserVerified = async (mail: any, frost: Frost) => {
   return user
 }
 
-export const createWork = ({ text = 'test' } = {}): any => {
+export const createWork = ({ content = 'test' } = {}): any => {
   return {
     name: 'test',
     datePublished: '2017-11-24T00:38:41.595Z',
     dateCreated: '2017-11-24T00:38:41.595Z',
     author: 'test',
     tags: '1,1,1',
-    text,
+    content,
   }
 }
 
@@ -34,7 +34,7 @@ export const createWorkWrong = (): any => {
     dateCreated: '2017-11-24T00:38:41.595Z',
     author: 'test',
     tags: '1,1,1',
-    text: 'test',
+    content: 'test',
   }
 }
 
@@ -44,7 +44,7 @@ export const createWorkNoTags = (): any => {
     datePublished: '2017-11-24T00:38:41.595Z',
     dateCreated: '2017-11-24T00:38:41.595Z',
     author: 'test',
-    text: 'test',
+    content: 'test',
   }
 }
 
@@ -72,7 +72,7 @@ export const createWorkEmptyTags = (): any => {
     datePublished: '2017-11-24T00:38:41.595Z',
     dateCreated: '2017-11-24T00:38:41.595Z',
     author: 'test',
-    text: 'test',
+    content: 'test',
     tags: '',
   }
 }

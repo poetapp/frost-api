@@ -12,7 +12,6 @@ import { Method } from '../../constants'
 import { errors } from '../../errors/errors'
 
 const legacyContext = {
-  text: 'schema:text',
   content: 'schema:text',
 }
 

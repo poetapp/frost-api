@@ -15,7 +15,6 @@ export const CreateWorkSchema = () => ({
     .isoDate(),
   author: Joi.string().required(),
   tags: Joi.string().allow(''),
-  text: Joi.string().optional(),
   content: Joi.any().optional(),
   hash: Joi.string().optional(),
   archiveUrl: Joi.string()

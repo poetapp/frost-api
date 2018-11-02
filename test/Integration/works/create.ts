@@ -110,9 +110,10 @@ describe('Works', function() {
           const { apiToken } = await frost.createApiToken(token, Network.LIVE)
 
           const contentBuffer = new Buffer(1024 * 100)
-          const text = contentBuffer.toString()
+          const content = contentBuffer.toString()
 
-          await expect(frost.createWork(apiToken, createWork({ text }))).to.be.throwWith(errorMessages.payloadTooLarge)
+          await expect(frost.createWork(apiToken, createWork({ content })))
+            .to.be.throwWith(errorMessages.payloadTooLarge)
         })
       })
 
