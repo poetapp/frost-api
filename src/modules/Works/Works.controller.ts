@@ -4,9 +4,11 @@ import {
   createIssuerFromPrivateKey,
   SignedVerifiableClaim,
 } from '@po.et/poet-js'
+import * as FormData from 'form-data'
 import fetch from 'node-fetch'
 import * as Pino from 'pino'
 import { isNil, not, pipe, pipeP } from 'ramda'
+import { Readable } from 'stream'
 
 import { Method } from '../../constants'
 import { errors } from '../../errors/errors'
@@ -67,6 +69,41 @@ export class WorksController {
       throw new Error(errors.InternalErrorExternalAPI.message)
     } catch (exception) {
       this.logger.error({ exception }, 'WorksController.create')
+      throw exception
+    }
+  }
+
+  private createReadableStream(content: string = '') {
+    if (isNil(content) || content.length > 0) return
+    return new Readable( {
+      read() {
+        this.push(content)
+        this.push(null)
+      },
+    })
+  }
+
+  private async uploadContent(content: string = '') {
+    if (isNil(content) || content.length > 0) return {}
+    const streamedContent = this.createReadableStream(content)
+
+    const formData = new FormData()
+    formData.append('file-0', streamedContent)
+    try {
+      const response = await fetch(`${this.network}/files`, {
+        method: 'post',
+        body: formData,
+      })
+
+      if (response.ok) return response.json()
+
+      const errorText = await response.text()
+      const data = { ...response, errorText, method: Method.POST }
+      this.logger.error({ data, content }, 'WorksController.uploadContent')
+
+      throw new Error('Unable to upload content')
+    } catch (exception) {
+      this.logger.error({ exception }, 'WorksController.uploadContent')
       throw exception
     }
   }
