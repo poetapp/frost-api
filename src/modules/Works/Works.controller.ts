@@ -109,20 +109,15 @@ export class WorksController {
   }
 
   async get(workId: string) {
-    try {
       const work = await fetch(`${this.network}/works/${workId}`)
 
       if (work.ok) return await work.json()
 
-      const errorText = await work.text()
-      const data = { ...work, errorText, method: Method.GET }
+      const errorType = 'Work not found'
+      const data = { ...work, errorType, method: Method.GET }
       this.logger.error({ data, workId }, 'WorksController.get')
 
-      throw new Error('Work not found')
-    } catch (exception) {
-      this.logger.error({ exception }, 'WorksController.get')
-      throw exception
-    }
+      throw new Error(errorType)
   }
 
   async getWorksByIssuer() {
