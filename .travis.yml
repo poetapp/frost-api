@@ -1,23 +1,32 @@
 language: node_js
 sudo: required
 dist: trusty
+
 services:
   - docker
   - rabbitmq
+
 env:
   - REPO=poetapp/frost-api
+
 before_install:
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
   - sudo apt-get update
   - sudo apt-get install gcc-5 g++-5
   - sudo rm /usr/bin/g++
   - sudo ln -s /usr/bin/g++-5 /usr/bin/g++
+
 before_script:
   - sudo docker-compose -f ./docker-compose.yml up -d
+
 script:
   - docker exec -it poet_frost-api-build npm run coverage
+
 before_deploy:
+  # Clean up so we don't fail due to permission problems.
+  - sudo rm -rf Docker/data
   - bash ./scripts/docker-build.sh
+
 deploy:
   - provider: script
     skip_cleanup: true
@@ -25,5 +34,6 @@ deploy:
       - bash ./scripts/docker-push.sh
     on:
       all_branches: true
+
 after_deploy:
   - npm run travis-deploy-once "npm run semantic-release"
