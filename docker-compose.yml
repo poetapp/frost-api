@@ -32,7 +32,7 @@ services:
     entrypoint: /wait-for-it.sh -t 20 -h consul -p 8500 -s -- vault server -config=/config/vault.hcl
 
   mongodb:
-      image: "mongo:3.4"
+      image: "mongo:3.7"
       container_name: "poet_mongodb"
       environment:
         - MONGO_DATA_DIR=/data/db
