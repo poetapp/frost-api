@@ -12,7 +12,6 @@ const getValuesOfSecrets = (
   body: { [index: string]: string },
   headers: { [index: string]: string },
 ): ReadonlyArray<string> =>
-  // prettier-ignore
   [
     ...Object.entries(params),
     ...Object.entries(query),
