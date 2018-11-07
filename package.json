@@ -7,7 +7,6 @@
     "build": "tsc",
     "lint": "tslint -p ./tsconfig.json",
     "lint:fix": "tslint -p ./tsconfig.json --fix",
-    "lint:check": "tslint-config-prettier-check ./tslint.json",
     "test:unit": "ts-node -r tsconfig-paths/register --files tests/unit/index.ts",
     "test:integration": "TS_NODE_FILES=true mocha --timeout 200000 --exit --require ts-node/register -r tsconfig-paths/register ./test/Integration/**/*.ts",
     "coverage": "npm run coverage:unit && npm run coverage:integration",
@@ -111,7 +110,6 @@
     "nock": "10.0.2",
     "nodemon": "1.18.6",
     "nyc": "github:poetapp/nyc#fbc2ed1",
-    "prettier": "1.14.3",
     "riteway": "3.0.1",
     "semantic-release": "15.10.8",
     "sinon": "7.1.1",
@@ -119,8 +117,6 @@
     "ts-node": "7.0.1",
     "tsconfig-paths": "3.6.0",
     "tslint": "5.11.0",
-    "tslint-config-prettier": "1.15.0",
-    "tslint-plugin-prettier": "2.0.0",
     "typescript": "3.1.6"
   },
   "publishConfig": {
