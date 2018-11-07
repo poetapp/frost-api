@@ -1,7 +1,9 @@
 require('dotenv').config({ path: '.env' })
 import * as fs from 'fs'
-
 import * as Pino from 'pino'
+
+import './extensions/Error'
+
 import { API } from './api/API'
 import { Configuration } from './configuration'
 import { MongoDB } from './databases/mongodb/mongodb'
