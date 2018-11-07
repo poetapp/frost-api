@@ -23,7 +23,7 @@ export const CreateAccountSchema = (
     email: Joi.string()
       .email()
       .required(),
-    password: Joi.validate(password, new PasswordComplexity(passwordComplex), (err, value) => {
+    password: Joi.validate(password, new PasswordComplexity(passwordComplex), (err: Joi.Err, value: string) => {
       if (err) throw usersController.getTextErrorPassword(passwordComplex)
 
       return value

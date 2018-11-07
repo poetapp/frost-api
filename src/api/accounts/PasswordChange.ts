@@ -16,12 +16,12 @@ export const PasswordChangeSchema = (
   const usersController = new AccountsController(ctx.logger, verifiedAccount, pwnedCheckerRoot)
 
   return {
-    password: Joi.validate(password, new PasswordComplexity(passwordComplex), (err, value) => {
+    password: Joi.validate(password, new PasswordComplexity(passwordComplex), (err: Joi.Err, value: string) => {
       if (err) throw usersController.getTextErrorPassword(passwordComplex)
 
       return value
     }),
-    oldPassword: Joi.validate(oldPassword, new PasswordComplexity(passwordComplex), (err, value) => {
+    oldPassword: Joi.validate(oldPassword, new PasswordComplexity(passwordComplex), (err: Joi.Err, value: string) => {
       if (err) throw usersController.getTextErrorPassword(passwordComplex)
 
       return value
