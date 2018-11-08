@@ -1,5 +1,7 @@
 import { describe } from 'riteway'
 import { spy } from 'sinon'
+
+import { logger } from '../../tests/helpers/logger'
 import { requireEmailVerified } from './requireEmailVerified'
 
 const createCtx = (verified: boolean) => ({
@@ -8,6 +10,7 @@ const createCtx = (verified: boolean) => ({
       verified,
     },
   },
+  logger,
 })
 
 describe('requireEmailVerified() middleware', async (assert: any) => {

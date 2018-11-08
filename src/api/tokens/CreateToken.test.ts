@@ -1,4 +1,6 @@
 import { describe } from 'riteway'
+
+import { logger } from '../../../tests/helpers/logger'
 import { CreateToken, getTokensLengthByNetwork, getTokenByNetwork, isEmptyObject, extractNetwork } from './CreateToken'
 
 const createCtx = (numTokens: number, body: object = {}) => ({
@@ -12,6 +14,7 @@ const createCtx = (numTokens: number, body: object = {}) => ({
     body,
   },
   status: 1,
+  logger,
 })
 
 describe('CreateToken', async assert => {
