@@ -1,5 +1,6 @@
 import { Frost } from '@po.et/frost-client'
 import { expect } from 'expect'
+import fetch from 'node-fetch'
 import { Mail } from 'test/Integration/Mail'
 import { deleteUser } from 'test/Integration/UserDao'
 import { configuration } from 'test/Integration/configuration'
@@ -32,14 +33,26 @@ describe('Works', async function() {
       })
     })
 
-    describe('When work exists', function() {
-      it('Should return the work', async function() {
+    describe('When a newly created work with content has been sucessfully created', function() {
+      it('Should return the work with a hash and archiveUrl of the content', async function() {
         const user = await createUserVerified(mail, frost)
         const { token } = user
         const { apiToken } = await frost.createApiToken(token, Network.LIVE)
+        const { content } = createWork()
         const { workId } = await frost.createWork(apiToken, createWork())
         const work = await frost.getWork(apiToken, workId)
-        expect(work).to.have.all.keys('name', 'datePublished', 'dateCreated', 'author', 'tags', 'content')
+        expect(work).to.have.all.keys(
+          'name',
+          'datePublished',
+          'dateCreated',
+          'author',
+          'tags',
+          'hash',
+          'archiveUrl',
+          )
+        const savedText = await fetch(work.archiveUrl).then((res: any) => res.text())
+        expect(savedText).to.eq(content)
+        expect(work.hash).to.eq('QmRf22bZar3WKmojipms22PkXH1MZGmvsqzQtuSvQE3uhm')
       })
     })
 
@@ -53,7 +66,7 @@ describe('Works', async function() {
         const createdWork = Object.assign({}, createWork(), { extra })
         const { workId } = await frost.createWork(apiToken, createdWork)
         const work = await frost.getWork(apiToken, workId)
-        expect(work).to.have.all.keys('name', 'datePublished', 'dateCreated', 'author', 'tags', 'content', 'extra')
+        expect(work).to.have.all.keys('name', 'datePublished', 'dateCreated', 'author', 'tags', 'content')
         expect(work.extra).to.be.eq(extra)
       })
     })
@@ -84,7 +97,7 @@ describe('Works', async function() {
         const { apiToken } = await frost.createApiToken(token, Network.TEST)
         const { workId } = await frost.createWork(apiToken, createWork())
         const work = await frost.getWork(apiToken, workId)
-        expect(work).to.have.all.keys('name', 'datePublished', 'dateCreated', 'author', 'tags', 'content')
+        expect(work).to.have.all.keys('name', 'datePublished', 'dateCreated', 'author', 'tags', 'hash', 'archiveUrl')
       })
     })
 
@@ -98,7 +111,16 @@ describe('Works', async function() {
         const createdWork = Object.assign({}, createWork(), { extra })
         const { workId } = await frost.createWork(apiToken, createdWork)
         const work = await frost.getWork(apiToken, workId)
-        expect(work).to.have.all.keys('name', 'datePublished', 'dateCreated', 'author', 'tags', 'content', 'extra')
+        expect(work).to.have.all.keys(
+          'name',
+          'datePublished',
+          'dateCreated',
+          'author',
+          'tags',
+          'hash',
+          'archiveUrl',
+          'extra',
+          )
         expect(work.extra).to.be.eq(extra)
       })
     })

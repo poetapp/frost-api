@@ -43,8 +43,8 @@ describe('Works', async function() {
       })
     })
 
-    describe('When there are 2 work', function() {
-      it('Should return 2 works', async function() {
+    describe('When there are 2 works with content', function() {
+      it('Should return 2 works with the hash and archiveUrl', async function() {
         const user = await createUserVerified(mail, frost)
         const { token } = user
         const { apiToken } = await frost.createApiToken(token, Network.LIVE)
@@ -53,8 +53,24 @@ describe('Works', async function() {
 
         const works = await frost.getWorks(apiToken)
         expect(works.length).to.eql(2)
-        expect(works[0]).to.have.all.keys('name', 'datePublished', 'dateCreated', 'author', 'tags', 'content')
-        expect(works[1]).to.have.all.keys('name', 'datePublished', 'dateCreated', 'author', 'tags', 'content')
+        expect(works[0]).to.have.all.keys(
+          'name',
+          'datePublished',
+          'dateCreated',
+          'author',
+          'tags',
+          'hash',
+          'archiveUrl',
+          )
+        expect(works[1]).to.have.all.keys(
+          'name',
+          'datePublished',
+          'dateCreated',
+          'author',
+          'tags',
+          'hash',
+          'archiveUrl',
+        )
       })
     })
   })
@@ -79,8 +95,8 @@ describe('Works', async function() {
       })
     })
 
-    describe('When there are 2 work', function() {
-      it('Should return 2 works', async function() {
+    describe('When there are 2 works with content', function() {
+      it('Should return 2 works with hash and archiveUrl', async function() {
         const user = await createUserVerified(mail, frost)
         const { token } = user
         const { apiToken } = await frost.createApiToken(token, Network.TEST)
@@ -89,8 +105,24 @@ describe('Works', async function() {
 
         const works = await frost.getWorks(apiToken)
         expect(works.length).to.eql(2)
-        expect(works[0]).to.have.all.keys('name', 'datePublished', 'dateCreated', 'author', 'tags', 'content')
-        expect(works[1]).to.have.all.keys('name', 'datePublished', 'dateCreated', 'author', 'tags', 'content')
+        expect(works[0]).to.have.all.keys(
+          'name',
+          'datePublished',
+          'dateCreated',
+          'author',
+          'tags',
+          'hash',
+          'archiveUrl',
+        )
+        expect(works[1]).to.have.all.keys(
+          'name',
+          'datePublished',
+          'dateCreated',
+          'author',
+          'tags',
+          'hash',
+          'archiveUrl',
+        )
       })
     })
   })
