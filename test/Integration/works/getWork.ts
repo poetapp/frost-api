@@ -1,6 +1,7 @@
 import { Frost } from '@po.et/frost-client'
 import { expect } from 'expect'
 import fetch from 'node-fetch'
+import { omit } from 'ramda'
 import { Mail } from 'test/Integration/Mail'
 import { deleteUser } from 'test/Integration/UserDao'
 import { configuration } from 'test/Integration/configuration'
@@ -50,9 +51,65 @@ describe('Works', async function() {
           'hash',
           'archiveUrl',
           )
+        expect(work).to.not.have.key('content')
         const savedText = await fetch(work.archiveUrl).then((res: any) => res.text())
         expect(savedText).to.eq(content)
         expect(work.hash).to.eq('QmRf22bZar3WKmojipms22PkXH1MZGmvsqzQtuSvQE3uhm')
+      })
+    })
+
+    describe('When a newly createrd work with an archiveUrl and a hash has been successfully created', function() {
+      it('Should return the work with the provided hash and archiveUrl', async function() {
+        const user = await createUserVerified(mail, frost)
+        const { token } = user
+        const { apiToken } = await frost.createApiToken(token, Network.LIVE)
+        const work = {
+          ...omit(['content'], createWork()),
+          archiveUrl: 'https://example.com/myWork',
+          hash: 'this-is-a-hash',
+        }
+        const { workId } = await frost.createWork(apiToken, work)
+        const retrievedWork = await frost.getWork(apiToken, workId)
+        expect(retrievedWork).to.have.all.keys(
+          'name',
+          'datePublished',
+          'dateCreated',
+          'author',
+          'tags',
+          'hash',
+          'archiveUrl',
+        )
+        expect(retrievedWork).to.not.have.key('content')
+        expect(retrievedWork.archiveUrl).to.eq(work.archiveUrl)
+        expect(retrievedWork.hash).to.eq(work.hash)
+      })
+    })
+
+    describe('When a newly createrd work with an archiveUrl and a hash AND content has been successfully created',
+      function() {
+      it('Should return the work with the provided hash and archiveUrl', async function() {
+        const user = await createUserVerified(mail, frost)
+        const { token } = user
+        const { apiToken } = await frost.createApiToken(token, Network.LIVE)
+        const work = {
+          ...createWork(),
+          archiveUrl: 'https://example.com/myWork',
+          hash: 'this-is-a-hash',
+        }
+        const { workId } = await frost.createWork(apiToken, work)
+        const retrievedWork = await frost.getWork(apiToken, workId)
+        expect(retrievedWork).to.have.all.keys(
+          'name',
+          'datePublished',
+          'dateCreated',
+          'author',
+          'tags',
+          'hash',
+          'archiveUrl',
+        )
+        expect(retrievedWork).to.not.have.key('content')
+        expect(retrievedWork.archiveUrl).to.eq('https://example.com/myWork')
+        expect(retrievedWork.hash).to.eq('this-is-a-hash')
       })
     })
 
