@@ -57,7 +57,7 @@ export class WorksController {
   async generateClaim() {
     const { archiveUrl, hash } = (await this.uploadContent(this.work.content))[0]
     const newWork = omit(['content'], this.work)
-    return await this.createAndSignClaim({ ...newWork, archiveUrl, hash })
+    return await this.createAndSignClaim({ archiveUrl, hash, ...newWork })
   }
 
   async create(workAttributes: any) {
