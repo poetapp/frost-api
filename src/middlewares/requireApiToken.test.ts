@@ -1,6 +1,8 @@
 import { Token } from 'api/Tokens'
 import { describe } from 'riteway'
 import { spy } from 'sinon'
+
+import { logger } from '../../tests/helpers/logger'
 import { requireApiToken, isRequiredToken } from './requireApiToken'
 
 const createCtx = (name: string) => ({
@@ -13,6 +15,7 @@ const createCtx = (name: string) => ({
       },
     },
   },
+  logger,
 })
 
 describe('requireApiToken() middleware', async assert => {

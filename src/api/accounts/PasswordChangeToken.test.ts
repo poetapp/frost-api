@@ -1,4 +1,6 @@
 import { describe } from 'riteway'
+
+import { logger } from '../../../tests/helpers/logger'
 import { PasswordChangeToken } from './PasswordChangeToken'
 
 describe('PasswordChangeToken()', async (assert: any) => {
@@ -8,6 +10,7 @@ describe('PasswordChangeToken()', async (assert: any) => {
         tokenData: { data: { meta: { name: 'foo' } } },
       },
       status: 1,
+      logger,
     }
 
     const pwnedCheckerRoot = ''

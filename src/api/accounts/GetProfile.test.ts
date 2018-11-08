@@ -2,6 +2,7 @@ import { pick } from 'ramda'
 import { describe } from 'riteway'
 import { spy } from 'sinon'
 
+import { logger } from '../../../tests/helpers/logger'
 import { GetProfile } from './GetProfile'
 
 describe('GetProfile', async (assert: any) => {
@@ -16,6 +17,7 @@ describe('GetProfile', async (assert: any) => {
         },
       },
       body: {},
+      logger,
     }
 
     await GetProfile()(ctx, () => ({}))
@@ -32,6 +34,7 @@ describe('GetProfile', async (assert: any) => {
     const ctx = {
       state: {},
       throw: spy(),
+      logger,
     }
 
     await GetProfile()(ctx, () => ({}))
