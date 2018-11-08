@@ -7,8 +7,8 @@ import {
 import * as FormData from 'form-data'
 import fetch from 'node-fetch'
 import * as Pino from 'pino'
-import { isNil, not, pipe, pipeP } from 'ramda'
-import { Readable } from 'stream'
+import { isNil, not, omit, pipe, pipeP } from 'ramda'
+import * as str from 'string-to-stream'
 
 import { Method } from '../../constants'
 import { errors } from '../../errors/errors'
@@ -22,15 +22,24 @@ const isNotNil = pipe(
   not,
 )
 
+export interface WorkAttributes {
+  readonly [key: string]: string
+}
+
 export class WorksController {
-  private work: object
+  private work: WorkAttributes
   private network: string
   private issuer: string
   private privateKey: string
   private createAndSignClaim: (doc: object) => SignedVerifiableClaim
   private logger: Pino.Logger
 
-  constructor(createLogger: (dirname: string) => Pino.Logger, network: string, privateKey?: string, work?: object) {
+  constructor(
+    createLogger: (dirname: string) => Pino.Logger,
+    network: string,
+    privateKey?: string,
+    work?: WorkAttributes,
+  ) {
     this.logger = createLogger(__dirname)
     this.work = work
     this.network = network
@@ -46,7 +55,9 @@ export class WorksController {
   }
 
   async generateClaim() {
-    return await this.createAndSignClaim(this.work)
+    const { archiveUrl, hash } = (await this.uploadContent(this.work.content))[0]
+    const newWork = omit(['content'], this.work)
+    return await this.createAndSignClaim({ ...newWork, archiveUrl, hash })
   }
 
   async create(workAttributes: any) {
@@ -73,23 +84,17 @@ export class WorksController {
     }
   }
 
-  private createReadableStream(content: string = '') {
-    if (isNil(content) || content.length > 0) return
-    return new Readable( {
-      read() {
-        this.push(content)
-        this.push(null)
-      },
-    })
-  }
-
   private async uploadContent(content: string = '') {
-    if (isNil(content) || content.length > 0) return {}
-    const streamedContent = this.createReadableStream(content)
-
+    if (isNil(content) || content.length === 0) return [{}]
     const formData = new FormData()
-    formData.append('file-0', streamedContent)
+
     try {
+      formData.append('content', str(content), {
+        knownLength: Buffer.from(content).length,
+        filename: 'content',
+        contentType: 'plain/text',
+      })
+
       const response = await fetch(`${this.network}/files`, {
         method: 'post',
         body: formData,
