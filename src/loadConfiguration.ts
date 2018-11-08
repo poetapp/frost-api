@@ -1,5 +1,5 @@
 import { fromPairs, map, pipe, keys } from 'ramda'
-import { configuration, Configuration } from './configuration'
+import { configuration, Configuration, defaultMongodbUrl } from './configuration'
 
 const toPair = (s: string) => [camelCaseToScreamingSnakeCase(s), s]
 
@@ -41,6 +41,22 @@ export const mergeConfigs = (localVars: any = {}) => {
   const config = {
     ...configuration,
     ...loadConfigurationFromEnv(localVars),
+  }
+
+  // Support setting MONGODB_URL all at once or via separate variables.
+  if (config.mongodbUrl === defaultMongodbUrl) {
+    const mongoAuth = config.mongodbUser !== '' ? `${config.mongodbUser}:${config.mongodbPassword}@` : ''
+    config.mongodbUrl = [
+      config.mongodbSchema,
+      '://',
+      mongoAuth,
+      config.mongodbHost,
+      ':',
+      config.mongodbPort,
+      '/',
+      config.mongodbDatabase,
+    ]
+    .join('')
   }
 
   return config

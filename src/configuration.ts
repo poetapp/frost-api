@@ -1,5 +1,7 @@
 import { LoggingConfiguration } from './utils/Logging/Logging'
 
+export const defaultMongodbUrl = 'mongodb://localhost:27017/frost'
+
 interface RateLimitConfiguration {
   readonly rateLimitDisabled: boolean
   readonly loginRateLimitMax: number
@@ -28,6 +30,12 @@ export interface PasswordComplexConfiguration {
 }
 
 interface MongoDBConfiguration {
+  readonly mongodbSchema: string
+  readonly mongodbUser: string
+  readonly mongodbPassword: string
+  readonly mongodbHost: string
+  readonly mongodbPort: number
+  readonly mongodbDatabase: string
   readonly mongodbUrl: string
   readonly mongodbSocketTimeoutMS: number
   readonly mongodbKeepAlive: number
@@ -73,7 +81,13 @@ export const configuration: Configuration = {
   vaultToken: undefined,
   vaultUrl: 'http://localhost:8200',
   vaultApiVersion: 'v1',
-  mongodbUrl: 'mongodb://localhost:27017/frost',
+  mongodbSchema: 'mongodb',
+  mongodbUser: '',
+  mongodbPassword: '',
+  mongodbHost: 'localhost',
+  mongodbPort: 27017,
+  mongodbDatabase: 'frost',
+  mongodbUrl: defaultMongodbUrl,
   mongodbSocketTimeoutMS: 0,
   mongodbKeepAlive: 0,
   mongodbReconnectTries: 30,
