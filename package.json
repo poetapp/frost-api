@@ -13,10 +13,7 @@
     "coverage:unit": "nyc --report-dir ./.coverage-unit npm run test:unit",
     "coverage:integration": "nyc --report-dir ./.coverage-integration npm run test:integration",
     "start": "node dist/src",
-    "start:ci": "npm run maildev && EMAIL_TRANSPORT_MAIL_DEV=true RATE_LIMIT_DISABLED=false node dist/src > /dev/null 2>&1",
-    "start:dev": "npm run docker:dev && TS_NODE_FILES=true nodemon --watch src -L --exec 'ts-node --inspect=0.0.0.0:5858 -r tsconfig-paths/register --cache-directory .tscache' ./src/index.ts",
-    "docker:dev": "docker-compose -f ./Docker/docker-compose.development.yml up -d",
-    "maildev": "maildev &",
+    "start:watch": "TS_NODE_FILES=true nodemon --watch src -L --exec 'ts-node --inspect=0.0.0.0:5858 -r tsconfig-paths/register --cache-directory .tscache' ./src/index.ts",
     "precommit": "lint-staged",
     "semantic-release": "semantic-release",
     "travis-deploy-once": "travis-deploy-once --pro"

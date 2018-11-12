@@ -30,22 +30,29 @@ Po.et's API layer for publishers
 * [Docker](https://docs.docker.com/install/) (with [docker-compose](https://docs.docker.com/compose/install/))
 * Frost API token (sign up at [frost.po.et](https://frost.po.et) to create one)
 
-### Install
+## How to Run Frost API
 
+To run Frost API, clone this repo, and make sure you have [Docker](https://docs.docker.com/install/) and [docker-compose](https://docs.docker.com/compose/install/) installed.
+
+Clone the repo:
 ```bash
-git clone git@github.com:poetapp/frost-api.git
+git clone https://github.com/poetapp/frost-api.git
 cd frost-api
-npm i
 ```
 
-
-### Development mode
-
-```
-npm run start:dev
+To start the Frost API development environment, run:
+```bash
+docker-compose up --build
 ```
 
-When you start in development mode, all dependencies (MongoDB, Consul, Vault and Po.et Node) needed for Frost API are loaded by docker-compose. The Frost API will work with nodemon and you have the ability to debug on port 5858.
+You only need to run `docker-compose build` to create or update the Docker images, and `docker-compose up -d` to start them. To shut everything down, it is recommended to use `docker-compose down --volumes`  to stop the running containers and clear any data. If you wish to keep data between invocations, use `docker-compose down`.
+
+You can also `docker-compose exec mongo bash` to run the mongo shell.
+
+### Dependencies
+
+Frost API depends on [RabbitMQ](http://www.rabbitmq.com/), [IPFS](https://ipfs.io/), [Bitcoin Core](https://github.com/bitcoin/bitcoin), [Po.et node](https://github.com/poetapp/node.git) and [MongoDB](https://github.com/mongodb/mongo).
+These dependencies are setup automatically when you run `docker-compose`.
 
 ## API
 

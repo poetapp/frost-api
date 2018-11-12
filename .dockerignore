@@ -1,0 +1,13 @@
+coverage
+dist
+docker-compose*
+Docker*
+.github
+.gitignore
+.idea
+.ipfs-docker
+makefile
+node_modules
+.nyc_output
+openapi.yaml
+.travis.yml

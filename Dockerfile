@@ -1,16 +1,25 @@
 FROM node:10.12.0
 
-RUN apt-get update && apt-get install -y \
-    rsync
+RUN echo "deb http://ftp.us.debian.org/debian unstable main contrib non-free" >> /etc/apt/sources.list.d/unstable.list
 
-WORKDIR /usr/src/app/api
+RUN apt-get update && apt-get install -y rsync \
+                       gcc-5 \
+                       g++-5 \
+                       && rm -rf /var/lib/apt/lists/* \
+                       && rm /etc/apt/sources.list.d/unstable.list
 
-RUN npm install node-gyp -g
+RUN rm /usr/bin/g++ && ln -s /usr/bin/g++-5 /usr/bin/g++
 
-COPY entrypoint.sh /entrypoint.sh
-COPY package.json ./package.json
-COPY api_dist ./dist
-COPY api_node_modules ./node_modules
+RUN echo 'PS1="\u@${POET_SERVICE:-noService}:\w# "' >> ~/.bashrc
 
-ENTRYPOINT ["/entrypoint.sh"]
-CMD [ "api" ]
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+RUN npm ci
+
+COPY . /usr/src/app/
+
+RUN npm run build
+
+CMD [ "npm", "start" ]
