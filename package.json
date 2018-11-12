@@ -49,7 +49,7 @@
   },
   "dependencies": {
     "@paralleldrive/feature-toggles": "1.0.3",
-    "@po.et/poet-js": "5.1.8",
+    "@po.et/poet-js": "5.1.9",
     "async-ratelimiter": "1.1.2",
     "bitcoinjs-lib": "4.0.2",
     "body-parser": "1.18.3",
