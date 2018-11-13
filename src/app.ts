@@ -143,18 +143,21 @@ export async function app(localVars: any = {}) {
     jwt: configuration.jwt,
   }
 
-  try {
-    Vault.config(configurationVault)
+  let secret
+  if (!configuration.skipVault) {
+    try {
+      Vault.config(configurationVault)
 
-    // Init vault and unseal
-    // https://www.vaultproject.io/intro/getting-started/deploy.html
-    if (!configurationVault.token) await initVault(configurationInitVault, logger)
-    await Vault.mountAuthTune()
-  } catch (e) {
-    logger.error(e.message)
+      // Init vault and unseal
+      // https://www.vaultproject.io/intro/getting-started/deploy.html
+      if (!configurationVault.token) await initVault(configurationInitVault, logger)
+      await Vault.mountAuthTune()
+    } catch (e) {
+      logger.error(e.message)
+    }
+
+    secret = await Vault.readSecret('frost')
   }
-
-  const secret = await Vault.readSecret('frost')
 
   const configurationMongoDB = {
     mongodbUrl: configuration.mongodbUrl,
@@ -183,7 +186,7 @@ export async function app(localVars: any = {}) {
     sendEmail: {
       nodemailer: {
         mandrill: {
-          apiKey: secret.data.transactionalMandrill,
+          apiKey: secret ? secret.data.transactionalMandrill : '',
         },
         maildev: {
           host: configuration.maildevPortTcpAddr,

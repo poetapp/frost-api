@@ -75,6 +75,7 @@ export interface Configuration
   readonly pwnedCheckerRoot: string
   readonly transactionalMandrill: string
   readonly jwt: string
+  readonly skipVault: boolean
 }
 
 export const configuration: Configuration = {
@@ -114,6 +115,7 @@ export const configuration: Configuration = {
   passwordComplexNumeric: 1,
   passwordComplexSymbol: 1,
   pwnedCheckerRoot: '',
+  skipVault: false,
   transactionalMandrill: '46mwv_E6dOxrSDUkJD4NOQ',
   jwt: 'example',
   maildevPortTcpAddr: 'localhost',
