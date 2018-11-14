@@ -48,3 +48,9 @@ export const setUpServerAndDb = async ({
 }
 
 export const baseUrl = (port: string, host: string = 'localhost') => `http://${host}:${port}`
+
+export const getHeader = (result: any, property: string) => {
+  const headers = result.headers
+  const value = headers.get(property)
+  return value
+}
