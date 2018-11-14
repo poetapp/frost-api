@@ -158,6 +158,15 @@ services:
       - redis
       - maildev
     command: "/wait-for-it.sh -h mongo -p 27017 -- npm start"
+  
+  k6:
+    build:
+      context: .
+      dockerfile: ./Docker/Dockerfile.stress
+    environment:
+      - FROST_HOST=http://frost-api:3000
+    volumes:
+      - .:/usr/src/app
 
 volumes:
   db:
