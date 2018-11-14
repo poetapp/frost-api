@@ -60,7 +60,7 @@
     "isomorphic-fetch": "2.2.1",
     "joi": "14.0.6",
     "joi-password-complexity": "2.0.1",
-    "jsonwebtoken": "8.3.0",
+    "jsonwebtoken": "8.4.0",
     "koa": "2.6.2",
     "koa-bodyparser": "4.2.1",
     "koa-helmet": "4.0.0",
