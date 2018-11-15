@@ -80,7 +80,7 @@ services:
     entrypoint: /consul.sh
 
   vault:
-    image: vault:0.11.4
+    image: vault:0.11.5
     ports:
       - "8200:8200"
     environment:
