@@ -1,12 +1,12 @@
 require('dotenv').config({ path: '.env' })
 import * as fs from 'fs'
 import * as Pino from 'pino'
-
-import './extensions/Error'
+import { promisify } from 'util'
 
 import { API } from './api/API'
 import { Configuration } from './configuration'
 import { MongoDB } from './databases/mongodb/mongodb'
+import './extensions/Error'
 import { loadConfigurationWithDefaults } from './loadConfiguration'
 import { delay } from './utils/Delay/Delay'
 import { createModuleLogger } from './utils/Logging/Logging'
@@ -19,6 +19,9 @@ interface InitVault {
   jwt: string
 }
 
+const readFile = promisify(fs.readFile)
+const VAULT_FILE = '/tmp/vault.json'
+
 const initVault = async ({ transactionalMandrill, jwt }: InitVault, logger: Pino.Logger) => {
   try {
     let initialized = false
@@ -27,7 +30,7 @@ const initVault = async ({ transactionalMandrill, jwt }: InitVault, logger: Pino
     let config
     let status
 
-    while (!initialized)
+    while (!initialized) {
       try {
         logger.info('info', 'waiting vault')
         status = await Vault.status()
@@ -35,12 +38,17 @@ const initVault = async ({ transactionalMandrill, jwt }: InitVault, logger: Pino
         if (!status.initialized) {
           config = await Vault.init()
           logger.info('info', 'Vault is initialized')
-        }
+        } else
+          config = JSON.parse(await readFile(VAULT_FILE, 'utf8'))
       } catch (e) {
         logger.info('error', e.message)
         logger.info('info', 'Retry in 5 seconds')
         await delay(5000)
       }
+
+      status = await Vault.status()
+      initialized = status.initialized
+    }
 
     if (config) {
       const box = Box('30x5', {
@@ -58,7 +66,7 @@ const initVault = async ({ transactionalMandrill, jwt }: InitVault, logger: Pino
       console.log(box)
       console.table(config)
 
-      fs.writeFile('./vault.json', JSON.stringify(config, null, '\t'), err => {
+      fs.writeFile(VAULT_FILE, JSON.stringify(config, null, '\t'), err => {
         if (err) return console.log(err)
 
         console.log('The file was saved!')
@@ -108,8 +116,8 @@ const initVault = async ({ transactionalMandrill, jwt }: InitVault, logger: Pino
     } else if (status.initialized)
       logger.info(
         'error',
-        'Vault was initialized. Check file vault.json in the root project. \
-         You have to set the environment variable VAULT_TOKEN ',
+        `Vault was initialized. Check file ${VAULT_FILE} in the container. \
+         You have to set the environment variable VAULT_TOKEN `,
       )
   } catch (e) {
     logger.info('error', e.message)
