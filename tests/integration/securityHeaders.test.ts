@@ -3,7 +3,6 @@ import { describe } from 'riteway'
 import { app } from '../../src/app'
 import { delay, runtimeId, createDatabase } from '../helpers/utils'
 
-const PREFIX = `test-interation-frost-api-poet-${runtimeId()}`
 const features = [
   {
     value: 'content-security-policy',
@@ -28,14 +27,16 @@ const features = [
 ]
 
 describe('Security headers', async assert => {
-  const db = await createDatabase(PREFIX)
+  const db = await createDatabase(`test-integration-frost-api-poet-${runtimeId()}`)
 
   const server = await app({
     FROST_PORT: '30080',
     FROST_HOST: 'localhost',
     FROST_URL: 'http://localhost:30080',
-    SKIP_VAULT: 'true',
     MONGODB_DATABASE: db.settings.tempDbName,
+    MONGODB_USER: db.settings.tempDbUser,
+    MONGODB_PASSWORD: db.settings.tempDbPassword,
+    MONGODB_URL: 'mongodb://localhost:27017/frost', // force calc of url in configuration
   })
   await delay(5)
 

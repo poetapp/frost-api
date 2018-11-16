@@ -2,4 +2,5 @@
 import './app.test'
 import './cors.test'
 import './health.test'
+import './login.test'
 import './securityHeaders.test'

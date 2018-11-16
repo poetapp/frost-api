@@ -8,6 +8,9 @@ export const FROST_HOST = 'localhost'
 export const FROST_PORT = '30080'
 export const FROST_URL = `http://${FROST_HOST}:${FROST_PORT}`
 
+export const testUserEmail = 'test-ci@po.et'
+export const testUserPassword = 'aB%12345678910'
+
 export const runtimeId = () => `${process.pid}-${new Date().getMilliseconds()}-${Math.floor(Math.random() * 10)}`
 export const delay = promisify(setTimeout)
 

@@ -142,7 +142,7 @@ services:
       - REDIS_HOST=redis
       - MAILDEV_URL=http://maildev:80
       - EMAIL_TRANSPORT_MAIL_DEV=true
-      - RATE_LIMIT_DISABLED=false
+      - RATE_LIMIT_DISABLED=true
       - FROST_VERIFIED_ACCOUNT=http://localhost:4000/verified-account
       - FROST_CHANGE_PASSWORD=http://localhost:4000/forgot-password/change-password
       - VERIFIED_ACCOUNT=false
@@ -158,7 +158,7 @@ services:
       - redis
       - maildev
     command: "/wait-for-it.sh -h mongo -p 27017 -- npm start"
-  
+
   k6:
     build:
       context: .
