@@ -53,3 +53,7 @@ More options on: https://docs.k6.io/docs/options
 ## Environment variables:
 
 - FROST_HOST: The Frost API location
+
+## Notes:
+
+For executing the test `createToken.js` you need to set the environment variable `MAX_API_TOKENS` with a high number.
