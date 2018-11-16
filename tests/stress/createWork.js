@@ -1,0 +1,32 @@
+import http from 'k6/http'
+import { check, sleep } from 'k6'
+
+import { createWork } from './Helpers/createWork.js'
+
+const FROST_HOST = __ENV.FROST_HOST || 'http://0.0.0.0:3000'
+
+export const setup = () => {
+  const sufix = Date.now()
+  const payload = JSON.stringify({
+    email: `test${sufix}@po.et`,
+    password: 'aB%12345678910'
+  })
+
+  const url = `${FROST_HOST}/accounts`
+  const params =  { headers: { 'Content-Type': 'application/json' } }
+  const res = http.post(url, payload, params)
+  return res.json()
+}
+
+export default (data) => {
+  const work = JSON.stringify(createWork())
+  const url = `${FROST_HOST}/works`
+  const params =  { headers: { 'Content-Type': 'application/json', token: data.token } }
+  const res = http.post(url, work, params)
+
+  check(res, {
+    'status 200': (r) => r.status === 200
+  })
+
+  sleep(1)
+}

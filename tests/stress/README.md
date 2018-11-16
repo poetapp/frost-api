@@ -56,4 +56,5 @@ More options on: https://docs.k6.io/docs/options
 
 ## Notes:
 
-For executing the test `createToken.js` you need to set the environment variable `MAX_API_TOKENS` with a high number.
+- For executing the test `createWork.js` you need to set the environment variable `VERIFIED_ACCOUNT` with true.
+- For executing the test `createToken.js` you need to set the environment variable `MAX_API_TOKENS` with a high number.
