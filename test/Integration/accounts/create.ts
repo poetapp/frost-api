@@ -25,12 +25,7 @@ describe('Account', function() {
   describe('When create a new account', function() {
     describe('When an account does not exist', function() {
       describe('When a password satisfies the security level', () => {
-        it('should return a token', async function() {
-          const response = await frost.create()
-          expect(response.token).to.be.a('string')
-        })
-
-        it('should return a token and email verified', async function() {
+        it('should return an email verified', async function() {
           await frost.create()
           const [message] = await mail.getEmails()
 
@@ -104,14 +99,6 @@ describe('Account', function() {
         const jointoken = splittoken.join('/')
 
         await expect(frost.verifyAccount(jointoken)).to.be.throwWith(expected)
-      })
-    })
-
-    describe('When an account exists', function() {
-      it(`should return a message with '${errorMessages.accountExists}'`, async function() {
-        const expected = errorMessages.accountExists
-        await frost.create()
-        await expect(frost.create()).to.be.throwWith(expected)
       })
     })
   })
