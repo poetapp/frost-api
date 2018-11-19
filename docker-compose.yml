@@ -68,7 +68,7 @@ services:
       - data:/data/ipfs
 
   consul:
-    image: consul:1.3.1
+    image: consul:1.4.0
     ports:
       - "8400:8400"
       - "8500:8500"
