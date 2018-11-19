@@ -98,7 +98,7 @@
     "@types/mongodb": "3.1.14",
     "@types/mongoose": "5.3.1",
     "@types/node": "10.12.9",
-    "@types/node-fetch": "2.1.2",
+    "@types/node-fetch": "2.1.4",
     "@types/node-vault": "0.5.3",
     "@types/pino": "5.8.1",
     "@types/sinon": "5.0.6",
