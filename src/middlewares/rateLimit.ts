@@ -1,4 +1,3 @@
-const Redis = require('ioredis')
 const RateLimiter = require('async-ratelimiter')
 
 import { errors } from '../errors/errors'
@@ -8,36 +7,28 @@ export interface LimiterConfiguration {
   readonly duration: number
 }
 
-export interface RedisConfiguration {
-  readonly redisPort: number
-  readonly redisHost: string
-}
-export interface RateLimitConfiguration extends RedisConfiguration {
+export interface RateLimitConfiguration {
   readonly rateLimitDisabled: boolean
 }
 
 const { RateLimitReached } = errors
 
-const limiter = ({ redisPort, redisHost }: RedisConfiguration) => ({ max = 2500, duration = 3600000 }) =>
-  new RateLimiter({
-    db: new Redis(redisPort, redisHost),
-    max,
-    duration,
-  })
+const limiter = (db: any) => ({ max = 2500, duration = 3600000 }) =>
+  new RateLimiter({ db, max, duration })
 
-export const RateLimit = (rateLimitConfiguration: RateLimitConfiguration) => (
+export const RateLimit = (db: any) => (rateLimitConfiguration: RateLimitConfiguration) => (
   limiterConfiguration: LimiterConfiguration,
 ) => {
-  const { redisPort, redisHost, rateLimitDisabled } = rateLimitConfiguration
-  const limiters = limiter({ redisPort, redisHost })
+  const limiters = limiter(db)
 
   return async (ctx: any, next: any) => {
-    if (rateLimitDisabled) return next()
+    if (rateLimitConfiguration.rateLimitDisabled) return await next()
+
     const limit = await limiters(limiterConfiguration).get({ id: ctx.request.ip })
     ctx.set('X-Rate-Limit-Limit', limit.total)
     ctx.set('X-Rate-Limit-Remaining', Math.max(0, limit.remaining - 1))
     ctx.set('X-Rate-Limit-Reset', limit.reset)
 
-    return !limit.remaining ? ctx.throw(RateLimitReached.code, RateLimitReached.message) : next()
+    return !limit.remaining ? ctx.throw(RateLimitReached.code, RateLimitReached.message) : await next()
   }
 }

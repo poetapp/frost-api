@@ -6,7 +6,8 @@ describe('rateLimit middleware', async (assert: any) => {
   {
     const next = spy()
     const ctx = {}
-    const rateLimit = RateLimit({ rateLimitDisabled: true, redisHost: 'localhost', redisPort: 1 })
+    const redisDB: any = null
+    const rateLimit = RateLimit(redisDB)({ rateLimitDisabled: true })
 
     await rateLimit({ max: 1, duration: 1 })(ctx, next)
 

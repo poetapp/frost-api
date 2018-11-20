@@ -31,7 +31,7 @@ import { CreateWork, CreateWorkSchema } from './works/CreateWork'
 import { GetWork, GetWorkSchema } from './works/GetWork'
 import { GetWorks } from './works/GetWorks'
 
-export const routes = (
+export const routes = (redisDB: any) => (
   passwordComplexConfiguration: PasswordComplexConfiguration,
   sendEmailConfiguration: SendEmailConfiguration,
   rateLimitConfiguration: RateLimitConfiguration,
@@ -44,7 +44,7 @@ export const routes = (
 ) => {
   const router = new KoaRouter()
   const sendEmail = SendEmail(sendEmailConfiguration)
-  const rateLimit = RateLimit(rateLimitConfiguration)
+  const rateLimit = RateLimit(redisDB)(rateLimitConfiguration)
   const { loginLimiter, accountLimiter, passwordChangeLimiter } = limiters
 
   router.use([Path.WORKS, Path.WORKS_WORKID], (ctx: any, next: any) => {

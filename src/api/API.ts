@@ -44,7 +44,7 @@ interface APIMethods {
   stop(): Promise<APIMethods>
 }
 
-const init = ({
+const init = (redisDB: any) => ({
   maxApiRequestLimitForm,
   maxApiRequestLimitJson,
   passwordComplex,
@@ -59,7 +59,7 @@ const init = ({
   loggingConfiguration,
 }: APIConfiguration) => {
   const app = new Koa()
-  const route = routes(
+  const route = routes(redisDB)(
     passwordComplex,
     sendEmail,
     rateLimit,
@@ -104,13 +104,13 @@ const stopAPI = async (server: any, logger: Pino.Logger) => {
   logger.info('Stopped API.')
 }
 
-export const API = (configuration: APIConfiguration): APIMethods => {
+export const API = (redisDB: any) => (configuration: APIConfiguration): APIMethods => {
   const { loggingConfiguration } = configuration
   const logger = createModuleLogger(loggingConfiguration)(__dirname)
 
   return {
     async start(): Promise<APIMethods> {
-      const app = init(configuration)
+      const app = init(redisDB)(configuration)
       this.server = await startAPI(app, configuration, logger)
       return this
     },

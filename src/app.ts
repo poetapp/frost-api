@@ -1,4 +1,5 @@
 require('dotenv').config({ path: '.env' })
+const Redis = require('ioredis')
 import * as fs from 'fs'
 import * as Pino from 'pino'
 import { promisify } from 'util'
@@ -211,8 +212,6 @@ export async function app(localVars: any = {}) {
     },
     rateLimit: {
       rateLimitDisabled: configuration.rateLimitDisabled,
-      redisPort: configuration.redisPort,
-      redisHost: configuration.redisHost,
     },
     limiters: {
       loginLimiter: {
@@ -236,13 +235,15 @@ export async function app(localVars: any = {}) {
     loggingConfiguration,
   }
 
+  const redisDB = await new Redis(configuration.redisPort, configuration.redisHost)
   const mongoDB = await MongoDB(configurationMongoDB).start()
-  const frostAPI = await API(configurationFrostAPI).start()
+  const frostAPI = await API(redisDB)(configurationFrostAPI).start()
 
   return {
     stop: async () => {
       await frostAPI.stop()
       await mongoDB.stop()
+      await redisDB.disconnect()
       return true
     },
   }
