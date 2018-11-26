@@ -83,7 +83,7 @@
     "@po.et/tslint-rules": "2.0.2",
     "@types/bitcoinjs-lib": "4.0.0",
     "@types/chai": "4.1.7",
-    "@types/cheerio": "0.22.9",
+    "@types/cheerio": "0.22.10",
     "@types/form-data": "2.2.1",
     "@types/handlebars": "4.0.39",
     "@types/ioredis": "4.0.4",
