@@ -7,7 +7,7 @@ const sha1sum = (password: string) =>
     .update(password)
     .digest('hex')
 
-const runPwnedChecker = (root: string) => async (password: string) => await fetch(`${root}/${sha1sum(password)}`)
+const runPwnedChecker = (root: string) => async (password: string) => fetch(`${root}/${sha1sum(password)}`)
 export const result = ({ status }: { [key: string]: any }) => Promise.resolve(status === 200)
 const asyncPipe = (...fns: any[]) => (x: any) => fns.reduce(async (y: any, f: any) => f(await y), x)
 

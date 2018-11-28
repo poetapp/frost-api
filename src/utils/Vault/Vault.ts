@@ -11,11 +11,11 @@ export namespace Vault {
   }
 
   export async function init() {
-    return await this.vault.init({ secret_shares: 1, secret_threshold: 1 })
+    return this.vault.init({ secret_shares: 1, secret_threshold: 1 })
   }
 
   export async function unseal(key: string) {
-    return await this.vault.unseal({ secret_shares: 1, key })
+    return this.vault.unseal({ secret_shares: 1, key })
   }
 
   export async function encrypt(text: string) {
@@ -34,28 +34,28 @@ export namespace Vault {
   }
 
   export async function createToken(options?: object) {
-    return await this.vault.tokenCreate(options)
+    return this.vault.tokenCreate(options)
   }
 
   export async function revokeToken(token: string) {
-    return await this.vault.tokenRevokeOrphan({ token })
+    return this.vault.tokenRevokeOrphan({ token })
   }
 
   export async function verifyToken(token: string) {
-    return await this.vault.tokenLookup({ token })
+    return this.vault.tokenLookup({ token })
   }
 
   export async function readSecret(key: string) {
-    return await this.vault.read(`secret/${key}`)
+    return this.vault.read(`secret/${key}`)
   }
 
   export async function writeSecret(key: string, value: object) {
-    return await this.vault.write(`secret/${key}`, value)
+    return this.vault.write(`secret/${key}`, value)
   }
 
   export async function mountSecret() {
     await this.vault.mounts()
-    return await this.vault.mount({
+    return this.vault.mount({
       mount_point: 'secret',
       type: 'generic',
       description: 'secrets',
@@ -64,7 +64,7 @@ export namespace Vault {
 
   export async function mountTransit() {
     await this.vault.mounts()
-    return await this.vault.mount({
+    return this.vault.mount({
       mount_point: 'transit',
       type: 'transit',
       description: 'transit',
@@ -73,7 +73,7 @@ export namespace Vault {
 
   export async function mountAuthTune() {
     await this.vault.mounts()
-    return await this.vault.mount({
+    return this.vault.mount({
       mount_point: 'auth/token/tune',
       type: 'auth',
       description: 'auth tune',
@@ -84,10 +84,10 @@ export namespace Vault {
   }
 
   export async function status() {
-    return await this.vault.health()
+    return this.vault.health()
   }
 
   export async function writeTransitKey() {
-    return await this.vault.write('transit/keys/frost')
+    return this.vault.write('transit/keys/frost')
   }
 }

@@ -22,13 +22,13 @@ export const RateLimit = (db: any) => (rateLimitConfiguration: RateLimitConfigur
   const limiters = limiter(db)
 
   return async (ctx: any, next: any) => {
-    if (rateLimitConfiguration.rateLimitDisabled) return await next()
+    if (rateLimitConfiguration.rateLimitDisabled) return next()
 
     const limit = await limiters(limiterConfiguration).get({ id: ctx.request.ip })
     ctx.set('X-Rate-Limit-Limit', limit.total)
     ctx.set('X-Rate-Limit-Remaining', Math.max(0, limit.remaining - 1))
     ctx.set('X-Rate-Limit-Reset', limit.reset)
 
-    return !limit.remaining ? ctx.throw(RateLimitReached.code, RateLimitReached.message) : await next()
+    return !limit.remaining ? ctx.throw(RateLimitReached.code, RateLimitReached.message) : next()
   }
 }

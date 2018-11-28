@@ -57,7 +57,7 @@ export class WorksController {
   async generateClaim() {
     const { archiveUrl, hash } = (await this.uploadContent(this.work.content))[0]
     const newWork = omit(['content'], this.work)
-    return await this.createAndSignClaim({ archiveUrl, hash, ...newWork })
+    return this.createAndSignClaim({ archiveUrl, hash, ...newWork })
   }
 
   async create(workAttributes: any) {
@@ -116,7 +116,7 @@ export class WorksController {
   async get(workId: string) {
       const work = await fetch(`${this.network}/works/${workId}`)
 
-      if (work.ok) return await work.json()
+      if (work.ok) return work.json()
 
       const errorType = 'Work not found'
       const data = { ...work, errorType, method: Method.GET }

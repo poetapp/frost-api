@@ -32,7 +32,7 @@ export class Mail {
     const request = fetch(`${this.host}/email`, options)
 
     const response = await Promise.race([request, this.timeoutPromise()])
-    if (response.ok) return await response.json()
+    if (response.ok) return response.json()
     throw await response.text()
   }
 
@@ -47,7 +47,7 @@ export class Mail {
     const request = fetch(`${this.host}/email/${id}`, options)
 
     const response = await Promise.race([request, this.timeoutPromise()])
-    if (response.ok) return await response.text()
+    if (response.ok) return response.text()
     throw await response.text()
   }
 
@@ -62,7 +62,7 @@ export class Mail {
     const request = fetch(`${this.host}/email/all`, options)
 
     const response = await Promise.race([request, this.timeoutPromise()])
-    if (response.ok) return await response.text()
+    if (response.ok) return response.text()
     throw await response.text()
   }
 }

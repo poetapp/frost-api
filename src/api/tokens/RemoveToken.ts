@@ -14,12 +14,12 @@ const getTestApiTokens = (user: Accounts) => {
 
 const decryptApiTokens = async (tokens: ReadonlyArray<string>) => {
   const allTokens = tokens.map(Vault.decrypt, Vault)
-  return await Promise.all(allTokens)
+  return Promise.all(allTokens)
 }
 
 const encryptApiTokens = async (tokens: ReadonlyArray<string>) => {
   const allTokens = tokens.map(Vault.encrypt, Vault)
-  return await Promise.all(allTokens)
+  return Promise.all(allTokens)
 }
 
 export const RemoveTokenSchema = () => ({

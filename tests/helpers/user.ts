@@ -10,6 +10,6 @@ export const createUser = async (email: string, password: string): Promise<{ rea
   }
 
   const request = await fetch(`${FROST_URL}${Path.ACCOUNTS}`, options)
-  if (request.ok) return await request.json()
+  if (request.ok) return request.json()
   throw await request.text()
 }
