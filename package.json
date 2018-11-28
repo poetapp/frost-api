@@ -100,7 +100,7 @@
     "@types/node": "10.12.10",
     "@types/node-fetch": "2.1.4",
     "@types/node-vault": "0.5.3",
-    "@types/pino": "5.8.2",
+    "@types/pino": "5.8.3",
     "@types/sinon": "5.0.7",
     "chai": "4.2.0",
     "cheerio": "1.0.0-rc.2",
