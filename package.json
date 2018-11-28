@@ -95,7 +95,7 @@
     "@types/koa-helmet": "3.1.2",
     "@types/koa-router": "7.0.35",
     "@types/mocha": "5.2.5",
-    "@types/mongodb": "3.1.14",
+    "@types/mongodb": "3.1.15",
     "@types/mongoose": "5.3.1",
     "@types/node": "10.12.10",
     "@types/node-fetch": "2.1.4",
