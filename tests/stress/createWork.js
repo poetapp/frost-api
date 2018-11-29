@@ -6,10 +6,16 @@ import { getTokenLogin } from './Helpers/getTokenLogin.js'
 
 const FROST_HOST = __ENV.FROST_HOST || 'http://0.0.0.0:3000'
 
-export const setup = () => getTokenLogin()
+export const setup = () => {
+  const token = getTokenLogin()
 
-export default (token) => {
-  const work = JSON.stringify(createWork())
+  const content = `${Date.now()} - VU: ${__VU}  -  ITER: ${__ITER}`
+  const work = JSON.stringify(createWork({ content }))
+
+  return { token, work }
+}
+
+export default ({ token, work }) => {
   const url = `${FROST_HOST}/works`
   const params =  { headers: { 'Content-Type': 'application/json', token } }
   const res = http.post(url, work, params)

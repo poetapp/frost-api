@@ -4,11 +4,8 @@ import { check, sleep } from 'k6'
 const FROST_HOST = __ENV.FROST_HOST || 'http://0.0.0.0:3000'
 
 export default () => {
-  const suffix = Date.now()
-  const payload = JSON.stringify({
-    email: `test${suffix}@po.et`,
-    password: 'aB%12345678910'
-  })
+  const email = `user${Date.now()}+${__VU}@po.et`;
+  const payload = JSON.stringify({ email, password: 'aB%12345678910' })
 
   const url = `${FROST_HOST}/accounts`
   const params =  { headers: { 'Content-Type': 'application/json' } }

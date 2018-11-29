@@ -7,7 +7,8 @@ import { getTokenLogin } from './Helpers/getTokenLogin.js'
 const FROST_HOST = __ENV.FROST_HOST || 'http://0.0.0.0:3000'
 
 const getWorkId = (token) => {
-  const work = JSON.stringify(createWork())
+  const content = `${Date.now()} - VU: ${__VU}  -  ITER: ${__ITER}`
+  const work = JSON.stringify(createWork({ content }))
   const urlWorks = `${FROST_HOST}/works`
   const paramsWorks =  { headers: { 'Content-Type': 'application/json', token } }
   const resWorks = http.post(urlWorks, work, paramsWorks)
