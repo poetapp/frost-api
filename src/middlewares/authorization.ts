@@ -5,7 +5,7 @@ import { Vault } from '../utils/Vault/Vault'
 
 const { AuthenticationFailed, ExpiredToken, InvalidToken } = errors
 
-export const extractToken = (ctx: any) => (ctx.header.token ? ctx.header.token : ctx.params.token)
+export const extractToken = (ctx: any): string => (ctx.header.token ? ctx.header.token : ctx.params.token) || ''
 
 export const authorization = (verifiedAccount: boolean, pwnedCheckerRoot: string) => {
 

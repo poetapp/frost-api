@@ -44,9 +44,9 @@ describe('extractToken()', async (assert: any) => {
 
     assert({
       given: 'no token in the context header or params properties',
-      should: 'return undefined',
+      should: 'return a string',
       actual,
-      expected: undefined,
+      expected: '',
     })
   }
 })
