@@ -8,6 +8,7 @@ import { securityHeaders } from '../securityHeaders'
 import { createModuleLogger, LoggingConfiguration } from '../utils/Logging/Logging'
 import { SendEmailConfiguration } from '../utils/SendEmail'
 
+import { errorHandling } from '../middlewares/errorHandling'
 import { logger } from '../middlewares/logger'
 import { LimiterConfiguration, RateLimitConfiguration } from '../middlewares/rateLimit'
 import { PasswordComplexConfiguration } from './PasswordComplexConfiguration'
@@ -72,6 +73,7 @@ const init = (redisDB: any) => ({
   )
 
   app
+    .use(errorHandling())
     .use(logger(createModuleLogger(loggingConfiguration)))
     .use(helmet(securityHeaders))
     .use(

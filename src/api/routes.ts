@@ -1,6 +1,5 @@
 import * as KoaRouter from 'koa-router'
 
-import { addHeaderToError } from '../middlewares/addHeaderToErrors'
 import { authorization } from '../middlewares/authorization'
 import { isLoggedIn } from '../middlewares/isLoggedIn'
 import { monitor } from '../middlewares/monitor'
@@ -76,8 +75,6 @@ export const routes = (redisDB: any) => (
   router.use([Path.WORKS, Path.WORKS_WORKID], requireEmailVerified())
 
   router.use([Path.TOKENS], isLoggedIn())
-
-  router.use(addHeaderToError())
 
   const secureKeys = ['password', 'token', 'tokenId']
   router.use(monitor(secureKeys))
