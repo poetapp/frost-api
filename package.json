@@ -72,7 +72,7 @@
     "nodemailer": "4.7.0",
     "nodemailer-mandrill-transport": "1.2.0",
     "pino": "5.9.0",
-    "pino-pretty": "2.3.0",
+    "pino-pretty": "2.4.0",
     "protobufjs": "6.8.8",
     "ramda": "0.26.1",
     "secure-password": "3.1.0",
