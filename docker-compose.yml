@@ -100,7 +100,7 @@ services:
       - "1025:25"
 
   poet-node:
-    image: "poetapp/node:v2.14.0"
+    image: "poetapp/node:v2.14.1"
     ports:
       - "18080:18080"
     environment:
