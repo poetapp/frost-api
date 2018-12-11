@@ -8,6 +8,6 @@ export class MongoDB {
   }
 
   connect() {
-    return MongoClient.connect(this.url)
+    return MongoClient.connect(this.url, { useNewUrlParser: true })
   }
 }

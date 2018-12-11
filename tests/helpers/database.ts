@@ -27,7 +27,10 @@ export const dbHelper = () => {
     console.log(`Connecting to temporary DB (${mongodbUrl})...`)
     const mongoClient = await MongoClient.connect(
       mongodbUrl,
-      { authSource: 'admin' },
+      {
+        authSource: 'admin',
+        useNewUrlParser: true,
+      },
     )
 
     try {
