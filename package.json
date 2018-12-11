@@ -80,7 +80,7 @@
   },
   "devDependencies": {
     "@po.et/frost-client": "2.1.0",
-    "@po.et/tslint-rules": "2.1.0",
+    "@po.et/tslint-rules": "2.2.0",
     "@types/bitcoinjs-lib": "4.0.0",
     "@types/chai": "4.1.7",
     "@types/cheerio": "0.22.10",
