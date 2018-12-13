@@ -40,7 +40,7 @@ services:
     command: mongod  --smallfiles --logpath=/dev/null
 
   redis:
-    image: redis:4.0.11-alpine
+    image: redis:4.0.12-alpine
     ports:
      - "6379:6379"
     volumes:
