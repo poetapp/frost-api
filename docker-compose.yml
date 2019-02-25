@@ -91,7 +91,7 @@ services:
       - ./Docker/config/vault/policies:/policies
     depends_on:
       - consul
-    entrypoint: /wait-for-it.sh -t 20 -h consul -p 8500 -s -- vault server -config=/config/vault.hcl
+    entrypoint: /wait-for-it.sh -t 20 consul:8500 -- vault server -config=/config/vault.hcl
 
   maildev:
     image: djfarrelly/maildev
@@ -120,7 +120,8 @@ services:
       - rabbit
       - ipfs
       - bitcoind-1
-    command: /wait-for-it.sh -h rabbit -p 5672 -t 30 -- /wait-for-it.sh -h mongo -p 27017 -- npm start
+    command: sh -c '/wait-for-it.sh mongo:27017 -- /wait-for-it.sh rabbit:5672 -t 30 -- npm start'
+
 
   frost-api:
     image: frost_api
@@ -150,23 +151,23 @@ services:
       - MAILDEV_PORT_TCP_PORT=25
       - DISABLED__PWNEDCHECKER_ROOT=http://pwned-checker:28080
     volumes:
-      - ./Docker/tools/wait-for-it.bash:/wait-for-it.sh
+      - ./Docker/tools/wait-for-it.sh:/wait-for-it.sh
     depends_on:
       - mongo
       - vault
       - poet-node
       - redis
       - maildev
-    command: "/wait-for-it.sh -h mongo -p 27017 -- npm start"
+    command: ["/wait-for-it.sh", "mongo:27017", "--", "npm", "start"]
 
-  k6:
-    build:
-      context: .
-      dockerfile: ./Docker/Dockerfile.stress
-    environment:
-      - FROST_HOST=http://frost-api:3000
-    volumes:
-      - .:/usr/src/app
+  #k6:
+  #  build:
+  #    context: .
+  #    dockerfile: ./Docker/Dockerfile.stress
+  #  environment:
+  #    - FROST_HOST=http://frost-api:3000
+  #  volumes:
+  #    - .:/usr/src/app
 
 volumes:
   db:

@@ -1,6 +1,7 @@
 coverage
 dist
 docker-compose*
+.dockerignore
 Docker*
 .github
 .gitignore
@@ -8,6 +9,11 @@ Docker*
 .ipfs-docker
 makefile
 node_modules
+npm-debug.log
 .nyc_output
 openapi.yaml
 .travis.yml
+.env
+README.md
+LICENSE
+.vscode

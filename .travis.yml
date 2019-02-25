@@ -1,38 +1,40 @@
 language: minimal
 
+notifications:
+  slack:
+    on_success: change
+    on_failure: always
+    on_error: always
+    on_cancel: always
+    rooms:
+      secure: f9izn2tuyI6ONiPzlERFNgvARR29naeSEHKhHIkpOF0JKvKpvQMP/iM5V8lzM/frqMUIIoO9eXeFFqKjY93uTBSQ+5cPpVTNTdD49d765T5DDRmNpG/Dd8RFjyT9XeYgCFIcVLJsOqS7GkajE02UcmZye/RfYzi/d+dZmlcomNPEuZXDhpPkECc2eL87OBC0P0JbsDzZqH3qFEuC+hQRMBVnXr3dR0PWCjMs82DBTHm+9T/PlCFwMUKHILbN1s+vim075aei1pJg1PtuOJaDhX+cRKWlCMhl461MVTn5sXqV1fphRTyo3AYht2J3skJGPHCvx+aI6CmZ0GGHoi4v+qKnLCespmnTUt73lxfztvv7j/qeHHRuOKsqNobceOOLJ4hvPpZSLK3NQM1Kw3h2CC5qVYLf3qh3qPCQFevoliOXw0Ij7iOT5/flEycCv059px43ciTM9VrwPxgmfQBcmZyWyX8se9xzFvSWURE5Su/zIwvoLifBYkmjflXUqQNBTe0lwAyqYPPhQX84xmu20lCM7dSo+pSTtlF1SW+soRsqjmjA0VXmjVdus6zQVj6V3CJoNHdyvjE9Hc6UUVRZoSGMc60YdPEo6r13aBYSek1fbfhW3HGUHyljmlJxJbP2INOlX90fqn6t/MTK8FnGLC7GMMQO+NJQNV0BxUDEWho=
+
 services:
   - docker
 
 env:
   REPO: poetapp/frost-api
-  DOCKER_COMPOSE_VERSION: 1.21.2
+  DOCKER_COMPOSE_VERSION: 1.23.2
 
 before_install:
   - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin
-
+  - sudo curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  - sudo chmod +x /usr/local/bin/docker-compose
 install:
   - docker-compose up -d
   - sleep 10
-
 script:
-  - docker-compose ps
   - docker-compose exec frost-api npm run lint
   - docker-compose exec frost-api npm run coverage
-
 after:
   - docker images
-
 before_deploy:
   - bash ./scripts/docker-build.sh
-
 deploy:
   - provider: script
     skip_cleanup: true
     script:
-    - bash ./scripts/docker-push.sh
+      - bash ./scripts/docker-push.sh
     on:
       all_branches: true
   - provider: script
