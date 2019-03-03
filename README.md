@@ -57,7 +57,7 @@ These dependencies are setup automatically when you run `docker-compose`.
 ## API
 
 We are using the [OpenAPI specification](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md) to document the Frost API:
-- https://app.swaggerhub.com/apis-docs/po.et/frost-api/0.1.0#/
+- https://app.swaggerhub.com/apis-docs/po.et/poet-api/0.1.0#/
 
 The purpose of the API is to:
 - Facilitate the creation and maintenance of Frost accounts
@@ -75,32 +75,32 @@ There are two other tokens sent by email:
 
 ### Health check
 
-- https://app.swaggerhub.com/apis-docs/po.et/frost-api/0.1.0#/default/healthCheck
+- https://app.swaggerhub.com/apis-docs/po.et/poet-api/0.1.0#/default/healthCheck
 
 ### Accounts
 
 #### Create account
 
-- https://app.swaggerhub.com/apis-docs/po.et/frost-api/0.1.0#/default/createAccount
+- https://app.swaggerhub.com/apis-docs/po.et/poet-api/0.1.0#/default/createAccount
 
 Returns a Login token.
 
 #### Verify account
 
 When the user creates a new account the system automatically sends an email for the purpose of verifying the email address. This email contains a link with an embedded token, which the user only needs to click in order to verify the email address. Alternatively, the token can be passed programatically to the server:
-- https://app.swaggerhub.com/apis-docs/po.et/frost-api/0.1.0#/default/verifyAccount
+- https://app.swaggerhub.com/apis-docs/po.et/poet-api/0.1.0#/default/verifyAccount
 
 #### Resend verification email
 
 Requires a Login token.
 
-- https://app.swaggerhub.com/apis-docs/po.et/frost-api/0.1.0#/default/resendVerifyEmail
+- https://app.swaggerhub.com/apis-docs/po.et/poet-api/0.1.0#/default/resendVerifyEmail
 
 #### Login to account
 
 Authenticate with email address and password.
 
-- https://app.swaggerhub.com/apis-docs/po.et/frost-api/0.1.0#/default/loginAccount
+- https://app.swaggerhub.com/apis-docs/po.et/poet-api/0.1.0#/default/loginAccount
 
 Returns a Login token.
 
@@ -108,13 +108,13 @@ Returns a Login token.
 
 Requires a Login token.
 
-- https://app.swaggerhub.com/apis-docs/po.et/frost-api/0.1.0#/default/getProfile
+- https://app.swaggerhub.com/apis-docs/po.et/poet-api/0.1.0#/default/getProfile
 
 #### Password reset
 
 When the user forgets or loses the account password, a new one can be requested programatically.
 
-- https://app.swaggerhub.com/apis-docs/po.et/frost-api/0.1.0#/default/passwordReset
+- https://app.swaggerhub.com/apis-docs/po.et/poet-api/0.1.0#/default/passwordReset
 
 An email is sent that contains a link with an embedded token, which the user can click in order to open the Frost website and set a new password.
 
@@ -122,13 +122,13 @@ An email is sent that contains a link with an embedded token, which the user can
 
 Requires a Login token.
 
-- https://app.swaggerhub.com/apis-docs/po.et/frost-api/0.1.0#/default/passwordChange
+- https://app.swaggerhub.com/apis-docs/po.et/poet-api/0.1.0#/default/passwordChange
 
 #### Password change token
 
 Requires a Forgot Password token.
 
-- https://app.swaggerhub.com/apis-docs/po.et/frost-api/0.1.0#/default/passwordChangeToken
+- https://app.swaggerhub.com/apis-docs/po.et/poet-api/0.1.0#/default/passwordChangeToken
 
 ### Tokens
 
@@ -136,7 +136,7 @@ Requires a Forgot Password token.
 
 Requires a Login token.
 
-- https://app.swaggerhub.com/apis-docs/po.et/frost-api/0.1.0#/default/createToken
+- https://app.swaggerhub.com/apis-docs/po.et/poet-api/0.1.0#/default/createToken
 
 Returns a "test" or "live" API token.
 
@@ -144,13 +144,13 @@ Returns a "test" or "live" API token.
 
 Requires a Login token.
 
-- https://app.swaggerhub.com/apis-docs/po.et/frost-api/0.1.0#/default/getTokens
+- https://app.swaggerhub.com/apis-docs/po.et/poet-api/0.1.0#/default/getTokens
 
 #### Delete token
 
 Requires a Login token.
 
-- https://app.swaggerhub.com/apis-docs/po.et/frost-api/0.1.0#/default/deleteToken
+- https://app.swaggerhub.com/apis-docs/po.et/poet-api/0.1.0#/default/deleteToken
 
 ### Works
 
@@ -158,19 +158,19 @@ Requires a Login token.
 
 Requires an API token.
 
-- https://app.swaggerhub.com/apis-docs/po.et/frost-api/0.1.0#/default/createWork
+- https://app.swaggerhub.com/apis-docs/po.et/poet-api/0.1.0#/default/createWork
 
 #### Get all works
 
 Requires an API token.
 
-- https://app.swaggerhub.com/apis-docs/po.et/frost-api/0.1.0#/default/getAllWorks
+- https://app.swaggerhub.com/apis-docs/po.et/poet-api/0.1.0#/default/getAllWorks
 
 #### Get work
 
 Requires an API token.
 
-- https://app.swaggerhub.com/apis-docs/po.et/frost-api/0.1.0#/default/getWork
+- https://app.swaggerhub.com/apis-docs/po.et/poet-api/0.1.0#/default/getWork
 
 ## [Vault](https://www.vaultproject.io/intro/getting-started/dev-server.html)
 
