@@ -49,7 +49,7 @@ jobs:
       - store_artifacts:
           path: /tmp/logs
       - store_test_results:
-          path: /tmp/.coverage
+          path: /tmp/test-results
 
 
   release:
