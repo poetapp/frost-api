@@ -62,7 +62,13 @@ jobs:
 
   push:
     <<: *defaults
+    working_directory: /tmp/workspace
     steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Load archived Docker image
+          command: docker load -i image.tar
       - run:
           name: Tag and Push Docker image
           command: |
