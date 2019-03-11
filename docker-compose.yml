@@ -91,7 +91,8 @@ services:
       - ./Docker/config/vault/policies:/policies
     depends_on:
       - consul
-    entrypoint: /wait-for-it.sh -t 20 consul:8500 -- vault server -config=/config/vault.hcl
+    command: ["-c", "/wait-for-it.sh consul:8500 && vault server -config=/config/vault.hcl"]
+    entrypoint: ["/bin/sh"]
 
   maildev:
     image: djfarrelly/maildev
@@ -158,7 +159,8 @@ services:
       - poet-node
       - redis
       - maildev
-    command: ["/wait-for-it.sh", "mongo:27017", "--", "npm", "start"]
+    command: ["-c", "/wait-for-it.sh mongo:27017 && npm start"]
+    entrypoint: ["/bin/sh"]
 
   #k6:
   #  build:

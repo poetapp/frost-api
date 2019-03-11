@@ -1,0 +1,115 @@
+version: 2
+
+defaults: &defaults
+    environment:
+      REPO_NAME: poetapp/frost-api
+      IMAGE_NAME: frost_api
+      DOCKER_COMPOSE_VERSION: 1.23.2
+    machine: true 
+
+jobs:
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Install Docker Compose
+          command: |
+            curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+            chmod +x ~/docker-compose
+            sudo mv ~/docker-compose /usr/local/bin/docker-compose
+      - run: docker-compose up -d
+      - run: docker-compose exec frost-api npm run lint
+      - run: docker-compose exec frost-api npm run coverage
+      - run: 
+          name: Get logs
+          command: |
+            services="bitcoind-1  consul frost-api ipfs mongo poet-node rabbit redis vault"
+            mkdir /tmp/logs
+            for i in $services
+            do
+               docker-compose logs $i > /tmp/logs/$i.log
+            done
+      - run: 
+          name: Get coverage report
+          command: |
+            reports="integration-riteway integration unit"
+            mkdir -p /tmp/test-results
+            for r in $reports
+            do
+               docker cp project_frost-api_1:/usr/src/app/.coverage-$r /tmp/test-results
+            done
+      - run:
+          name: Archive Docker image
+          command: docker save -o image.tar ${IMAGE_NAME}
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./image.tar
+      - store_artifacts:
+          path: /tmp/logs
+      - store_test_results:
+          path: /tmp/.coverage
+
+  tag:
+    <<: *defaults
+    working_directory: /tmp/workspace
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Load archived Docker image
+          command: docker load -i image.tar
+      - run:
+          name: Tag Docker image
+          command: |
+            if [[ -z "${CIRCLE_TAG}" ]]; then
+              TAG="v-$(echo $CIRCLE_SHA1 | cut -c 1-6)-beta"
+            else
+              TAG="${CIRCLE_TAG}"
+            fi
+            docker tag "${IMAGE_NAME}" "${REPO_NAME}":"${TAG}"
+            docker tag "${IMAGE_NAME}" "${REPO_NAME}":"latest"
+            docker images
+
+  release:
+    docker:
+      - image: circleci/node:8
+    steps:
+      - checkout
+      - run: sudo npm install -g semantic-release
+      - run: npx semantic-release
+
+  push:
+    <<: *defaults
+    steps:
+      - run:
+          name: Publish Docker image
+          command: |
+            docker login -u "${DOCKER_USER}" -p "${DOCKER_PASS}"
+            docker push "${REPO_NAME}"
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - tag:
+          requires:
+            - build
+          #filters:
+          #  branches:
+          #    only: master
+      - release:
+          requires:
+            - build
+          #filters:
+          #  branches:
+          #    only: master
+      - push:
+          context: docker
+          requires:
+            - release
+          filters:
+            branches:
+              only: master
