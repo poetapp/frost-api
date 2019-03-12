@@ -28,11 +28,4 @@ export class AccountsController {
     return this.dao.delete(id)
   }
 
-  public getTextErrorPassword(options: ComplexityOptions): string {
-    const mapOptions = Object.entries(options).map(value => {
-      return `${value[0]}: ${value[1]} `
-    })
-
-    return `Password Requirements, ${mapOptions.join('')}`
-  }
 }

@@ -1,6 +1,7 @@
+// tslint:disable:max-line-length
+
 export const errorMessages = {
-  inputsNotValid: `One of the inputs is not valid. Password Requirements,
-  min: 10 max: 30 lowerCase: 1 upperCase: 1 numeric: 1 symbol: 1 requirementCount: 4`,
+  inputsNotValid: `One of the inputs is not valid. Password requirements: min: 10, max: 30, lowerCase: 1, upperCase: 1, numeric: 1, symbol: 1, requirementCount: 4.`,
   emailVerified: 'Email already verified.',
   invalidToken: 'Invalid token.',
   accountExists: 'The specified account already exists.',

@@ -81,7 +81,7 @@ export const routes = (redisDB: any) => (
 
   router.post(
     Path.ACCOUNTS,
-    validate({ body: CreateAccountSchema(passwordComplexConfiguration, verifiedAccount, pwnedCheckerRoot) }),
+    validate({ body: CreateAccountSchema(passwordComplexConfiguration) }),
     CreateAccount(sendEmail, verifiedAccount, pwnedCheckerRoot),
   )
   router.post(
@@ -93,12 +93,12 @@ export const routes = (redisDB: any) => (
   router.post(Path.LOGIN, validate({ body: LoginSchema }), Login(verifiedAccount, pwnedCheckerRoot))
   router.post(
     Path.PASSWORD_CHANGE,
-    validate({ body: PasswordChangeSchema(passwordComplexConfiguration, verifiedAccount, pwnedCheckerRoot) }),
+    validate({ body: PasswordChangeSchema(passwordComplexConfiguration) }),
     PasswordChange(verifiedAccount, pwnedCheckerRoot),
   )
   router.post(
     Path.PASSWORD_CHANGE_TOKEN,
-    validate({ body: PasswordChangeTokenSchema(passwordComplexConfiguration, verifiedAccount, pwnedCheckerRoot) }),
+    validate({ body: PasswordChangeTokenSchema(passwordComplexConfiguration) }),
     PasswordChangeToken(sendEmail, verifiedAccount, pwnedCheckerRoot),
   )
   router.post(Path.ACCOUNTS_VERIFY, VerifyAccount(sendEmail))

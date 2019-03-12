@@ -1,8 +1,8 @@
 import * as Joi from 'joi'
-const PasswordComplexity = require('joi-password-complexity')
 
-import { PasswordComplexConfiguration } from 'api/PasswordComplexConfiguration'
+import { PasswordComplexConfiguration } from '../../api/PasswordComplexConfiguration'
 import { errors } from '../../errors/errors'
+import { validatePassword } from '../../helpers/validatePassword'
 import { Network } from '../../interfaces/Network'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
 import { SendEmailTo } from '../../utils/SendEmail'
@@ -13,23 +13,12 @@ import { getToken } from './utils/utils'
 
 export const CreateAccountSchema = (
   passwordComplex: PasswordComplexConfiguration,
-  verifiedAccount: boolean,
-  pwnedCheckerRoot: string,
-) => (values: { password: string }, ctx: any): object => {
-  const { password } = values
-  const usersController = new AccountsController(ctx.logger, verifiedAccount, pwnedCheckerRoot)
-
-  return {
-    email: Joi.string()
-      .email()
-      .required(),
-    password: Joi.validate(password, new PasswordComplexity(passwordComplex), (err: Joi.Err, value: string) => {
-      if (err) throw usersController.getTextErrorPassword(passwordComplex)
-
-      return value
-    }),
-  }
-}
+) => ({ password }: { password: string }) => ({
+  email: Joi.string()
+    .email()
+    .required(),
+  password: validatePassword(password, passwordComplex),
+})
 
 export const CreateAccount = (sendEmail: SendEmailTo, verifiedAccount: boolean, pwnedCheckerRoot: string) => async (
   ctx: any,

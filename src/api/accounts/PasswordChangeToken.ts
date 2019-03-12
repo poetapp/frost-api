@@ -1,7 +1,5 @@
-import * as Joi from 'joi'
-const PasswordComplexity = require('joi-password-complexity')
-
 import { errors } from '../../errors/errors'
+import { validatePassword } from '../../helpers/validatePassword'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
 import { processPassword } from '../../utils/Password'
 import { SendEmailTo } from '../../utils/SendEmail'
@@ -12,20 +10,9 @@ import { getToken, tokenMatch } from './utils/utils'
 
 export const PasswordChangeTokenSchema = (
   passwordComplex: PasswordComplexConfiguration,
-  verifiedAccount: boolean,
-  pwnedCheckerRoot: string,
-) => (values: { password: string }, ctx: any) => {
-  const { password } = values
-  const usersController = new AccountsController(ctx.logger, verifiedAccount, pwnedCheckerRoot)
-
-  return {
-    password: Joi.validate(password, new PasswordComplexity(passwordComplex), (err: Joi.Err, value: string) => {
-      if (err) throw usersController.getTextErrorPassword(passwordComplex)
-
-      return value
-    }),
-  }
-}
+) => ({ password }: { password: string }) => ({
+  password: validatePassword(password, passwordComplex),
+})
 
 const hasForgotPasswordToken = tokenMatch(Token.ForgotPassword)
 
