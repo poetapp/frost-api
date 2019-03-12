@@ -46,11 +46,13 @@ jobs:
           root: .
           paths:
             - ./image.tar
+
       - store_artifacts:
           path: /tmp/logs
-      - store_test_results:
+      - store_artifacts:
           path: /tmp/test-results
-
+      - store_test_results:
+          path: test-results
 
   release:
     docker:
