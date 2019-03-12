@@ -31,6 +31,7 @@ jobs:
             do
                docker-compose logs $i > /tmp/logs/$i.log
             done
+          when: on_fail
       - run: 
           name: Get coverage report
           command: |
@@ -87,13 +88,8 @@ jobs:
       - run:
           name: Tag and Push Docker image
           command: |
-            if [[ -z "${CIRCLE_TAG}" ]]; then
-              TAG="v-$(echo $CIRCLE_SHA1 | cut -c 1-6)-beta"
-            else
-              TAG="${CIRCLE_TAG}"
-            fi
+            TAG="v-$(echo $CIRCLE_SHA1 | cut -c 1-6)-beta"
             docker tag "${IMAGE_NAME}" "${REPO_NAME}":"${TAG}"
-            docker tag "${IMAGE_NAME}" "${REPO_NAME}":"latest"
             
             docker login -u "${DOCKER_USER}" -p "${DOCKER_PASS}"
             docker push "${REPO_NAME}"
