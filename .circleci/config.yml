@@ -5,7 +5,8 @@ defaults: &defaults
       REPO_NAME: poetapp/frost-api
       IMAGE_NAME: frost_api
       DOCKER_COMPOSE_VERSION: 1.23.2
-    machine: true 
+    machine:
+      docker_layer_caching: true
 
 jobs:
   build:
@@ -52,7 +53,7 @@ jobs:
       - store_artifacts:
           path: /tmp/test-results
       - store_test_results:
-          path: test-results
+          path: /tmp/test-results
 
   release:
     docker:
