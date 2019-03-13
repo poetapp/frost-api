@@ -1,14 +1,14 @@
 import * as Joi from 'joi'
 import { verify } from 'jsonwebtoken'
 import { errors } from '../../errors/errors'
-import { Accounts } from '../../modules/Accounts/Accounts.interface'
+import { Account } from '../../modules/Accounts/Accounts.model'
 import { Vault } from '../../utils/Vault/Vault'
 
-const getApiTokens = (user: Accounts) => {
+const getApiTokens = (user: Account) => {
   return user.apiTokens.map(({ token }) => token)
 }
 
-const getTestApiTokens = (user: Accounts) => {
+const getTestApiTokens = (user: Account) => {
   return user.testApiTokens.map(({ token }) => token)
 }
 

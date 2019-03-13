@@ -6,10 +6,6 @@ import { validatePassword } from '../../helpers/validatePassword'
 import { Network } from '../../interfaces/Network'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
 import { SendEmailTo } from '../../utils/SendEmail'
-import { Vault } from '../../utils/Vault/Vault'
-
-import { Token } from '../Tokens'
-import { getToken } from './utils/utils'
 
 export const CreateAccountSchema = (
   passwordComplex: PasswordComplexConfiguration,
@@ -27,17 +23,9 @@ export const CreateAccount = (sendEmail: SendEmailTo, verifiedAccount: boolean, 
   const logger = ctx.logger(__dirname)
 
   try {
-    const user = ctx.request.body
-    const { email } = user
-    const apiToken = await getToken(email, Token.TestApiKey, Network.TEST)
-    user.testApiTokens = [{ token: await Vault.encrypt(`TEST_${apiToken}`) }]
-    const usersController = new AccountsController(ctx.logger, verifiedAccount, pwnedCheckerRoot)
-
-    await usersController.create(user)
-
-    const tokenVerifiedAccount = await getToken(email, Token.VerifyAccount)
-    await sendEmail(email).sendVerified(tokenVerifiedAccount)
-    const token = await getToken(email, Token.Login)
+    const usersController = new AccountsController(ctx.logger, verifiedAccount, pwnedCheckerRoot, sendEmail)
+    const { email, password } = ctx.request.body
+    const token = await usersController.create({ email, password })
     ctx.body = { token }
   } catch (exception) {
     const { AccountAlreadyExists } = errors

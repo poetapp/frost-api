@@ -1,15 +1,28 @@
-import { model, Schema } from 'mongoose'
-import { validate } from './Accounts.hooks'
-import { Accounts } from './Accounts.interface'
+import { model, Schema, Document } from 'mongoose'
 
-const Tokens = new Schema(
+interface Token {
+  readonly token: string
+}
+
+export interface Account extends Document {
+  readonly email: string
+  readonly password: string
+  readonly verified: boolean
+  readonly privateKey: string
+  readonly publicKey: string
+  readonly createdAt: string
+  readonly apiTokens: [Token]
+  readonly testApiTokens: [Token]
+}
+
+const TokenSchema = new Schema(
   {
     token: String,
   },
   { _id: false },
 )
 
-export const AccountsSchema = new Schema({
+const AccountSchema = new Schema({
   email: {
     type: String,
     required: true,
@@ -38,12 +51,8 @@ export const AccountsSchema = new Schema({
   apiToken: {
     type: String,
   },
-  apiTokens: [Tokens],
-  testApiTokens: [Tokens],
+  apiTokens: [TokenSchema],
+  testApiTokens: [TokenSchema],
 })
 
-const createSchema = (verifiedAccount: boolean, pwnedCheckerRoot: string) =>
-  AccountsSchema.pre('validate', validate(verifiedAccount, pwnedCheckerRoot))
-
-export const AccountsModel = (verifiedAccount: boolean, pwnedCheckerRoot: string) =>
-  model<Accounts>('Accounts', createSchema(verifiedAccount, pwnedCheckerRoot))
+export const Account = model<Account>('Accounts', AccountSchema)
