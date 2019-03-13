@@ -3,7 +3,6 @@ import * as Joi from 'joi'
 import { PasswordComplexConfiguration } from '../../api/PasswordComplexConfiguration'
 import { errors } from '../../errors/errors'
 import { validatePassword } from '../../helpers/validatePassword'
-import { Network } from '../../interfaces/Network'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
 import { SendEmailTo } from '../../utils/SendEmail'
 
@@ -18,7 +17,6 @@ export const CreateAccountSchema = (
 
 export const CreateAccount = (sendEmail: SendEmailTo, verifiedAccount: boolean, pwnedCheckerRoot: string) => async (
   ctx: any,
-  next: any,
 ): Promise<any> => {
   const logger = ctx.logger(__dirname)
 

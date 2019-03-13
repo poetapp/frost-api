@@ -1,4 +1,4 @@
-import { generateED25519Base58Keys } from '@po.et/poet-js'
+import { createIssuerFromPrivateKey, generateED25519Base58Keys } from '@po.et/poet-js'
 import * as Pino from 'pino'
 
 import { Token } from '../../api/Tokens'
@@ -33,6 +33,7 @@ export class AccountsController {
     const encryptedPrivateKey = await Vault.encrypt(privateKey)
     const apiToken = await getToken(email, Token.TestApiKey, Network.TEST)
     const encryptedToken = await Vault.encrypt(`TEST_${apiToken}`)
+    const issuer = createIssuerFromPrivateKey(privateKey)
 
     const account = new Account({
       email,
@@ -42,6 +43,7 @@ export class AccountsController {
       createdAt: Date.now().toString(), // .toString(): legacy reasons
       verified: this.verifiedAccount,
       testApiTokens: [{ token: encryptedToken }],
+      issuer,
     })
 
     this.logger.trace({ account }, 'Creating account')

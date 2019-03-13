@@ -27,20 +27,14 @@ export const CreateWork = (poetUrl: string, testPoetUrl: string) => async (ctx: 
 
   try {
     const { user, tokenData } = ctx.state
-    const {
-      data: {
-        meta: { network },
-      },
-    } = tokenData
     const { WorkError } = errors
 
     const newWork = ctx.request.body
     const privateKey = await Vault.decrypt(user.privateKey)
-    const nodeNetwork = isLiveNetwork(network) ? poetUrl : testPoetUrl
+    const nodeNetwork = isLiveNetwork(tokenData.data.meta.network) ? poetUrl : testPoetUrl
 
-    const work = new WorksController(ctx.logger, nodeNetwork, privateKey, newWork)
-    work.start()
-    const claim = await work.generateClaim()
+    const work = new WorksController(ctx.logger, nodeNetwork)
+    const claim = await work.generateClaim(user.issuer, privateKey, newWork)
 
     try {
       await work.create(claim)

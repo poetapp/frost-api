@@ -1,7 +1,6 @@
 import { SignedVerifiableClaim } from '@po.et/poet-js'
 import { errors } from '../../errors/errors'
 import { WorksController } from '../../modules/Works/Works.controller'
-import { Vault } from '../../utils/Vault/Vault'
 import { isLiveNetwork } from '../accounts/utils/utils'
 
 export const GetWorks = (poetUrl: string, testPoetUrl: string) => async (ctx: any, next: any): Promise<any> => {
@@ -9,19 +8,14 @@ export const GetWorks = (poetUrl: string, testPoetUrl: string) => async (ctx: an
 
   try {
     const { user, tokenData } = ctx.state
-    const privateKey = await Vault.decrypt(user.privateKey)
-    const {
-      data: {
-        meta: { network },
-      },
-    } = tokenData
+    const { issuer } = user
 
-    const nodeNetwork = isLiveNetwork(network) ? poetUrl : testPoetUrl
+    const nodeNetwork = isLiveNetwork(tokenData.data.meta.network) ? poetUrl : testPoetUrl
 
-    const worksController = new WorksController(ctx.logger, nodeNetwork, privateKey)
+    const worksController = new WorksController(ctx.logger, nodeNetwork)
 
     try {
-      const response = await worksController.getWorksByIssuer()
+      const response = await worksController.getWorksByIssuer(issuer)
 
       ctx.body = response.map((work: SignedVerifiableClaim) => work.claim)
       return

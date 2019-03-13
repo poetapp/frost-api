@@ -1,8 +1,6 @@
 import {
   getVerifiableClaimSigner,
   configureCreateVerifiableClaim,
-  createIssuerFromPrivateKey,
-  SignedVerifiableClaim,
 } from '@po.et/poet-js'
 import * as FormData from 'form-data'
 import fetch from 'node-fetch'
@@ -17,47 +15,28 @@ const legacyContext = {
   content: 'schema:text',
 }
 
-const isNotNil = pipe(
-  isNil,
-  not,
-)
-
 export interface WorkAttributes {
   readonly [key: string]: string
 }
 
 export class WorksController {
-  private work: WorkAttributes
-  private network: string
-  private issuer: string
-  private privateKey: string
-  private createAndSignClaim: (doc: object) => SignedVerifiableClaim
   private logger: Pino.Logger
 
   constructor(
     createLogger: (dirname: string) => Pino.Logger,
-    network: string,
-    privateKey?: string,
-    work?: WorkAttributes,
+    readonly network: string,
   ) {
     this.logger = createLogger(__dirname)
-    this.work = work
-    this.network = network
-    this.privateKey = privateKey
-    if (isNotNil(privateKey)) this.issuer = createIssuerFromPrivateKey(privateKey)
   }
 
-  start() {
-    this.createAndSignClaim = pipeP(
-      configureCreateVerifiableClaim({ issuer: this.issuer, context: legacyContext }),
-      getVerifiableClaimSigner().configureSignVerifiableClaim({ privateKey: this.privateKey }),
+  async generateClaim(issuer: string, privateKey: string, work: WorkAttributes) {
+    const createAndSignClaim = pipeP(
+      configureCreateVerifiableClaim({ issuer, context: legacyContext }),
+      getVerifiableClaimSigner().configureSignVerifiableClaim({ privateKey }),
     )
-  }
-
-  async generateClaim() {
-    const { archiveUrl, hash } = (await this.uploadContent(this.work.content))[0]
-    const newWork = omit(['content'], this.work)
-    return this.createAndSignClaim({ archiveUrl, hash, ...newWork })
+    const { archiveUrl, hash } = (await this.uploadContent(work.content))[0]
+    const newWork = omit(['content'], work)
+    return createAndSignClaim({ archiveUrl, hash, ...newWork })
   }
 
   async create(workAttributes: any) {
@@ -125,15 +104,15 @@ export class WorksController {
       throw new Error(errorType)
   }
 
-  async getWorksByIssuer() {
+  async getWorksByIssuer(issuer: string) {
     try {
-      const works = await fetch(`${this.network}/works/?issuer=${this.issuer}`)
+      const works = await fetch(`${this.network}/works/?issuer=${issuer}`)
 
-      if (works.ok) return await works.json()
+      if (works.ok) return works.json()
 
       const errorText = await works.text()
       const data = { ...works, errorText, method: Method.GET }
-      this.logger.error({ data, issuer: this.issuer }, 'WorksController.getWorksByIssuer')
+      this.logger.error({ data, issuer }, 'WorksController.getWorksByIssuer')
 
       throw new Error('Works not found')
     } catch (exception) {

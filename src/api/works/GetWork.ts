@@ -13,13 +13,8 @@ export const GetWork = (poetUrl: string, testPoetUrl: string) => async (ctx: any
   try {
     const { workId } = ctx.params
     const { tokenData } = ctx.state
-    const {
-      data: {
-        meta: { network },
-      },
-    } = tokenData
 
-    const nodeNetwork = isLiveNetwork(network) ? poetUrl : testPoetUrl
+    const nodeNetwork = isLiveNetwork(tokenData.data.meta.network) ? poetUrl : testPoetUrl
 
     const worksController = new WorksController(ctx.logger, nodeNetwork)
 
