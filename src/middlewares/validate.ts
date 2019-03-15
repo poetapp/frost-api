@@ -1,7 +1,7 @@
 import * as Joi from 'joi'
 import { errors } from '../errors/errors'
 
-interface ValidateParams {
+export interface ValidateParams {
   readonly query?: (values: object, ctx: any) => {}
   readonly body?: (values: object, ctx: any) => {}
   readonly params?: (values: object, ctx: any) => {}

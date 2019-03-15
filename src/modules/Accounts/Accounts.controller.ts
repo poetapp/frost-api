@@ -59,6 +59,10 @@ export class AccountsController {
     return this.dao.get(email)
   }
 
+  public getByIssuer(issuer: string): Promise<Account | null> {
+    return Account.findOne({ issuer }).exec()
+  }
+
   public update(id: string, account: Account) {
     return this.dao.update(id, account)
   }

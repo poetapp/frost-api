@@ -13,6 +13,7 @@ import { Path } from './Path'
 
 import { CreateAccount, CreateAccountSchema } from './accounts/CreateAccount'
 import { ForgotPassword, ForgotPasswordSchema } from './accounts/ForgotPassword'
+import { GetAccount, GetAccountSchema } from './accounts/GetAccount'
 import { GetProfile } from './accounts/GetProfile'
 import { Login, LoginSchema } from './accounts/Login'
 import { PasswordChange, PasswordChangeSchema } from './accounts/PasswordChange'
@@ -78,6 +79,12 @@ export const routes = (redisDB: any) => (
 
   const secureKeys = ['password', 'token', 'tokenId']
   router.use(monitor(secureKeys))
+
+  router.get(
+    Path.ACCOUNTS_ID,
+    validate(GetAccountSchema),
+    GetAccount(),
+  )
 
   router.post(
     Path.ACCOUNTS,

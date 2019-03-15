@@ -9,6 +9,10 @@ export const errors = {
       Make sure the value of the Authorization header is formed correctly
       including the signature.`,
   },
+  AccountNotFound: {
+    code: 404,
+    message: 'Account not found.',
+  },
   AccountNotVerify: {
     code: 409,
     message: 'The specified account is not verified.',
