@@ -2,7 +2,13 @@ export const errorHandling = () => async (ctx: any, next: any) => {
   try {
     await next()
   } catch (err) {
-    ctx.status = err.status
-    ctx.message = err.message
+    if (Number.isInteger(err.status)) {
+      ctx.status = err.status
+      ctx.message = err.message
+    } else {
+      const logger = ctx.logger('Error Middleware')
+      logger.error(err)
+      ctx.status = 500
+    }
   }
 }

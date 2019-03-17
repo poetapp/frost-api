@@ -1,4 +1,6 @@
 import * as fs from 'fs'
+import { homedir } from 'os'
+import * as path from 'path'
 import * as Pino from 'pino'
 import { promisify } from 'util'
 
@@ -9,7 +11,7 @@ import { loggingConfigurationToPinoConfiguration } from './utils/Logging/Logging
 import { Vault } from './utils/Vault/Vault'
 
 const readFile = promisify(fs.readFile)
-const VAULT_FILE = '/tmp/vault.json'
+const VAULT_FILE = path.join(homedir(), '/.po.et/vault.json')
 
 export const initVault = async () => {
   const configuration: Configuration = loadConfigurationWithDefaults()

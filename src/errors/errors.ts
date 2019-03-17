@@ -1,3 +1,5 @@
+// tslint:disable:max-classes-per-file
+
 export const errors = {
   AccountAlreadyExists: {
     code: 409,
@@ -66,4 +68,14 @@ export const errors = {
     code: 429,
     message: 'Too many attempts. Please try again later.',
   },
+}
+
+export class Unauthorized extends Error {
+  status = 403
+  message = 'Not authorized.'
+}
+
+export class AccountNotFound extends Error {
+  status = errors.AccountNotFound.code
+  message = errors.AccountNotFound.message
 }

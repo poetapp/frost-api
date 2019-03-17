@@ -28,7 +28,7 @@ export class AccountsDAO implements GenericDAO<Account> {
     }
   }
 
-  public async update(id: string, account: Account): Promise<Account> {
+  public async update(id: string, account: Partial<Account>): Promise<Account> {
     try {
       return await Account.findByIdAndUpdate(id, account, { new: true })
     } catch (exception) {

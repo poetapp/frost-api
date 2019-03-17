@@ -14,6 +14,9 @@ export interface Account extends Document {
   readonly apiTokens: [Token]
   readonly testApiTokens: [Token]
   readonly issuer: string
+  readonly name: string
+  readonly bio: string
+  readonly ethereumAddress: string
 }
 
 const TokenSchema = new Schema(
@@ -55,6 +58,15 @@ const AccountSchema = new Schema({
   apiTokens: [TokenSchema],
   testApiTokens: [TokenSchema],
   issuer: {
+    type: String,
+  },
+  name: {
+    type: String,
+  },
+  bio: {
+    type: String,
+  },
+  ethereumAddress: {
     type: String,
   },
 })

@@ -63,7 +63,7 @@ export class AccountsController {
     return Account.findOne({ issuer }).exec()
   }
 
-  public update(id: string, account: Account) {
+  public update(id: string, account: Partial<Account>) {
     return this.dao.update(id, account)
   }
 

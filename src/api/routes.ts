@@ -18,6 +18,7 @@ import { GetProfile } from './accounts/GetProfile'
 import { Login, LoginSchema } from './accounts/Login'
 import { PasswordChange, PasswordChangeSchema } from './accounts/PasswordChange'
 import { PasswordChangeToken, PasswordChangeTokenSchema } from './accounts/PasswordChangeToken'
+import { PatchAccount, PatchAccountSchema } from './accounts/PatchAccount'
 import { VerifyAccount } from './accounts/Verify'
 import { VerifyAccountToken } from './accounts/VerifyToken'
 
@@ -80,17 +81,23 @@ export const routes = (redisDB: any) => (
   const secureKeys = ['password', 'token', 'tokenId']
   router.use(monitor(secureKeys))
 
-  router.get(
-    Path.ACCOUNTS_ID,
-    validate(GetAccountSchema),
-    GetAccount(),
-  )
-
   router.post(
     Path.ACCOUNTS,
     validate({ body: CreateAccountSchema(passwordComplexConfiguration) }),
     CreateAccount(sendEmail, verifiedAccount, pwnedCheckerRoot),
   )
+  router.get(
+    Path.ACCOUNTS_ID,
+    validate(GetAccountSchema),
+    GetAccount(),
+  )
+  router.patch(
+    Path.ACCOUNTS_ID,
+    authorization(verifiedAccount, pwnedCheckerRoot),
+    validate(PatchAccountSchema),
+    PatchAccount(),
+  )
+
   router.post(
     Path.PASSWORD_RESET,
     validate({ body: ForgotPasswordSchema }),
