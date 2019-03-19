@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
+    "build:watch": "tsc -w",
     "lint": "tslint -p ./tsconfig.json",
     "lint:fix": "tslint -p ./tsconfig.json --fix",
     "test:unit": "ts-node -r tsconfig-paths/register --files tests/unit/index.ts",
@@ -18,7 +19,8 @@
     "start:watch": "TS_NODE_FILES=true nodemon --watch src -L --exec 'ts-node --inspect=0.0.0.0:5858 -r tsconfig-paths/register --cache-directory .tscache' ./src/index.ts",
     "precommit": "lint-staged",
     "semantic-release": "semantic-release",
-    "travis-deploy-once": "travis-deploy-once --pro"
+    "travis-deploy-once": "travis-deploy-once --pro",
+    "migrate-issuer":  "node dist/src/scripts/issuer.js"
   },
   "lint-staged": {
     "*.ts": [
