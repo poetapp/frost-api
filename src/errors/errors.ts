@@ -79,3 +79,8 @@ export class AccountNotFound extends Error {
   status = errors.AccountNotFound.code
   message = errors.AccountNotFound.message
 }
+
+export class AccountAlreadyExists extends Error {
+  status = errors.AccountAlreadyExists.code
+  message = errors.AccountAlreadyExists.message
+}

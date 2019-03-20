@@ -1,5 +1,6 @@
 import * as Joi from 'joi'
-import { Unauthorized } from '../../errors/errors'
+
+import { AccountAlreadyExists, Unauthorized } from '../../errors/errors'
 import { ValidateParams } from '../../middlewares/validate'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
 
@@ -26,6 +27,14 @@ export const PatchAccount = () => async (ctx: any, next: any): Promise<any> => {
     throw new Unauthorized()
 
   const accountsController = new AccountsController(ctx.logger, false, null)
+
+  if (ctx.request.body.email) {
+    const existing = await accountsController.get(ctx.request.body.email)
+    logger.trace(existing, 'Existing Account')
+
+    if (existing)
+      throw new AccountAlreadyExists()
+  }
 
   const response = await accountsController.update(user.id, ctx.request.body)
 
