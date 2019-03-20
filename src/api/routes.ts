@@ -14,7 +14,6 @@ import { Path } from './Path'
 import { CreateAccount, CreateAccountSchema } from './accounts/CreateAccount'
 import { ForgotPassword, ForgotPasswordSchema } from './accounts/ForgotPassword'
 import { GetAccount, GetAccountSchema } from './accounts/GetAccount'
-import { GetProfile } from './accounts/GetProfile'
 import { Login, LoginSchema } from './accounts/Login'
 import { PasswordChange, PasswordChangeSchema } from './accounts/PasswordChange'
 import { PasswordChangeToken, PasswordChangeTokenSchema } from './accounts/PasswordChangeToken'
@@ -103,7 +102,6 @@ export const routes = (redisDB: any) => (
     validate({ body: ForgotPasswordSchema }),
     ForgotPassword(sendEmail, verifiedAccount, pwnedCheckerRoot),
   )
-  router.get(Path.ACCOUNTS_PROFILE, GetProfile())
   router.post(Path.LOGIN, validate({ body: LoginSchema }), Login(verifiedAccount, pwnedCheckerRoot))
   router.post(
     Path.PASSWORD_CHANGE,

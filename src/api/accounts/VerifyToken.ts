@@ -29,7 +29,7 @@ export const VerifyAccountToken = (verifiedAccount: boolean, pwnedCheckerRoot: s
     const usersController = new AccountsController(ctx.logger, verifiedAccount, pwnedCheckerRoot)
     await usersController.update(user.id, user)
     const token = await getToken(user.email, Token.Login)
-    ctx.body = { token }
+    ctx.body = { token, issuer: user.issuer }
   } catch (exception) {
     logger.error({ exception }, 'api.VerifyAccountToken')
     throw exception
