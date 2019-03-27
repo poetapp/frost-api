@@ -1,0 +1,187 @@
+version: '3.6'
+
+services:
+  bitcoind-1:
+    image: ruimarinho/bitcoin-core:0.17.0
+    ports:
+      - "18443:18443"
+    volumes:
+      - type: tmpfs
+        target: /home/bitcoin/.bitcoin
+    command:
+      -printtoconsole
+      -testnet=${USE_BTC_TESTNET:-0}
+      -regtest=${USE_BTC_REGTEST:-1}
+      -rpcuser=bitcoinrpcuser
+      -rpcpassword=bitcoinrpcpassword
+      -rpcallowip=::/0
+      -server
+      -deprecatedrpc=signrawtransaction
+
+  mongo:
+    image: mongo:3.7
+    ports:
+      - "27017:27017"
+      - "28017:28017"
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=rootPass
+      - POET_DB=poet-dev
+      - POET_DB_USER=poet
+      - POET_DB_PASSWORD=poetPass
+      - FROST_DB=frost-dev
+      - FROST_DB_USER=frost
+      - FROST_DB_PASSWORD=frostPass
+    volumes:
+      - db:/data/db
+      - ../mongodb:/docker-entrypoint-initdb.d
+    command: mongod  --smallfiles --logpath=/dev/null
+
+  redis:
+    image: redis:4.0.12-alpine
+    ports:
+     - "6379:6379"
+    volumes:
+      - redis:/data
+    command: ["redis-server", "--appendonly", "yes"]
+
+  rabbit:
+    image: rabbitmq:3-management
+    ports:
+      - "5671:5671"
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=some_secret_cookie
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=adminPass
+
+  ipfs:
+    image: ipfs/go-ipfs:v0.4.18
+    ports:
+      - "8080:8080"
+      - "4001:4001"
+      - "5001:5001"
+    volumes:
+      - data:/data/ipfs
+
+  consul:
+    image: consul:1.4.0
+    ports:
+      - "8400:8400"
+      - "8500:8500"
+      - "8600:53/udp"
+    volumes:
+      - ../Docker/config/consul:/usr/share/consul
+      - ../Docker/tools/consul.sh:/consul.sh
+      - consul_data:/consul/data
+    entrypoint: /consul.sh
+
+  vault:
+    image: vault:0.11.5
+    ports:
+      - "8200:8200"
+    environment:
+      - VAULT_ADDR=http://0.0.0.0:8200
+    volumes:
+      - ../Docker/config/vault:/config
+      - ../Docker/tools/wait-for-it.sh:/wait-for-it.sh
+      - ../Docker/config/vault/policies:/policies
+    depends_on:
+      - consul
+    command: ["-c", "/wait-for-it.sh consul:8500 && vault server -config=/config/vault.hcl"]
+    entrypoint: ["/bin/sh"]
+
+  maildev:
+    image: djfarrelly/maildev
+    ports:
+      - "1080:80"
+      - "1025:25"
+
+  poet-node:
+    image: "poetapp/node:v2.18.4"
+    ports:
+      - "18080:18080"
+    environment:
+      - POET_SERVICE=node
+      - RABBITMQ_URL=amqp://admin:adminPass@rabbit
+      - MONGODB_USER=poet
+      - MONGODB_PASSWORD=poetPass
+      - MONGODB_HOST=mongo
+      - MONGODB_DATABASE=poet-dev
+      - IPFS_URL=http://ipfs:5001
+      - BITCOIN_URL=bitcoind-1
+      - INTEGRATION_TEST_NODE_URL=http://poet-node:18080
+    volumes:
+      - ../Docker/tools/wait-for-it.bash:/wait-for-it.sh
+    depends_on:
+      - mongo
+      - rabbit
+      - ipfs
+      - bitcoind-1
+    command: sh -c '/wait-for-it.sh mongo:27017 -- /wait-for-it.sh rabbit:5672 -t 30 -- npm start'
+
+
+  frost-api:
+    image: frost_api
+    build:
+      context: .
+    ports:
+      - "3000:3000"
+    environment:
+      - POET_SERVICE=frost-api
+      - VAULT_URL=http://vault:8200
+      - MONGODB_USER=frost
+      - MONGODB_PASSWORD=frostPass
+      - MONGODB_HOST=mongo
+      - MONGODB_DATABASE=frost-dev
+      - MONGODB_URL=mongodb://frost:frostPass@mongo:27017/frost-dev
+      - POET_URL=http://poet-node:18080
+      - TEST_POET_URL=http://poet-node:18080
+      - FROST_URL=http://frost-api:3000
+      - REDIS_HOST=redis
+      - MAILDEV_URL=http://maildev:80
+      - EMAIL_TRANSPORT_MAIL_DEV=true
+      - RATE_LIMIT_DISABLED=true
+      - FROST_VERIFIED_ACCOUNT=http://localhost:4000/verified-account
+      - FROST_CHANGE_PASSWORD=http://localhost:4000/forgot-password/change-password
+      - VERIFIED_ACCOUNT=false
+      - MAILDEV_PORT_TCP_ADDR=maildev
+      - MAILDEV_PORT_TCP_PORT=25
+      - DISABLED__PWNEDCHECKER_ROOT=http://pwned-checker:28080
+    volumes:
+      - ../Docker/tools/wait-for-it.sh:/wait-for-it.sh
+      - ../:/usr/src/app/
+      - /usr/src/app/node_modules 
+    depends_on:
+      - mongo
+      - vault
+      - poet-node
+      - redis
+      - maildev
+    command: ["-c", "/wait-for-it.sh mongo:27017 && npm start"]
+    entrypoint: ["/bin/sh"]
+
+  #k6:
+  #  build:
+  #    context: .
+  #    dockerfile: ./Docker/Dockerfile.stress
+  #  environment:
+  #    - FROST_HOST=http://frost-api:3000
+  #  volumes:
+  #    - .:/usr/src/app
+
+volumes:
+  db:
+    driver: local
+
+  data:
+    driver: local
+
+  consul_data:
+    driver: local
+
+  redis:
+    driver: local
