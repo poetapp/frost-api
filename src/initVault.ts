@@ -22,13 +22,11 @@ export const initVault = async () => {
   const config = await initializeWithRetries(logger)
   logger.info({ config }, 'Vault configuration obtained.')
 
-  if (!config) {
-    logger.fatal(
+  if (!config)
+    logger.error(
       `Vault was initialized. Check file ${VAULT_FILE} in the container. \
        You have to set the environment variable VAULT_TOKEN.`,
     )
-    return
-  }
 
   const { keys, root_token } = config
   const vault = Vault.getInstance()

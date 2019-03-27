@@ -36,7 +36,6 @@ export async function app(localVars: any = {}) {
       await Vault.mountAuthTune()
     } catch (e) {
       logger.fatal(e, 'Error with Vault')
-      return
     }
 
     secret = await Vault.readSecret('frost')
