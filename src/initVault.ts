@@ -1,4 +1,4 @@
-import * as fs from 'fs'
+import { readFile as readFileCallback, writeFileSync, mkdirSync } from 'fs'
 import { homedir } from 'os'
 import * as path from 'path'
 import * as Pino from 'pino'
@@ -10,8 +10,9 @@ import { delay } from './utils/Delay/Delay'
 import { loggingConfigurationToPinoConfiguration } from './utils/Logging/Logging'
 import { Vault } from './utils/Vault/Vault'
 
-const readFile = promisify(fs.readFile)
-const VAULT_FILE = path.join(homedir(), '/.po.et/vault.json')
+const readFile = promisify(readFileCallback)
+const HOME_POET = path.join(homedir(), '.po.et')
+const VAULT_FILE = path.join(HOME_POET, 'vault.json')
 
 export const initVault = async () => {
   const configuration: Configuration = loadConfigurationWithDefaults()
@@ -19,7 +20,7 @@ export const initVault = async () => {
 
   logger.info('Attempting to initialize Vault.')
   const config = await initializeWithRetries(logger)
-  logger.info(config, 'Vault configuration obtained.')
+  logger.info({ config }, 'Vault configuration obtained.')
 
   if (!config) {
     logger.fatal(
@@ -57,7 +58,8 @@ const initializeWithRetries = async (logger: Pino.Logger) => {
       if (!status.initialized) {
         config = await Vault.init()
         logger.info('Vault initialized successfully.')
-        fs.writeFileSync(VAULT_FILE, JSON.stringify(config, null, '\t'))
+        mkdirSync(HOME_POET, { recursive: true })
+        writeFileSync(VAULT_FILE, JSON.stringify(config, null, '\t'))
         logger.info({ config, VAULT_FILE }, 'Vault configuration written to disk.')
       } else {
         logger.info('Vault was already initialized. Reading Vault configuration from disk.')
