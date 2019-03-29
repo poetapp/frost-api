@@ -7,6 +7,7 @@ import { Configuration } from './configuration'
 import { MongoDB } from './databases/mongodb/mongodb'
 import { initVault } from './initVault'
 import { loadConfigurationWithDefaults } from './loadConfiguration'
+import { Account } from './modules/Accounts/Accounts.model'
 import { loggingConfigurationToPinoConfiguration } from './utils/Logging/Logging'
 import { Vault } from './utils/Vault/Vault'
 
@@ -35,7 +36,7 @@ export async function app(localVars: any = {}) {
       if (!configurationVault.token) await initVault()
       await Vault.mountAuthTune()
     } catch (e) {
-      logger.fatal(e, 'Error with Vault')
+      logger.error(e, 'Error with Vault')
     }
 
     secret = await Vault.readSecret('frost')
@@ -47,6 +48,9 @@ export async function app(localVars: any = {}) {
   const redisDB = await new Redis(configuration.redisPort, configuration.redisHost)
   const mongoDB = await MongoDB(configurationMongoDB).start()
   const frostAPI = await API(redisDB)(configurationFrostAPI).start()
+
+  // Mongoose sometimes fails to create indices
+  await Account.collection.createIndex({ email: 1 }, { unique: true })
 
   return {
     stop: async () => {

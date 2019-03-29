@@ -3,7 +3,6 @@
 import { MongoClient } from 'mongodb'
 import { pipeP } from 'ramda'
 
-import { Configuration } from '../../src/configuration'
 import { loadConfigurationWithDefaults } from '../../src/loadConfiguration'
 import { delay, runtimeId } from './utils'
 
@@ -20,11 +19,10 @@ export const dbHelper = () => {
     }
 
     const config = loadConfigurationWithDefaults(localVars)
-    // This needs to be hardcoded until all integration tests are converted to
-    // riteway.
+    // This needs to be hardcoded until all integration tests are converted to riteway.
     const mongodbUrl = `mongodb://root:rootPass@${config.mongodbHost}/${tempDbName}`
 
-    console.log(`Connecting to temporary DB (${mongodbUrl})...`)
+    log(`Connecting to temporary DB (${mongodbUrl})...`)
     const mongoClient = await MongoClient.connect(
       mongodbUrl,
       {
@@ -54,7 +52,7 @@ export const dbHelper = () => {
       const tempDbUser = dbUser || `test-${id}`
       const tempDbPassword = dbPassword || 'sekretP455wurd'
 
-      console.log(`Creating temporary DB (${tempDbName})...`)
+      log(`Creating temporary DB (${tempDbName})...`)
       await dbExecute(
         async (db: any) => db.addUser(tempDbUser, tempDbPassword, { roles: ['readWrite'] }),
       )
@@ -69,10 +67,13 @@ export const dbHelper = () => {
     },
 
     teardown: async () => {
-      if (setupCalled) {
-        console.log(`Deleting temporary DB (${tempDbName})...`)
-        await dbExecute(async (db: any) => db.dropDatabase())
-      } else console.log('ERROR: setup() must be called vefore teardown()')
+      if (!setupCalled) throw new Error('setup() must be called before teardown().')
+      log(`Deleting temporary DB (${tempDbName})...`)
+      await dbExecute(async (db: any) => db.dropDatabase())
     },
   }
+}
+
+const log = (what: string) => {
+  if (process.env.TEST_CONSOLE_LOG === 'true') console.log(what)
 }

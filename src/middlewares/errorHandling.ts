@@ -4,7 +4,7 @@ export const errorHandling = () => async (ctx: any, next: any) => {
   } catch (err) {
     if (Number.isInteger(err.status)) {
       ctx.status = err.status
-      ctx.message = err.message
+      ctx.body = err.message
     } else {
       const logger = ctx.logger('Error Middleware')
       logger.error(err)

@@ -22,8 +22,10 @@ jobs:
       - run: docker-compose build frost-api
       - run: docker-compose up -d
       - run: docker-compose exec frost-api npm run lint
-      - run: docker-compose exec frost-api npm run coverage
-      - run: 
+      - run: docker-compose exec frost-api npm run test:unit
+      - run: docker-compose exec -e LOGGING_LEVEL=fatal frost-api npm run test:integration
+      - run: docker-compose exec -e LOGGING_LEVEL=fatal frost-api npm run test:integration:riteway
+      - run:
           name: Get logs
           command: |
             services="bitcoind-1  consul frost-api ipfs mongo poet-node rabbit redis vault"
@@ -33,15 +35,6 @@ jobs:
                docker-compose logs $i > /tmp/logs/$i.log
             done
           when: on_fail
-      - run: 
-          name: Get coverage report
-          command: |
-            reports="integration-riteway integration unit"
-            mkdir -p /tmp/test-results
-            for r in $reports
-            do
-               docker cp project_frost-api_1:/usr/src/app/.coverage-$r /tmp/test-results
-            done
       - run:
           name: Archive Docker image
           command: docker save -o image.tar ${IMAGE_NAME}

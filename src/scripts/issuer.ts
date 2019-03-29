@@ -29,7 +29,7 @@ async function main() {
     Vault.config(configurationVault)
     await Vault.mountAuthTune()
   } catch (e) {
-    logger.fatal(e, 'Error with Vault')
+    logger.error(e, 'Error with Vault')
     return
   }
 

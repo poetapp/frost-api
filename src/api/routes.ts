@@ -67,7 +67,6 @@ export const routes = (redisDB: any) => (
       Path.WORKS,
       Path.WORKS_WORKID,
       Path.TOKENS,
-      Path.ACCOUNTS_PROFILE,
       Path.TOKENS_TOKENID,
     ],
     authorization(verifiedAccount, pwnedCheckerRoot),

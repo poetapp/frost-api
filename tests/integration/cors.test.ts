@@ -27,7 +27,7 @@ describe('CORS header exists when calling every known route', async assert => {
       path !== '/works/:workId' &&
       path !== '/works' &&
       path !== '/tokens' &&
-      path !== '/accounts/profile'
+      path !== '/accounts/:issuer'
       && path !== '/accounts/verify/:token'
     ) {
       const result = await fetch('http://localhost:30080' + path)
