@@ -84,3 +84,16 @@ export class AccountAlreadyExists extends Error {
   status = errors.AccountAlreadyExists.code
   message = errors.AccountAlreadyExists.message
 }
+
+export class IncorrectOldPassword extends Error {
+  status = 403
+  message = 'Incorrect Old Password.'
+}
+
+export class IncorrectToken extends Error {
+  status = 401
+
+  constructor(got: string, wanted: string) {
+    super(`Incorrect Token Type. Got "${got}", wanted "${wanted}".`)
+  }
+}

@@ -1,4 +1,6 @@
-import { errors } from '../../errors/errors'
+import * as Joi from 'joi'
+
+import { IncorrectOldPassword, IncorrectToken } from '../../errors/errors'
 import { validatePassword } from '../../helpers/validatePassword'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
 import { processPassword, verify } from '../../utils/Password'
@@ -9,7 +11,7 @@ export const PasswordChangeSchema = (
   passwordComplex: PasswordComplexConfiguration,
 ) => ({ password }: { password: string }) => ({
   password: validatePassword(password, passwordComplex),
-  oldPassword: validatePassword(password, passwordComplex),
+  oldPassword: Joi.string(),
 })
 
 export const PasswordChange = (verifiedAccount: boolean, pwnedCheckerRoot: string) => async (
@@ -17,27 +19,23 @@ export const PasswordChange = (verifiedAccount: boolean, pwnedCheckerRoot: strin
   next: any,
 ): Promise<any> => {
   const logger = ctx.logger(__dirname)
-  const { InvalidInput, InternalError } = errors
+
+  const { user, tokenData } = ctx.state
+
+  if (tokenData.data.meta.name !== Token.Login.meta.name)
+    throw new IncorrectToken(tokenData.data.meta.name, Token.Login.meta.name)
+
+  const { password, oldPassword } = ctx.request.body
 
   try {
-    const { user, tokenData } = ctx.state
-
-    if (tokenData.data.meta.name !== Token.Login.meta.name) {
-      ctx.status = InternalError.code
-      ctx.body = InternalError.message
-      return
-    }
-
-    const { password, oldPassword } = ctx.request.body
-
     await verify(oldPassword, user.password)
-    user.password = await processPassword(password, pwnedCheckerRoot)
-    const usersController = new AccountsController(ctx.logger, verifiedAccount, pwnedCheckerRoot)
-    await usersController.update(user.id, user)
-
-    ctx.status = 200
-  } catch (exception) {
-    logger.error({ exception }, 'api.PasswordChange')
-    ctx.throw(InvalidInput.code, InvalidInput.message + ' ' + exception.message)
+  } catch (error) {
+    throw new IncorrectOldPassword()
   }
+
+  user.password = await processPassword(password, pwnedCheckerRoot)
+  const usersController = new AccountsController(ctx.logger, verifiedAccount, pwnedCheckerRoot)
+  await usersController.update(user.id, user)
+
+  ctx.status = 200
 }
