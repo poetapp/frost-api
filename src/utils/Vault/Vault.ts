@@ -19,7 +19,7 @@ export namespace Vault {
   }
 
   export async function encrypt(text: string) {
-    const plaintext = new Buffer(text).toString('base64')
+    const plaintext = Buffer.from(text).toString('base64')
     const encrypted = await this.vault.write('transit/encrypt/frost', {
       plaintext,
     })
@@ -30,7 +30,7 @@ export namespace Vault {
     const decrypted = await this.vault.write('transit/decrypt/frost', {
       ciphertext,
     })
-    return new Buffer(decrypted.data.plaintext, 'base64').toString('ascii')
+    return Buffer.from(decrypted.data.plaintext, 'base64').toString('ascii')
   }
 
   export async function createToken(options?: object) {

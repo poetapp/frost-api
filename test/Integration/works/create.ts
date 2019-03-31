@@ -109,7 +109,7 @@ describe('Works', function() {
           const { token } = user
           const { apiToken } = await frost.createApiToken(token, Network.LIVE)
 
-          const contentBuffer = new Buffer(1024 * 100)
+          const contentBuffer = Buffer.alloc(1024 * 100)
           const content = contentBuffer.toString()
 
           await expect(frost.createWork(apiToken, createWork({ content })))
