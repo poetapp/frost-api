@@ -116,7 +116,7 @@ export const configuration: Configuration = {
   passwordComplexSymbol: 1,
   pwnedCheckerRoot: '',
   skipVault: false,
-  transactionalMandrill: '46mwv_E6dOxrSDUkJD4NOQ',
+  transactionalMandrill: '',
   jwt: 'example',
   maildevPortTcpAddr: 'localhost',
   maildevPortTcpPort: 1025,

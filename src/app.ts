@@ -29,8 +29,7 @@ export async function app(localVars: any = {}) {
     apiVersion: configuration.vaultApiVersion,
   }
 
-  let secret
-  if (!configuration.skipVault) {
+  if (!configuration.skipVault)
     try {
       Vault.config(configurationVault)
       if (!configurationVault.token) await initVault()
@@ -39,11 +38,8 @@ export async function app(localVars: any = {}) {
       logger.error(e, 'Error with Vault')
     }
 
-    secret = await Vault.readSecret('frost')
-  }
-
   const configurationMongoDB = configurationToMongoDB(configuration)
-  const configurationFrostAPI = configurationToFrostAPI(configuration, secret ? secret.data.transactionalMandrill : '')
+  const configurationFrostAPI = configurationToFrostAPI(configuration)
 
   const redisDB = await new Redis(configuration.redisPort, configuration.redisHost)
   const mongoDB = await MongoDB(configurationMongoDB).start()
@@ -76,7 +72,7 @@ const configurationToMongoDB = (configuration: Configuration) => ({
   },
 })
 
-const configurationToFrostAPI = (configuration: Configuration, mandrillApiKey: string) => ({
+const configurationToFrostAPI = (configuration: Configuration) => ({
   host: configuration.frostHost,
   port: configuration.frostPort,
   maxApiRequestLimitForm: configuration.maxApiRequestLimitForm,
@@ -92,7 +88,7 @@ const configurationToFrostAPI = (configuration: Configuration, mandrillApiKey: s
   sendEmail: {
     nodemailer: {
       mandrill: {
-        apiKey: mandrillApiKey,
+        apiKey: configuration.transactionalMandrill,
       },
       maildev: {
         host: configuration.maildevPortTcpAddr,
