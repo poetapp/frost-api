@@ -20,6 +20,7 @@ export const PatchAccount = () => async (ctx: any, next: any): Promise<any> => {
   const logger = ctx.logger(__dirname)
   const { issuer } = ctx.params
   const { user } = ctx.state
+  const { body } = ctx.request
 
   logger.debug({ issuer, user }, 'PatchAccount')
 
@@ -28,15 +29,15 @@ export const PatchAccount = () => async (ctx: any, next: any): Promise<any> => {
 
   const accountsController = new AccountsController(ctx.logger, false, null)
 
-  if (ctx.request.body.email) {
-    const existing = await accountsController.get(ctx.request.body.email)
+  if (body.email && body.email !== user.email) {
+    const existing = await accountsController.get(body.email)
     logger.trace(existing, 'Existing Account')
 
     if (existing)
       throw new AccountAlreadyExists()
   }
 
-  const response = await accountsController.update(user.id, ctx.request.body)
+  const response = await accountsController.update(user.id, body)
 
   const { email, createdAt, name, bio, ethereumAddress } = response
   ctx.body = { email, createdAt, issuer, name, bio, ethereumAddress }
