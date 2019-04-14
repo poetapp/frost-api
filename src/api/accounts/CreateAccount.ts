@@ -1,4 +1,5 @@
 import * as Joi from 'joi'
+import bytesToUuid = require('uuid/lib/bytesToUuid')
 
 import { PasswordComplexConfiguration } from '../../api/PasswordComplexConfiguration'
 import { errors } from '../../errors/errors'
@@ -23,8 +24,8 @@ export const CreateAccount = (sendEmail: SendEmailTo, verifiedAccount: boolean, 
   try {
     const usersController = new AccountsController(ctx.logger, verifiedAccount, pwnedCheckerRoot, sendEmail)
     const { email, password } = ctx.request.body
-    const token = await usersController.create({ email, password })
-    ctx.body = { token }
+    const { account: { id, issuer }, token } = await usersController.create({ email, password })
+    ctx.body = { id: bytesToUuid(id), issuer, token }
   } catch (exception) {
     const { AccountAlreadyExists } = errors
     logger.error({ exception }, 'api.CreateAccount')

@@ -2,7 +2,6 @@ import * as Joi from 'joi'
 
 import { IncorrectOldPassword, IncorrectToken } from '../../errors/errors'
 import { validatePassword } from '../../helpers/validatePassword'
-import { AccountsController } from '../../modules/Accounts/Accounts.controller'
 import { processPassword, verify } from '../../utils/Password'
 import { PasswordComplexConfiguration } from '../PasswordComplexConfiguration'
 import { Token } from '../Tokens'
@@ -34,8 +33,7 @@ export const PasswordChange = (verifiedAccount: boolean, pwnedCheckerRoot: strin
   }
 
   user.password = await processPassword(password, pwnedCheckerRoot)
-  const usersController = new AccountsController(ctx.logger, verifiedAccount, pwnedCheckerRoot)
-  await usersController.update(user.id, user)
+  await user.save()
 
   ctx.status = 200
 }

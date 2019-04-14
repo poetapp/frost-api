@@ -37,7 +37,7 @@ export const PatchAccount = () => async (ctx: any, next: any): Promise<any> => {
       throw new AccountAlreadyExists()
   }
 
-  const response = await accountsController.update(user.id, body)
+  const response = await accountsController.update(user._id, body)
 
   const { email, createdAt, name, bio, ethereumAddress } = response
   ctx.body = { email, createdAt, issuer, name, bio, ethereumAddress }

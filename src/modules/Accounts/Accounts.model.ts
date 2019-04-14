@@ -5,6 +5,7 @@ interface Token {
 }
 
 export interface Account extends Document {
+  readonly id: Buffer
   readonly email: string
   readonly password: string
   readonly verified: boolean
@@ -27,6 +28,11 @@ const TokenSchema = new Schema(
 )
 
 const AccountSchema = new Schema({
+  id: {
+    type: Buffer,
+    required: true,
+    unique: true,
+  },
   email: {
     type: String,
     required: true,

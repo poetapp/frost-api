@@ -35,8 +35,7 @@ export const PasswordChangeToken = (
 
     const { password } = ctx.request.body
     user.password = await processPassword(password, pwnedCheckerRoot)
-    const usersController = new AccountsController(ctx.logger, verifiedAccount, pwnedCheckerRoot)
-    await usersController.update(user.id, user)
+    await user.save()
     await Vault.revokeToken(tokenData.data.id)
 
     const token = await getToken(user.email, Token.Login)

@@ -1,4 +1,6 @@
 import * as Joi from 'joi'
+import bytesToUuid = require('uuid/lib/bytesToUuid' )
+
 import { AccountNotFound } from '../../errors/errors'
 import { ValidateParams } from '../../middlewares/validate'
 import { AccountsController } from '../../modules/Accounts/Accounts.controller'
@@ -22,6 +24,6 @@ export const GetAccount = () => async (ctx: any, next: any): Promise<any> => {
   if (!response)
     throw new AccountNotFound()
 
-  const { email, createdAt, name, bio, ethereumAddress } = response
-  ctx.body = { email, createdAt, name, bio, ethereumAddress }
+  const { id, email, createdAt, name, bio, ethereumAddress } = response
+  ctx.body = { id: bytesToUuid(id), email, createdAt, name, bio, ethereumAddress }
 }

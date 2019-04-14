@@ -3,6 +3,7 @@ import * as Pino from 'pino'
 
 import { Token } from '../../api/Tokens'
 import { getToken } from '../../api/accounts/utils/utils'
+import { uuid4 } from '../../helpers/uuid'
 import { GenericDAO } from '../../interfaces/GenericDAO'
 import { Network } from '../../interfaces/Network'
 import { processPassword } from '../../utils/Password'
@@ -29,6 +30,7 @@ export class AccountsController {
   public async create({ email, password }: { email: string, password: string }) {
     this.logger.debug({ email }, 'Creating account')
 
+    const id = await this.getUnusedId()
     const { privateKey, publicKey } = generateED25519Base58Keys()
     const encryptedPrivateKey = await Vault.encrypt(privateKey)
     const apiToken = await getToken(email, Token.TestApiKey, Network.TEST)
@@ -36,6 +38,7 @@ export class AccountsController {
     const issuer = createIssuerFromPrivateKey(privateKey)
 
     const account = new Account({
+      id,
       email,
       password: (await processPassword(password, this.pwnedCheckerRoot)).toString(),
       privateKey: encryptedPrivateKey,
@@ -52,7 +55,11 @@ export class AccountsController {
 
     const tokenVerifiedAccount = await getToken(email, Token.VerifyAccount)
     await this.sendEmail(email).sendVerified(tokenVerifiedAccount)
-    return getToken(email, Token.Login)
+    const token = await getToken(email, Token.Login)
+    return {
+      account,
+      token,
+    }
   }
 
   public get(email: string): Promise<Account> {
@@ -69,6 +76,12 @@ export class AccountsController {
 
   public delete(id: string) {
     return this.dao.delete(id)
+  }
+
+  private async getUnusedId(): Promise<Buffer> {
+    const id = uuid4()
+    const account = await Account.findOne({ id })
+    return !account ? id : this.getUnusedId()
   }
 
 }
