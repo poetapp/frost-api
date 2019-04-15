@@ -3,6 +3,7 @@ import * as Pino from 'pino'
 
 import { Token } from '../../api/Tokens'
 import { getToken } from '../../api/accounts/utils/utils'
+import { AccountAlreadyExists } from '../../errors/errors'
 import { uuid4 } from '../../helpers/uuid'
 import { GenericDAO } from '../../interfaces/GenericDAO'
 import { Network } from '../../interfaces/Network'
@@ -29,6 +30,11 @@ export class AccountsController {
 
   public async create({ email, password }: { email: string, password: string }) {
     this.logger.debug({ email }, 'Creating account')
+
+    const existing = await Account.findOne({ email })
+
+    if (existing)
+      throw new AccountAlreadyExists()
 
     const id = await this.getUnusedId()
     const { privateKey, publicKey } = generateED25519Base58Keys()
