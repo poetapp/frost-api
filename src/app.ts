@@ -1,7 +1,5 @@
 import * as Pino from 'pino'
 
-const Redis = require('ioredis')
-
 import { API } from './api/API'
 import { Configuration } from './configuration'
 import { MongoDB } from './databases/mongodb/mongodb'
@@ -41,9 +39,8 @@ export async function app(localVars: any = {}) {
   const configurationMongoDB = configurationToMongoDB(configuration)
   const configurationFrostAPI = configurationToFrostAPI(configuration)
 
-  const redisDB = await new Redis(configuration.redisPort, configuration.redisHost)
   const mongoDB = await MongoDB(configurationMongoDB).start()
-  const frostAPI = await API(redisDB)(configurationFrostAPI).start()
+  const frostAPI = await API()(configurationFrostAPI).start()
 
   // Mongoose sometimes fails to create indices
   await Account.collection.createIndex({ email: 1 }, { unique: true })
@@ -52,7 +49,6 @@ export async function app(localVars: any = {}) {
     stop: async () => {
       await frostAPI.stop()
       await mongoDB.stop()
-      await redisDB.disconnect()
       return true
     },
   }
@@ -102,23 +98,6 @@ const configurationToFrostAPI = (configuration: Configuration) => ({
     emailReply: configuration.emailReply,
     frostChangePassword: configuration.frostChangePassword,
     frostVerifiedAccount: configuration.frostVerifiedAccount,
-  },
-  rateLimit: {
-    rateLimitDisabled: configuration.rateLimitDisabled,
-  },
-  limiters: {
-    loginLimiter: {
-      max: configuration.loginRateLimitMax,
-      duration: configuration.loginRateLimitDuration,
-    },
-    accountLimiter: {
-      max: configuration.accountRateLimitMax,
-      duration: configuration.accountRateLimitDuration,
-    },
-    passwordChangeLimiter: {
-      max: configuration.passwordChangeRateLimitMax,
-      duration: configuration.passwordChangeRateLimitDuration,
-    },
   },
   poetUrl: configuration.poetUrl,
   testPoetUrl: configuration.testPoetUrl,

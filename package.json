@@ -51,13 +51,11 @@
   "dependencies": {
     "@paralleldrive/feature-toggles": "1.0.3",
     "@po.et/poet-js": "5.1.17",
-    "async-ratelimiter": "1.1.2",
     "bitcoinjs-lib": "4.0.2",
     "body-parser": "1.18.3",
     "console.table": "0.10.0",
     "dotenv": "6.2.0",
     "form-data": "2.3.3",
-    "ioredis": "4.3.0",
     "isomorphic-fetch": "2.2.1",
     "joi": "14.1.1",
     "joi-password-complexity": "2.0.1",

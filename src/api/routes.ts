@@ -3,7 +3,6 @@ import * as KoaRouter from 'koa-router'
 import { authorization } from '../middlewares/authorization'
 import { isLoggedIn } from '../middlewares/isLoggedIn'
 import { monitor } from '../middlewares/monitor'
-import { RateLimit, RateLimitConfiguration, LimiterConfiguration } from '../middlewares/rateLimit'
 import { requireEmailVerified } from '../middlewares/requireEmailVerified'
 import { validate } from '../middlewares/validate'
 import { SendEmail, SendEmailConfiguration } from '../utils/SendEmail'
@@ -31,11 +30,9 @@ import { CreateWork, CreateWorkSchema } from './works/CreateWork'
 import { GetWork, GetWorkSchema } from './works/GetWork'
 import { GetWorks } from './works/GetWorks'
 
-export const routes = (redisDB: any) => (
+export const routes = () => (
   passwordComplexConfiguration: PasswordComplexConfiguration,
   sendEmailConfiguration: SendEmailConfiguration,
-  rateLimitConfiguration: RateLimitConfiguration,
-  limiters: { [name: string]: LimiterConfiguration },
   poetUrl: string,
   maxApiTokens: number,
   testPoetUrl: string,
@@ -44,8 +41,6 @@ export const routes = (redisDB: any) => (
 ) => {
   const router = new KoaRouter()
   const sendEmail = SendEmail(sendEmailConfiguration)
-  const rateLimit = RateLimit(redisDB)(rateLimitConfiguration)
-  const { loginLimiter, accountLimiter, passwordChangeLimiter } = limiters
 
   router.use([Path.WORKS, Path.WORKS_WORKID], (ctx: any, next: any) => {
     ctx.set('Access-Control-Allow-Methods', 'POST,GET')
@@ -54,9 +49,9 @@ export const routes = (redisDB: any) => (
     return next()
   })
 
-  router.use([Path.PASSWORD_CHANGE, Path.PASSWORD_CHANGE_TOKEN, Path.PASSWORD_RESET], rateLimit(loginLimiter))
-  router.use([Path.ACCOUNTS], rateLimit(accountLimiter))
-  router.use([Path.LOGIN], rateLimit(passwordChangeLimiter))
+  router.use([Path.PASSWORD_CHANGE, Path.PASSWORD_CHANGE_TOKEN, Path.PASSWORD_RESET])
+  router.use([Path.ACCOUNTS])
+  router.use([Path.LOGIN])
 
   router.use(
     [

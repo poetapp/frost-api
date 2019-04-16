@@ -39,14 +39,6 @@ services:
       - ./mongodb:/docker-entrypoint-initdb.d
     command: mongod  --smallfiles --logpath=/dev/null
 
-  redis:
-    image: redis:4.0.12-alpine
-    ports:
-     - "6379:6379"
-    volumes:
-      - redis:/data
-    command: ["redis-server", "--appendonly", "yes"]
-
   rabbit:
     image: rabbitmq:3-management
     ports:
@@ -141,10 +133,8 @@ services:
       - POET_URL=http://poet-node:18080
       - TEST_POET_URL=http://poet-node:18080
       - FROST_URL=http://frost-api:3000
-      - REDIS_HOST=redis
       - MAILDEV_URL=http://maildev:80
       - EMAIL_TRANSPORT_MAIL_DEV=true
-      - RATE_LIMIT_DISABLED=true
       - FROST_VERIFIED_ACCOUNT=http://localhost:4000/verified-account
       - FROST_CHANGE_PASSWORD=http://localhost:4000/forgot-password/change-password
       - VERIFIED_ACCOUNT=false
@@ -157,7 +147,6 @@ services:
       - mongo
       - vault
       - poet-node
-      - redis
       - maildev
     command: ["-c", "/wait-for-it.sh mongo:27017 && npm start"]
     entrypoint: ["/bin/sh"]
@@ -179,7 +168,4 @@ volumes:
     driver: local
 
   consul_data:
-    driver: local
-
-  redis:
     driver: local

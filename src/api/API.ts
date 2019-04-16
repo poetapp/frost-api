@@ -10,7 +10,6 @@ import { SendEmailConfiguration } from '../utils/SendEmail'
 
 import { errorHandling } from '../middlewares/errorHandling'
 import { logger } from '../middlewares/logger'
-import { LimiterConfiguration, RateLimitConfiguration } from '../middlewares/rateLimit'
 import { PasswordComplexConfiguration } from './PasswordComplexConfiguration'
 import { routes } from './routes'
 
@@ -26,12 +25,6 @@ interface APIConfiguration extends APIConnection {
   port: number
   passwordComplex: PasswordComplexConfiguration
   sendEmail: SendEmailConfiguration
-  rateLimit: RateLimitConfiguration
-  limiters: {
-    loginLimiter: LimiterConfiguration
-    accountLimiter: LimiterConfiguration
-    passwordChangeLimiter: LimiterConfiguration,
-  }
   poetUrl: string
   testPoetUrl: string
   maxApiTokens: number
@@ -45,13 +38,11 @@ interface APIMethods {
   stop(): Promise<APIMethods>
 }
 
-const init = (redisDB: any) => ({
+const init = () => ({
   maxApiRequestLimitForm,
   maxApiRequestLimitJson,
   passwordComplex,
   sendEmail,
-  rateLimit,
-  limiters,
   poetUrl,
   testPoetUrl,
   maxApiTokens,
@@ -60,11 +51,9 @@ const init = (redisDB: any) => ({
   loggingConfiguration,
 }: APIConfiguration) => {
   const app = new Koa()
-  const route = routes(redisDB)(
+  const route = routes()(
     passwordComplex,
     sendEmail,
-    rateLimit,
-    limiters,
     poetUrl,
     maxApiTokens,
     testPoetUrl,
@@ -106,13 +95,13 @@ const stopAPI = async (server: any, logger: Pino.Logger) => {
   logger.info('Stopped API.')
 }
 
-export const API = (redisDB: any) => (configuration: APIConfiguration): APIMethods => {
+export const API = () => (configuration: APIConfiguration): APIMethods => {
   const { loggingConfiguration } = configuration
   const logger = createModuleLogger(loggingConfiguration)(__dirname)
 
   return {
     async start(): Promise<APIMethods> {
-      const app = init(redisDB)(configuration)
+      const app = init()(configuration)
       this.server = await startAPI(app, configuration, logger)
       return this
     },

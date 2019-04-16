@@ -2,20 +2,6 @@ import { LoggingConfiguration } from './utils/Logging/Logging'
 
 export const defaultMongodbUrl = 'mongodb://localhost:27017/frost'
 
-interface RateLimitConfiguration {
-  readonly rateLimitDisabled: boolean
-  readonly loginRateLimitMax: number
-  readonly accountRateLimitMax: number
-  readonly passwordChangeRateLimitMax: number
-  readonly loginRateLimitDuration: number
-  readonly accountRateLimitDuration: number
-  readonly passwordChangeRateLimitDuration: number
-}
-
-interface RedisConfiguration {
-  readonly redisPort: number
-  readonly redisHost: string
-}
 interface MaxApiRequestLimitConfiguration {
   readonly maxApiRequestLimitForm: string
   readonly maxApiRequestLimitJson: string
@@ -53,8 +39,6 @@ export interface Configuration
     MaxApiRequestLimitConfiguration,
     MongoDBConfiguration,
     MaildevConfiguration,
-    RateLimitConfiguration,
-    RedisConfiguration,
     LoggingConfiguration {
   readonly vaultToken: undefined
   readonly vaultUrl: string
@@ -121,15 +105,6 @@ export const configuration: Configuration = {
   maildevPortTcpAddr: 'localhost',
   maildevPortTcpPort: 1025,
   maildevIgnoreTLS: true,
-  redisPort: 6379,
-  redisHost: 'localhost',
-  rateLimitDisabled: true,
-  loginRateLimitMax: 50,
-  accountRateLimitMax: 50,
-  passwordChangeRateLimitMax: 50,
-  loginRateLimitDuration: 3600000,
-  accountRateLimitDuration: 3600000,
-  passwordChangeRateLimitDuration: 3600000,
   loggingLevel: 'info',
   loggingPretty: true,
 }
