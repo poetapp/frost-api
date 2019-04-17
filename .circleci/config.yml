@@ -28,7 +28,7 @@ jobs:
       - run:
           name: Get logs
           command: |
-            services="bitcoind-1  consul frost-api ipfs mongo poet-node rabbit redis vault"
+            services="bitcoind-1  consul frost-api ipfs mongo poet-node rabbit vault"
             mkdir /tmp/logs
             for i in $services
             do

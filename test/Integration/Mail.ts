@@ -1,4 +1,4 @@
-import * as fetch from 'isomorphic-fetch'
+import fetch from 'node-fetch'
 import { promisify } from 'util'
 import { configuration } from './configuration'
 const delay = promisify(setTimeout)
@@ -24,9 +24,9 @@ export class Mail {
   async getEmails(): Promise<ReadonlyArray<{ subject: string; from: ReadonlyArray<{ name: string }> }>> {
     const options = {
       method: Method.GET,
-      headers: new Headers({
+      headers: {
         'Content-Type': 'application/json',
-      }),
+      },
     }
 
     const request = fetch(`${this.host}/email`, options)
@@ -39,9 +39,9 @@ export class Mail {
   async removeById(id: string): Promise<string> {
     const options = {
       method: Method.DEL,
-      headers: new Headers({
+      headers: {
         'Content-Type': 'application/json',
-      }),
+      },
     }
 
     const request = fetch(`${this.host}/email/${id}`, options)
@@ -54,9 +54,9 @@ export class Mail {
   async removeAll(): Promise<string> {
     const options = {
       method: Method.DEL,
-      headers: new Headers({
+      headers: {
         'Content-Type': 'application/json',
-      }),
+      },
     }
 
     const request = fetch(`${this.host}/email/all`, options)

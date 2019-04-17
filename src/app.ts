@@ -12,7 +12,6 @@ import { Vault } from './utils/Vault/Vault'
 import './extensions/Error'
 
 require('dotenv').config({ path: '.env' })
-require('console.table')
 
 export async function app(localVars: any = {}) {
   const configuration: Configuration = loadConfigurationWithDefaults(localVars)
