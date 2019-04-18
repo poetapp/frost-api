@@ -24,7 +24,7 @@ jobs:
       - run: docker-compose exec frost-api npm run lint
       - run: docker-compose exec frost-api npm run test:unit
       - run: docker-compose exec -e LOGGING_LEVEL=fatal frost-api npm run test:integration
-      - run: docker-compose exec -e LOGGING_LEVEL=fatal frost-api npm run test:integration:riteway
+      - run: docker-compose exec -e LOGGING_LEVEL=fatal frost-api npm run test:integration:legacy
       - run:
           name: Get logs
           command: |
