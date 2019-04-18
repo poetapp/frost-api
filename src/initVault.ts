@@ -6,10 +6,10 @@ import { promisify } from 'util'
 
 import { Configuration } from './configuration'
 import { loadConfigurationWithDefaults } from './loadConfiguration'
-import { delay } from './utils/Delay/Delay'
 import { loggingConfigurationToPinoConfiguration } from './utils/Logging/Logging'
 import { Vault } from './utils/Vault/Vault'
 
+const delay = promisify(setTimeout)
 const readFile = promisify(readFileCallback)
 const HOME_POET = path.join(homedir(), '.po.et')
 const VAULT_FILE = path.join(HOME_POET, 'vault.json')
