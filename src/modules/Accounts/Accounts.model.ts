@@ -30,7 +30,7 @@ const TokenSchema = new Schema(
 const AccountSchema = new Schema({
   id: {
     type: Buffer,
-    required: true,
+    required: false,
     unique: true,
   },
   email: {
