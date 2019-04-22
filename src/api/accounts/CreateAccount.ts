@@ -21,5 +21,5 @@ export const CreateAccount = (sendEmail: SendEmailTo, verifiedAccount: boolean, 
   const usersController = new AccountsController(ctx.logger, verifiedAccount, pwnedCheckerRoot, sendEmail)
   const { email, password } = ctx.request.body
   const { account: { id, issuer }, token } = await usersController.create({ email, password })
-  ctx.body = { id: bytesToUuid(id), issuer, token }
+  ctx.body = { id: id && bytesToUuid(id), issuer, token }
 }

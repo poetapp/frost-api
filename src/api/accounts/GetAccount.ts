@@ -25,5 +25,5 @@ export const GetAccount = () => async (ctx: any, next: any): Promise<any> => {
     throw new AccountNotFound()
 
   const { id, email, createdAt, name, bio, ethereumAddress } = response
-  ctx.body = { id: bytesToUuid(id), email, createdAt, name, bio, ethereumAddress }
+  ctx.body = { id: id && bytesToUuid(id), email, createdAt, name, bio, ethereumAddress }
 }
