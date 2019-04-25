@@ -1,5 +1,6 @@
 import * as KoaRouter from 'koa-router'
 
+import { AccountController } from '../controllers/AccountController'
 import { authorization } from '../middlewares/authorization'
 import { isLoggedIn } from '../middlewares/isLoggedIn'
 import { monitor } from '../middlewares/monitor'
@@ -30,7 +31,7 @@ import { CreateWork, CreateWorkSchema } from './works/CreateWork'
 import { GetWork, GetWorkSchema } from './works/GetWork'
 import { GetWorks } from './works/GetWorks'
 
-export const routes = () => (
+export const routes = (accountController: AccountController) => (
   passwordComplexConfiguration: PasswordComplexConfiguration,
   sendEmailConfiguration: SendEmailConfiguration,
   poetUrl: string,
@@ -82,7 +83,7 @@ export const routes = () => (
   router.get(
     Path.ACCOUNTS_ID,
     validate(GetAccountSchema),
-    GetAccount(),
+    GetAccount(accountController),
   )
   router.patch(
     Path.ACCOUNTS_ID,

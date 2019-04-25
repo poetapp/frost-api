@@ -7,7 +7,7 @@
     "preserveConstEnums": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "sourceMap": false,
+    "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./src",
     "paths": {

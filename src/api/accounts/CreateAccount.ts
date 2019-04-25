@@ -1,5 +1,4 @@
 import * as Joi from 'joi'
-import bytesToUuid = require('uuid/lib/bytesToUuid')
 
 import { PasswordComplexConfiguration } from '../../api/PasswordComplexConfiguration'
 import { validatePassword } from '../../helpers/validatePassword'
@@ -20,6 +19,6 @@ export const CreateAccount = (sendEmail: SendEmailTo, verifiedAccount: boolean, 
 ): Promise<any> => {
   const usersController = new AccountsController(ctx.logger, verifiedAccount, pwnedCheckerRoot, sendEmail)
   const { email, password } = ctx.request.body
-  const { account: { id, issuer }, token } = await usersController.create({ email, password })
-  ctx.body = { id: id && bytesToUuid(id), issuer, token }
+  const { id, issuer, token } = await usersController.create({ email, password })
+  ctx.body = { id, issuer, token }
 }

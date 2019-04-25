@@ -1,7 +1,10 @@
+import { MongoClient } from 'mongodb'
 import * as Pino from 'pino'
 
 import { API } from './api/API'
 import { Configuration } from './configuration'
+import { AccountController } from './controllers/AccountController'
+import { AccountDao } from './daos/AccountDao'
 import { MongoDB } from './databases/mongodb/mongodb'
 import { initVault } from './initVault'
 import { loadConfigurationWithDefaults } from './loadConfiguration'
@@ -38,8 +41,15 @@ export async function app(localVars: any = {}) {
   const configurationMongoDB = configurationToMongoDB(configuration)
   const configurationFrostAPI = configurationToFrostAPI(configuration)
 
-  const mongoDB = await MongoDB(configurationMongoDB).start()
-  const frostAPI = await API()(configurationFrostAPI).start()
+  const mongoClient = await MongoClient.connect(configuration.mongodbUrl)
+  const dbConnection = await mongoClient.db()
+  const accountCollection = dbConnection.collection('accounts')
+  const accountDao = AccountDao(accountCollection)
+
+  const accountController = AccountController(accountDao)
+
+  const frostAPI = await API(accountController)(configurationFrostAPI).start()
+  const mongoDB = await MongoDB(configurationMongoDB).start() // DEPRECATED
 
   // Mongoose sometimes fails to create indices
   await Account.collection.createIndex({ email: 1 }, { unique: true })
@@ -48,6 +58,7 @@ export async function app(localVars: any = {}) {
     stop: async () => {
       await frostAPI.stop()
       await mongoDB.stop()
+      await mongoClient.close()
       return true
     },
   }

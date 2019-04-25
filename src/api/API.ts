@@ -8,8 +8,10 @@ import { securityHeaders } from '../securityHeaders'
 import { createModuleLogger, LoggingConfiguration } from '../utils/Logging/Logging'
 import { SendEmailConfiguration } from '../utils/SendEmail'
 
+import { AccountController } from '../controllers/AccountController'
 import { errorHandling } from '../middlewares/errorHandling'
 import { logger } from '../middlewares/logger'
+
 import { PasswordComplexConfiguration } from './PasswordComplexConfiguration'
 import { routes } from './routes'
 
@@ -38,7 +40,7 @@ interface APIMethods {
   stop(): Promise<APIMethods>
 }
 
-const init = () => ({
+const init = (accountController: AccountController) => ({
   maxApiRequestLimitForm,
   maxApiRequestLimitJson,
   passwordComplex,
@@ -51,7 +53,7 @@ const init = () => ({
   loggingConfiguration,
 }: APIConfiguration) => {
   const app = new Koa()
-  const route = routes()(
+  const route = routes(accountController)(
     passwordComplex,
     sendEmail,
     poetUrl,
@@ -95,13 +97,13 @@ const stopAPI = async (server: any, logger: Pino.Logger) => {
   logger.info('Stopped API.')
 }
 
-export const API = () => (configuration: APIConfiguration): APIMethods => {
+export const API = (accountController: AccountController) => (configuration: APIConfiguration): APIMethods => {
   const { loggingConfiguration } = configuration
   const logger = createModuleLogger(loggingConfiguration)(__dirname)
 
   return {
     async start(): Promise<APIMethods> {
-      const app = init()(configuration)
+      const app = init(accountController)(configuration)
       this.server = await startAPI(app, configuration, logger)
       return this
     },

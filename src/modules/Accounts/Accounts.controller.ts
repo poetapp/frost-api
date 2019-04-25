@@ -4,7 +4,7 @@ import * as Pino from 'pino'
 import { Token } from '../../api/Tokens'
 import { getToken } from '../../api/accounts/utils/utils'
 import { AccountAlreadyExists } from '../../errors/errors'
-import { uuid4 } from '../../helpers/uuid'
+import { uuid4, bytesToUuid, uuidToBytes } from '../../helpers/uuid'
 import { GenericDAO } from '../../interfaces/GenericDAO'
 import { Network } from '../../interfaces/Network'
 import { processPassword } from '../../utils/Password'
@@ -42,28 +42,34 @@ export class AccountsController {
     const apiToken = await getToken(email, Token.TestApiKey, Network.TEST)
     const encryptedToken = await Vault.encrypt(`TEST_${apiToken}`)
     const issuer = createIssuerFromPrivateKey(privateKey)
+    const hashedPassword = (await processPassword(password, this.pwnedCheckerRoot)).toString()
 
-    const account = new Account({
+    const account = {
       id,
       email,
-      password: (await processPassword(password, this.pwnedCheckerRoot)).toString(),
+      password: hashedPassword,
       privateKey: encryptedPrivateKey,
       publicKey,
       createdAt: Date.now().toString(), // .toString(): legacy reasons
       verified: this.verifiedAccount,
       testApiTokens: [{ token: encryptedToken }],
       issuer,
-    })
+    }
 
     this.logger.trace({ account }, 'Creating account')
 
-    await this.dao.create(account)
+    // await this.dao.create(account)
+    await Account.create({
+      ...account,
+      id: uuidToBytes(id),
+    })
 
     const tokenVerifiedAccount = await getToken(email, Token.VerifyAccount)
     await this.sendEmail(email).sendVerified(tokenVerifiedAccount)
     const token = await getToken(email, Token.Login)
     return {
-      account,
+      id,
+      issuer,
       token,
     }
   }
@@ -80,14 +86,10 @@ export class AccountsController {
     return this.dao.update(id, account)
   }
 
-  public delete(id: string) {
-    return this.dao.delete(id)
-  }
-
-  private async getUnusedId(): Promise<Buffer> {
+  private async getUnusedId(): Promise<string> {
     const id = uuid4()
     const account = await Account.findOne({ id })
-    return !account ? id : this.getUnusedId()
+    return !account ? bytesToUuid(id) : this.getUnusedId()
   }
 
 }
