@@ -4,17 +4,24 @@ import { bytesToUuid, uuidToBytes } from '../helpers/uuid'
 import { Account } from '../models/Account'
 
 export interface AccountDao {
+  insertOne: (account: Account) => Promise<void>
   findOne: (filter: Partial<Account>) => Promise<Account>
 }
 
 export const AccountDao = (collection: Collection): AccountDao => {
+  const insertOne = async (account: Account): Promise<void> => {
+    const document = modelToDocument(account)
+    await collection.insertOne(document)
+  }
+
   const findOne = async (filter: Partial<Account>): Promise<Account> => {
     const document = modelToDocument(filter)
     const account: AccountDocument = await collection.findOne(document)
-    return documentToModel(account) as Account
+    return account && documentToModel(account) as Account
   }
 
   return {
+    insertOne,
     findOne,
   }
 }

@@ -1,15 +1,7 @@
-import { createIssuerFromPrivateKey, generateED25519Base58Keys } from '@po.et/poet-js'
 import * as Pino from 'pino'
 
-import { Token } from '../../api/Tokens'
-import { getToken } from '../../api/accounts/utils/utils'
-import { AccountAlreadyExists } from '../../errors/errors'
-import { uuid4, bytesToUuid, uuidToBytes } from '../../helpers/uuid'
 import { GenericDAO } from '../../interfaces/GenericDAO'
-import { Network } from '../../interfaces/Network'
-import { processPassword } from '../../utils/Password'
 import { SendEmailTo } from '../../utils/SendEmail'
-import { Vault } from '../../utils/Vault/Vault'
 
 import { AccountsDAO } from './Accounts.dao'
 import { Account } from './Accounts.model'
@@ -28,68 +20,12 @@ export class AccountsController {
     this.dao = new AccountsDAO(createLogger)
   }
 
-  public async create({ email, password }: { email: string, password: string }) {
-    this.logger.debug({ email }, 'Creating account')
-
-    const existing = await Account.findOne({ email })
-
-    if (existing)
-      throw new AccountAlreadyExists()
-
-    const id = await this.getUnusedId()
-    const { privateKey, publicKey } = generateED25519Base58Keys()
-    const encryptedPrivateKey = await Vault.encrypt(privateKey)
-    const apiToken = await getToken(email, Token.TestApiKey, Network.TEST)
-    const encryptedToken = await Vault.encrypt(`TEST_${apiToken}`)
-    const issuer = createIssuerFromPrivateKey(privateKey)
-    const hashedPassword = (await processPassword(password, this.pwnedCheckerRoot)).toString()
-
-    const account = {
-      id,
-      email,
-      password: hashedPassword,
-      privateKey: encryptedPrivateKey,
-      publicKey,
-      createdAt: Date.now().toString(), // .toString(): legacy reasons
-      verified: this.verifiedAccount,
-      testApiTokens: [{ token: encryptedToken }],
-      issuer,
-    }
-
-    this.logger.trace({ account }, 'Creating account')
-
-    // await this.dao.create(account)
-    await Account.create({
-      ...account,
-      id: uuidToBytes(id),
-    })
-
-    const tokenVerifiedAccount = await getToken(email, Token.VerifyAccount)
-    await this.sendEmail(email).sendVerified(tokenVerifiedAccount)
-    const token = await getToken(email, Token.Login)
-    return {
-      id,
-      issuer,
-      token,
-    }
-  }
-
   public get(email: string): Promise<Account> {
     return this.dao.get(email)
   }
 
-  public getByIssuer(issuer: string): Promise<Account | null> {
-    return Account.findOne({ issuer }).exec()
-  }
-
   public update(id: string, account: Partial<Account>) {
     return this.dao.update(id, account)
-  }
-
-  private async getUnusedId(): Promise<string> {
-    const id = uuid4()
-    const account = await Account.findOne({ id })
-    return !account ? bytesToUuid(id) : this.getUnusedId()
   }
 
 }

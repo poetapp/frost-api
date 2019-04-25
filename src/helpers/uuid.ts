@@ -6,6 +6,8 @@ export const uuid4 = () => {
   return id
 }
 
+export const uuid4s = () => bytesToUuid(uuid4()) // TODO: delete uuid4, rename this to uuid4
+
 export const bytesToUuid = (buffer: Buffer) =>
   buffer.toString('hex', 0, 4) + '-' +
   buffer.toString('hex', 4, 6) + '-' +

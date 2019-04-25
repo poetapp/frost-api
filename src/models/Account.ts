@@ -6,12 +6,12 @@ export interface Account {
   readonly privateKey: string
   readonly publicKey: string
   readonly createdAt: string
-  readonly apiTokens: [Token]
-  readonly testApiTokens: [Token]
+  readonly apiTokens?: [Token]
+  readonly testApiTokens?: [Token]
   readonly issuer: string
-  readonly name: string
-  readonly bio: string
-  readonly ethereumAddress: string
+  readonly name?: string
+  readonly bio?: string
+  readonly ethereumAddress?: string
 }
 
 interface Token {

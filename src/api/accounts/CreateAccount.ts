@@ -1,9 +1,8 @@
 import * as Joi from 'joi'
 
 import { PasswordComplexConfiguration } from '../../api/PasswordComplexConfiguration'
+import { AccountController } from '../../controllers/AccountController'
 import { validatePassword } from '../../helpers/validatePassword'
-import { AccountsController } from '../../modules/Accounts/Accounts.controller'
-import { SendEmailTo } from '../../utils/SendEmail'
 
 export const CreateAccountSchema = (
   passwordComplex: PasswordComplexConfiguration,
@@ -14,11 +13,10 @@ export const CreateAccountSchema = (
   password: validatePassword(password, passwordComplex),
 })
 
-export const CreateAccount = (sendEmail: SendEmailTo, verifiedAccount: boolean, pwnedCheckerRoot: string) => async (
+export const CreateAccount = (accountController: AccountController) => async (
   ctx: any,
 ): Promise<any> => {
-  const usersController = new AccountsController(ctx.logger, verifiedAccount, pwnedCheckerRoot, sendEmail)
   const { email, password } = ctx.request.body
-  const { id, issuer, token } = await usersController.create({ email, password })
+  const { id, issuer, token } = await accountController.create({ email, password })
   ctx.body = { id, issuer, token }
 }

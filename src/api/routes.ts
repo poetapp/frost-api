@@ -78,7 +78,7 @@ export const routes = (accountController: AccountController) => (
   router.post(
     Path.ACCOUNTS,
     validate({ body: CreateAccountSchema(passwordComplexConfiguration) }),
-    CreateAccount(sendEmail, verifiedAccount, pwnedCheckerRoot),
+    CreateAccount(accountController),
   )
   router.get(
     Path.ACCOUNTS_ID,

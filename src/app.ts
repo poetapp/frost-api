@@ -10,6 +10,7 @@ import { initVault } from './initVault'
 import { loadConfigurationWithDefaults } from './loadConfiguration'
 import { Account } from './modules/Accounts/Accounts.model'
 import { loggingConfigurationToPinoConfiguration } from './utils/Logging/Logging'
+import { SendEmail } from './utils/SendEmail'
 import { Vault } from './utils/Vault/Vault'
 
 import './extensions/Error'
@@ -46,7 +47,19 @@ export async function app(localVars: any = {}) {
   const accountCollection = dbConnection.collection('accounts')
   const accountDao = AccountDao(accountCollection)
 
-  const accountController = AccountController(accountDao)
+  const sendEmail = SendEmail(configurationFrostAPI.sendEmail)
+
+  const accountController = AccountController({
+    dependencies: {
+      logger: logger.child({ file: 'AccountController' }),
+      accountDao,
+      sendEmail,
+    },
+    configuration: {
+      verifiedAccount: configuration.verifiedAccount,
+      pwnedCheckerRoot: configuration.pwnedCheckerRoot,
+    },
+  })
 
   const frostAPI = await API(accountController)(configurationFrostAPI).start()
   const mongoDB = await MongoDB(configurationMongoDB).start() // DEPRECATED
