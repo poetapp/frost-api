@@ -1,36 +1,27 @@
-import { errors } from '../../errors/errors'
-import { AccountsController } from '../../modules/Accounts/Accounts.controller'
+import { AccountController } from '../../controllers/AccountController'
+import { EmailAlreadyVerified, Unauthorized } from '../../errors/errors'
 import { Token } from '../Tokens'
 import { getToken } from './utils/utils'
 
-export const VerifyAccountToken = (verifiedAccount: boolean, pwnedCheckerRoot: string) => async (
+export const VerifyAccountToken = (accountController: AccountController) => async (
   ctx: any,
   next: any,
 ): Promise<any> => {
   const logger = ctx.logger(__dirname)
-  const { EmailVerfied, InternalError } = errors
 
-  try {
-    const { user, tokenData } = ctx.state
+  const { user, tokenData } = ctx.state
 
-    if (user.verified) {
-      ctx.status = EmailVerfied.code
-      ctx.body = EmailVerfied.message
-      return
-    }
+  if (user.verified)
+    throw new EmailAlreadyVerified()
 
-    if (tokenData.data.meta.name !== Token.VerifyAccount.meta.name) {
-      ctx.status = InternalError.code
-      ctx.body = InternalError.message
-      return
-    }
-
-    user.verified = true
-    user.save()
-    const token = await getToken(user.email, Token.Login)
-    ctx.body = { token, issuer: user.issuer }
-  } catch (exception) {
-    logger.error({ exception }, 'api.VerifyAccountToken')
-    throw exception
+  if (tokenData.data.meta.name !== Token.VerifyAccount.meta.name) {
+    logger.warn({ user, tokenData }, 'User tried to verify email with incorrect token type.')
+    throw new Unauthorized()
   }
+
+  await accountController.updateByIssuer(user.issuer, { verified: true })
+
+  const token = await getToken(user.email, Token.Login)
+
+  ctx.body = { token, issuer: user.issuer }
 }

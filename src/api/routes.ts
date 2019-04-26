@@ -37,8 +37,6 @@ export const routes = (accountController: AccountController) => (
   poetUrl: string,
   maxApiTokens: number,
   testPoetUrl: string,
-  verifiedAccount: boolean,
-  pwnedCheckerRoot: string,
 ) => {
   const router = new KoaRouter()
   const sendEmail = SendEmail(sendEmailConfiguration)
@@ -65,7 +63,7 @@ export const routes = (accountController: AccountController) => (
       Path.TOKENS,
       Path.TOKENS_TOKENID,
     ],
-    authorization(verifiedAccount, pwnedCheckerRoot),
+    authorization(accountController),
   )
 
   router.use([Path.WORKS, Path.WORKS_WORKID], requireEmailVerified())
@@ -87,34 +85,34 @@ export const routes = (accountController: AccountController) => (
   )
   router.patch(
     Path.ACCOUNTS_ID,
-    authorization(verifiedAccount, pwnedCheckerRoot),
+    authorization(accountController),
     validate(PatchAccountSchema),
-    PatchAccount(),
+    PatchAccount(accountController),
   )
 
   router.post(
     Path.PASSWORD_RESET,
     validate({ body: ForgotPasswordSchema }),
-    ForgotPassword(sendEmail, verifiedAccount, pwnedCheckerRoot),
+    ForgotPassword(accountController),
   )
-  router.post(Path.LOGIN, validate({ body: LoginSchema }), Login(verifiedAccount, pwnedCheckerRoot))
+  router.post(Path.LOGIN, validate({ body: LoginSchema }), Login(accountController))
   router.post(
     Path.PASSWORD_CHANGE,
     validate({ body: PasswordChangeSchema(passwordComplexConfiguration) }),
-    PasswordChange(verifiedAccount, pwnedCheckerRoot),
+    PasswordChange(accountController),
   )
   router.post(
     Path.PASSWORD_CHANGE_TOKEN,
     validate({ body: PasswordChangeTokenSchema(passwordComplexConfiguration) }),
-    PasswordChangeToken(sendEmail, verifiedAccount, pwnedCheckerRoot),
+    PasswordChangeToken(accountController),
   )
   router.post(Path.ACCOUNTS_VERIFY, VerifyAccount(sendEmail))
-  router.get(Path.ACCOUNTS_VERIFY_TOKEN, VerifyAccountToken(verifiedAccount, pwnedCheckerRoot))
+  router.get(Path.ACCOUNTS_VERIFY_TOKEN, VerifyAccountToken(accountController))
 
-  router.post(Path.TOKENS, CreateToken(maxApiTokens))
-  router.get(Path.TOKENS, GetToken(verifiedAccount, pwnedCheckerRoot))
+  router.post(Path.TOKENS, CreateToken(maxApiTokens, accountController))
+  router.get(Path.TOKENS, GetToken(accountController))
   router.get(Path.HEALTH, GetHealth())
-  router.del(Path.TOKENS_TOKENID, validate({ params: RemoveTokenSchema }), RemoveToken())
+  router.del(Path.TOKENS_TOKENID, validate({ params: RemoveTokenSchema }), RemoveToken(accountController))
 
   router.post(
     Path.WORKS,

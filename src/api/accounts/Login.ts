@@ -1,9 +1,8 @@
 import * as Joi from 'joi'
-import { isNil } from 'ramda'
 
-import { errors } from '../../errors/errors'
-import { AccountsController } from '../../modules/Accounts/Accounts.controller'
-import { verify } from '../../utils/Password'
+import { AccountController } from '../../controllers/AccountController'
+import { AccountNotFound } from '../../errors/errors'
+import { passwordMatches } from '../../utils/Password/Password'
 import { Token } from '../Tokens'
 
 import { getToken } from './utils/utils'
@@ -15,25 +14,23 @@ export const LoginSchema = () => ({
   password: Joi.string().required(),
 })
 
-export const Login = (verifiedAccount: boolean, pwnedCheckerRoot: string) => async (ctx: any, next: any) => {
-  const logger = ctx.logger(__dirname)
-  const { ResourceNotFound } = errors
+export const Login = (accountController: AccountController) => async (ctx: any, next: any) => {
+  const logger = ctx.logger('Login Route')
 
-  try {
-    const user = ctx.request.body
-    const usersController = new AccountsController(ctx.logger, verifiedAccount, pwnedCheckerRoot)
-    const response = await usersController.get(user.email)
+  const credentials = ctx.request.body
+  const account = await accountController.findByEmail(credentials.email)
 
-    if (isNil(response)) {
-      ctx.status = ResourceNotFound.code
-      ctx.body = ResourceNotFound.message
-    } else {
-      await verify(user.password, response.password)
-      const token = await getToken(user.email, Token.Login)
-      ctx.body = { token, issuer: response.issuer }
-    }
-  } catch (exception) {
-    logger.error({ exception }, 'api.Login')
-    ctx.throw(ResourceNotFound.code, ResourceNotFound.message)
+  if (!account) {
+    logger.trace({ credentials }, 'Account not found')
+    throw new AccountNotFound()
   }
+
+  if (!await passwordMatches(credentials.password, account.password)) {
+    logger.trace({ credentials }, 'Password does not match')
+    throw new AccountNotFound()
+  }
+
+  const token = await getToken(credentials.email, Token.Login)
+
+  ctx.body = { token, issuer: account.issuer }
 }

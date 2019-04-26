@@ -15,6 +15,7 @@ export const processPassword = (password: string, root: string) =>
     return hashedPassword
   })
 
+// DEPRECATED, use passwordMatches
 export const verify = (password: string, hash: string) => {
   const userPassword = Buffer.from(password)
   const hashBuffer = Buffer.from(hash)
@@ -25,4 +26,10 @@ export const verify = (password: string, hash: string) => {
       result === securePassword.VALID ? resolve(true) : reject(INVALID)
     })
   })
+}
+
+export const passwordMatches = async (password: string, hash: string): Promise<boolean> => {
+  const userPassword = Buffer.from(password)
+  const hashBuffer = Buffer.from(hash)
+  return await securePassword().verify(userPassword, hashBuffer) === securePassword.VALID
 }

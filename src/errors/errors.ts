@@ -93,3 +93,8 @@ export class IncorrectToken extends Error {
     super(`Incorrect Token Type. Got "${got}", wanted "${wanted}".`)
   }
 }
+
+export class EmailAlreadyVerified extends Error {
+  status = 422
+  message = 'Email already verified.'
+}

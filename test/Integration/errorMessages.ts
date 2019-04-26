@@ -5,6 +5,7 @@ export const errorMessages = {
   emailVerified: 'Email already verified.',
   invalidToken: 'Invalid token.',
   accountExists: 'The specified account already exists.',
+  accountNotFound: 'Account not found.',
   resourceNotExist: 'The specified resource does not exist.',
   accountIsNotVerified: 'The specified account is not verified.',
   maximumTokens: 'You have reached the maximum number of allowed tokens.',

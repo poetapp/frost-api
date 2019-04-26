@@ -1,7 +1,9 @@
 import * as Joi from 'joi'
 import { verify } from 'jsonwebtoken'
+
+import { AccountController } from '../../controllers/AccountController'
 import { errors } from '../../errors/errors'
-import { Account } from '../../modules/Accounts/Accounts.model'
+import { Account } from '../../models/Account'
 import { Vault } from '../../utils/Vault/Vault'
 
 const getApiTokens = (user: Account) => {
@@ -26,7 +28,7 @@ export const RemoveTokenSchema = () => ({
   tokenId: Joi.string().required(),
 })
 
-export const RemoveToken = () => async (ctx: any, next: any): Promise<any> => {
+export const RemoveToken = (accountController: AccountController) => async (ctx: any, next: any): Promise<any> => {
   const logger = ctx.logger(__dirname)
   const { ResourceNotFound } = errors
 
@@ -64,17 +66,15 @@ export const RemoveToken = () => async (ctx: any, next: any): Promise<any> => {
         token,
       }))
 
-      user.apiTokens = updateApiTokens
+      await accountController.updateByIssuer(user.issuer, { apiTokens: updateApiTokens })
     } else {
       const testApiTokensEncrypted = await encryptApiTokens(testApiTokensFiltered)
       const updateTestApiTokens = testApiTokensEncrypted.map((token: string) => ({
         token,
       }))
 
-      user.testApiTokens = updateTestApiTokens
+      await accountController.updateByIssuer(user.issuer, { testApiTokens: updateTestApiTokens })
     }
-
-    user.save()
 
     ctx.status = 200
   } catch (exception) {

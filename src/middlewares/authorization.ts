@@ -1,13 +1,14 @@
 import { verify } from 'jsonwebtoken'
+
+import { AccountController } from '../controllers/AccountController'
 import { errors } from '../errors/errors'
-import { AccountsController } from '../modules/Accounts/Accounts.controller'
 import { Vault } from '../utils/Vault/Vault'
 
 const { AuthenticationFailed, ExpiredToken, InvalidToken } = errors
 
 export const extractToken = (ctx: any): string => (ctx.header.token ? ctx.header.token : ctx.params.token) || ''
 
-export const authorization = (verifiedAccount: boolean, pwnedCheckerRoot: string) => {
+export const authorization = (accountController: AccountController) => {
 
   return async (ctx: any, next: any) => {
     // TODO: add configuration to ctx in app.ts so middlewares have access.
@@ -25,9 +26,8 @@ export const authorization = (verifiedAccount: boolean, pwnedCheckerRoot: string
       const { client_token, email } = decoded as any
 
       const tokenData = await Vault.verifyToken(client_token)
-      const usersController = new AccountsController(ctx.logger, verifiedAccount, pwnedCheckerRoot)
       ctx.state.tokenData = tokenData
-      ctx.state.user = await usersController.get(email)
+      ctx.state.user = await accountController.findByEmail(email)
       ctx.state.jwtSecret = jwt
       return ctx.state.user ? next() : (ctx.status = 404)
     } catch (exception) {

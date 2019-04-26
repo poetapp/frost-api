@@ -1,14 +1,21 @@
 import { createIssuerFromPrivateKey, generateED25519Base58Keys } from '@po.et/poet-js'
 import * as Pino from 'pino'
 
-import { Token } from '../api/Tokens'
-import { getToken } from '../api/accounts/utils/utils'
+import { Token, TokenOptions } from '../api/Tokens'
+import { getToken, tokenMatch } from '../api/accounts/utils/utils'
+import { getApiKeyByNetwork, getTokenByNetwork } from '../api/tokens/CreateToken'
 import { AccountDao } from '../daos/AccountDao'
-import { AccountAlreadyExists } from '../errors/errors'
-import { uuid4s } from '../helpers/uuid'
+import {
+  AccountAlreadyExists,
+  AccountNotFound,
+  IncorrectOldPassword,
+  IncorrectToken,
+  Unauthorized,
+} from '../errors/errors'
+import { uuid4 } from '../helpers/uuid'
 import { Network } from '../interfaces/Network'
 import { Account } from '../models/Account'
-import { processPassword } from '../utils/Password'
+import { processPassword, passwordMatches } from '../utils/Password'
 import { SendEmailTo } from '../utils/SendEmail'
 import { Vault } from '../utils/Vault/Vault'
 
@@ -20,6 +27,22 @@ interface EmailPassword {
 export interface AccountController {
   readonly create: (e: EmailPassword) => Promise<{ id: string, issuer: string, token: string }>
   readonly findByIssuer: (issuer: string) => Promise<Account>
+  readonly findByEmail: (email: string) => Promise<Account>
+  readonly sendPasswordResetEmail: (email: string) => Promise<void>
+  readonly updateByIssuer: (issuer: string, updates: Partial<Account>) => Promise<void>
+  readonly changePassword: (
+    tokenData: TokenOptions,
+    user: Account,
+    password: string,
+    oldPassword: string,
+  ) => Promise<void>
+  readonly changePasswordWithToken: (
+    tokenData: TokenOptions,
+    issuer: string,
+    email: string,
+    newPassword: string,
+  ) => Promise<string>
+  readonly addToken: (issuer: string, email: string, network: Network) => Promise<string>
 }
 
 interface Dependencies {
@@ -47,6 +70,8 @@ export const AccountController = ({
   configuration,
 }: Arguments): AccountController => {
   const findByIssuer = (issuer: string) => accountDao.findOne({ issuer })
+
+  const findByEmail = (email: string) => accountDao.findOne({ email })
 
   const create = async ({ email, password }: EmailPassword) => {
     logger.debug({ email }, 'Creating account')
@@ -90,14 +115,77 @@ export const AccountController = ({
     }
   }
 
+  const sendPasswordResetEmail = async (email: string) => {
+    const user = await findByEmail(email)
+
+    if (!user)
+      throw new AccountNotFound()
+
+    const token = await getToken(email, Token.ForgotPassword)
+    await sendEmail(email).sendForgotPassword(token)
+  }
+
+  const updateByIssuer = async (issuer: string, updates: Partial<Account>) => {
+    await accountDao.updateOne({ issuer }, updates)
+  }
+
   const getUnusedId = async (): Promise<string> => {
-    const id = uuid4s()
+    const id = uuid4()
     const account = await accountDao.findOne({ id })
     return !account ? id : getUnusedId()
+  }
+
+  const changePassword = async (tokenData: TokenOptions, user: Account, password: string, oldPassword: string) => {
+    if (tokenData.meta.name !== Token.Login.meta.name)
+      throw new IncorrectToken(tokenData.meta.name, Token.Login.meta.name)
+
+    if (await passwordMatches(oldPassword, user.password))
+      throw new IncorrectOldPassword()
+
+    const newPassword = await processPassword(password, configuration.pwnedCheckerRoot) as string
+
+    await updateByIssuer(user.issuer, { password: newPassword })
+  }
+
+  const changePasswordWithToken = async (
+    tokenData: TokenOptions,
+    issuer: string,
+    email: string,
+    newPassword: string,
+  ) => {
+    const isForgotPasswordToken = tokenMatch(Token.ForgotPassword)
+
+    if (!isForgotPasswordToken(tokenData))
+      throw new Unauthorized()
+
+    const password = (await processPassword(newPassword, configuration.pwnedCheckerRoot)).toString()
+
+    await accountDao.updateOne({ issuer }, { password })
+
+    logger.trace({ tokenData }, 'changePasswordWithToken')
+
+    await Vault.revokeToken(tokenData.id)
+
+    await sendEmail(email).changePassword()
+    return getToken(email, Token.Login)
+  }
+
+  const addToken = async (issuer: string, email: string, network: Network) => {
+    const apiToken = await getToken(email, getApiKeyByNetwork(network), network)
+    const testOrMainApiToken = getTokenByNetwork(network, apiToken)
+    const apiTokenEncrypted = await Vault.encrypt(testOrMainApiToken)
+    await accountDao.insertToken({ issuer }, network, apiTokenEncrypted)
+    return testOrMainApiToken
   }
 
   return {
     create,
     findByIssuer,
+    findByEmail,
+    updateByIssuer,
+    sendPasswordResetEmail,
+    changePassword,
+    changePasswordWithToken,
+    addToken,
   }
 }

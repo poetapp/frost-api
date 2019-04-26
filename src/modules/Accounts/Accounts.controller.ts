@@ -24,8 +24,4 @@ export class AccountsController {
     return this.dao.get(email)
   }
 
-  public update(id: string, account: Partial<Account>) {
-    return this.dao.update(id, account)
-  }
-
 }

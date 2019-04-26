@@ -8,7 +8,6 @@ import { AccountDao } from './daos/AccountDao'
 import { MongoDB } from './databases/mongodb/mongodb'
 import { initVault } from './initVault'
 import { loadConfigurationWithDefaults } from './loadConfiguration'
-import { Account } from './modules/Accounts/Accounts.model'
 import { loggingConfigurationToPinoConfiguration } from './utils/Logging/Logging'
 import { SendEmail } from './utils/SendEmail'
 import { Vault } from './utils/Vault/Vault'
@@ -62,10 +61,10 @@ export async function app(localVars: any = {}) {
   })
 
   const frostAPI = await API(accountController)(configurationFrostAPI).start()
+
   const mongoDB = await MongoDB(configurationMongoDB).start() // DEPRECATED
 
-  // Mongoose sometimes fails to create indices
-  await Account.collection.createIndex({ email: 1 }, { unique: true })
+  await accountDao.createIndices()
 
   return {
     stop: async () => {

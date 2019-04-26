@@ -48,8 +48,6 @@ const init = (accountController: AccountController) => ({
   poetUrl,
   testPoetUrl,
   maxApiTokens,
-  verifiedAccount,
-  pwnedCheckerRoot,
   loggingConfiguration,
 }: APIConfiguration) => {
   const app = new Koa()
@@ -59,8 +57,6 @@ const init = (accountController: AccountController) => ({
     poetUrl,
     maxApiTokens,
     testPoetUrl,
-    verifiedAccount,
-    pwnedCheckerRoot,
   )
 
   app

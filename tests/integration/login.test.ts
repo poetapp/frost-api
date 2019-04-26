@@ -73,7 +73,7 @@ describe('Login to an existing account', async assert => {
       given: `incorrect email to ${Path.LOGIN}`,
       should: 'return an error string',
       actual,
-      expected: 'The specified resource does not exist.',
+      expected: 'Account not found.',
     })
   }
 
@@ -91,7 +91,7 @@ describe('Login to an existing account', async assert => {
       given: `incorrect password to ${Path.LOGIN}`,
       should: 'return an erro string',
       actual,
-      expected: 'The specified resource does not exist.',
+      expected: 'Account not found.',
     })
   }
 

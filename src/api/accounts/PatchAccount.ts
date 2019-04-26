@@ -1,8 +1,8 @@
 import * as Joi from 'joi'
 
+import { AccountController } from '../../controllers/AccountController'
 import { AccountAlreadyExists, Unauthorized } from '../../errors/errors'
 import { ValidateParams } from '../../middlewares/validate'
-import { AccountsController } from '../../modules/Accounts/Accounts.controller'
 
 export const PatchAccountSchema: ValidateParams = {
   params: () => ({
@@ -16,29 +16,28 @@ export const PatchAccountSchema: ValidateParams = {
   }),
 }
 
-export const PatchAccount = () => async (ctx: any, next: any): Promise<any> => {
+export const PatchAccount = (accountController: AccountController) => async (ctx: any, next: any): Promise<any> => {
   const logger = ctx.logger(__dirname)
   const { issuer } = ctx.params
-  const { user } = ctx.state
   const { body } = ctx.request
+  const { user } = ctx.state
 
   logger.debug({ issuer, user }, 'PatchAccount')
 
   if (user.issuer !== issuer)
     throw new Unauthorized()
 
-  const accountsController = new AccountsController(ctx.logger, false, null)
-
   if (body.email && body.email !== user.email) {
-    const existing = await accountsController.get(body.email)
+    const existing = await accountController.findByEmail(body.email)
     logger.trace(existing, 'Existing Account')
 
     if (existing)
       throw new AccountAlreadyExists()
   }
 
-  const response = await accountsController.update(user._id, body)
+  await accountController.updateByIssuer(issuer, body)
 
-  const { email, createdAt, name, bio, ethereumAddress } = response
-  ctx.body = { email, createdAt, issuer, name, bio, ethereumAddress }
+  const { email, createdAt, name, bio, ethereumAddress } = user
+
+  ctx.body = { email, createdAt, issuer, name, bio, ethereumAddress, ...body }
 }

@@ -53,7 +53,7 @@ describe('Forgot Password', function() {
         await frost.sendEmailForgotPassword()
         const token = await getTokenResetPassword(mail)
         await frost.changePasswordWithToken(token, newPassword)
-        await expect(frost.login(email, password)).to.be.throwWith(errorMessages.resourceNotExist)
+        await expect(frost.login(email, password)).to.be.throwWith(errorMessages.accountNotFound)
       })
     })
 
@@ -75,8 +75,8 @@ describe('Forgot Password', function() {
   })
 
   describe('When account does not exist', function() {
-    it(`should return a message with '${errorMessages.resourceNotExist}'`, async function() {
-      await expect(frost.sendEmailForgotPassword('email@exist.com')).to.be.throwWith(errorMessages.resourceNotExist)
+    it(`should return a message with '${errorMessages.accountNotFound}'`, async function() {
+      await expect(frost.sendEmailForgotPassword('email@exist.com')).to.be.throwWith(errorMessages.accountNotFound)
     })
   })
 })

@@ -1,7 +1,7 @@
 import { describe } from 'riteway'
 
 import { logger } from '../../../tests/helpers/logger'
-import { CreateToken, getTokensLengthByNetwork, getTokenByNetwork, isEmptyObject, extractNetwork } from './CreateToken'
+import { getTokensLengthByNetwork, getTokenByNetwork, isEmptyObject, extractNetwork } from './CreateToken'
 
 const createCtx = (numTokens: number, body: object = {}) => ({
   state: {
@@ -15,34 +15,6 @@ const createCtx = (numTokens: number, body: object = {}) => ({
   },
   status: 1,
   logger,
-})
-
-describe('CreateToken', async assert => {
-  {
-    const ctx = createCtx(5)
-
-    await CreateToken(5)(ctx, (): any => undefined)
-
-    assert({
-      given: 'exactly max api tokens',
-      should: 'return a status of 409',
-      actual: ctx.status,
-      expected: 409,
-    })
-  }
-
-  {
-    const ctx = createCtx(6)
-
-    await CreateToken(5)(ctx, (): any => undefined)
-
-    assert({
-      given: 'more than max api tokens',
-      should: 'return a status of 409',
-      actual: ctx.status,
-      expected: 409,
-    })
-  }
 })
 
 describe('getTokenByNetwork()', async assert => {

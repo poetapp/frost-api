@@ -2,6 +2,7 @@
 import { Network } from '../interfaces/Network'
 
 export interface TokenOptions {
+  readonly id?: string
   readonly role_name: string
   readonly policies: string[]
   readonly no_default_policy: boolean
