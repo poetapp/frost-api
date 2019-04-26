@@ -5,7 +5,6 @@ import { API } from './api/API'
 import { Configuration } from './configuration'
 import { AccountController } from './controllers/AccountController'
 import { AccountDao } from './daos/AccountDao'
-import { MongoDB } from './databases/mongodb/mongodb'
 import { initVault } from './initVault'
 import { loadConfigurationWithDefaults } from './loadConfiguration'
 import { loggingConfigurationToPinoConfiguration } from './utils/Logging/Logging'
@@ -38,7 +37,6 @@ export async function app(localVars: any = {}) {
       logger.error(e, 'Error with Vault')
     }
 
-  const configurationMongoDB = configurationToMongoDB(configuration)
   const configurationFrostAPI = configurationToFrostAPI(configuration)
 
   const mongoClient = await MongoClient.connect(configuration.mongodbUrl)
@@ -62,14 +60,11 @@ export async function app(localVars: any = {}) {
 
   const frostAPI = await API(accountController)(configurationFrostAPI).start()
 
-  const mongoDB = await MongoDB(configurationMongoDB).start() // DEPRECATED
-
   await accountDao.createIndices()
 
   return {
     stop: async () => {
       await frostAPI.stop()
-      await mongoDB.stop()
       await mongoClient.close()
       return true
     },
