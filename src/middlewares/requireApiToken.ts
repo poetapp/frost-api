@@ -1,6 +1,6 @@
 import { Token } from '../../src/api/Tokens'
-import { tokenMatch } from '../../src/api/accounts/utils/utils'
 import { errors } from '../errors/errors'
+import { tokenMatch } from '../helpers/token'
 
 const isApiKey = tokenMatch(Token.ApiKey)
 const isTestApiKey = tokenMatch(Token.TestApiKey)

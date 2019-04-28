@@ -1,7 +1,7 @@
 import { AccountController } from '../../controllers/AccountController'
 import { EmailAlreadyVerified, Unauthorized } from '../../errors/errors'
+import { getToken } from '../../helpers/token'
 import { Token } from '../Tokens'
-import { getToken } from './utils/utils'
 
 export const VerifyAccountToken = (accountController: AccountController) => async (
   ctx: any,

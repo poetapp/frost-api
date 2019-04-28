@@ -1,7 +1,7 @@
 import { Token } from '../../api/Tokens'
 import { SendEmailTo } from '../../utils/SendEmail'
 
-import { getToken } from './utils/utils'
+import { getToken } from '../../helpers/token'
 
 export const VerifyAccount = (sendEmail: SendEmailTo) => async (ctx: any, next: any): Promise<any> => {
   const { user } = ctx.state

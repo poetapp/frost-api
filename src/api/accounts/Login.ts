@@ -5,7 +5,7 @@ import { AccountNotFound } from '../../errors/errors'
 import { passwordMatches } from '../../utils/Password/Password'
 import { Token } from '../Tokens'
 
-import { getToken } from './utils/utils'
+import { getToken } from '../../helpers/token'
 
 export const LoginSchema = () => ({
   email: Joi.string()

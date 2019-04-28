@@ -2,7 +2,6 @@ import { createIssuerFromPrivateKey, generateED25519Base58Keys } from '@po.et/po
 import * as Pino from 'pino'
 
 import { Token, TokenOptions } from '../api/Tokens'
-import { getToken, tokenMatch } from '../api/accounts/utils/utils'
 import { getApiKeyByNetwork, getTokenByNetwork } from '../api/tokens/CreateToken'
 import { AccountDao } from '../daos/AccountDao'
 import {
@@ -12,6 +11,7 @@ import {
   IncorrectToken,
   Unauthorized,
 } from '../errors/errors'
+import { getToken, tokenMatch } from '../helpers/token'
 import { uuid4 } from '../helpers/uuid'
 import { Network } from '../interfaces/Network'
 import { Account } from '../models/Account'

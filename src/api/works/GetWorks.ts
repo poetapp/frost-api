@@ -1,7 +1,7 @@
 import { SignedVerifiableClaim } from '@po.et/poet-js'
 import { errors } from '../../errors/errors'
+import { isLiveNetwork } from '../../helpers/token'
 import { WorksController } from '../../modules/Works/Works.controller'
-import { isLiveNetwork } from '../accounts/utils/utils'
 
 export const GetWorks = (poetUrl: string, testPoetUrl: string) => async (ctx: any, next: any): Promise<any> => {
   const logger = ctx.logger(__dirname)

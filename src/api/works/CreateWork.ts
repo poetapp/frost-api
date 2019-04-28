@@ -1,9 +1,9 @@
 import * as Joi from 'joi'
 
 import { errors } from '../../errors/errors'
+import { isLiveNetwork } from '../../helpers/token'
 import { WorksController } from '../../modules/Works/Works.controller'
 import { Vault } from '../../utils/Vault/Vault'
-import { isLiveNetwork } from '../accounts/utils/utils'
 
 export const CreateWorkSchema = () => ({
   name: Joi.string().required(),

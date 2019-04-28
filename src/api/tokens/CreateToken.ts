@@ -3,9 +3,9 @@ import { lte } from 'ramda'
 
 import { AccountController } from '../../controllers/AccountController'
 import { errors } from '../../errors/errors'
+import { isLiveNetwork } from '../../helpers/token'
 import { Network } from '../../interfaces/Network'
 import { Token } from '../Tokens'
-import { isLiveNetwork } from '../accounts/utils/utils'
 
 export const isEmptyObject = (o: object) => Object.keys(o).length === 0
 export const addPrefixTest = (apiToken: string) => `TEST_${apiToken}`

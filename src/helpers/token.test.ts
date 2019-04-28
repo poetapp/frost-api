@@ -1,5 +1,5 @@
 import { describe } from 'riteway'
-import { tokenMatch, isLiveNetwork } from './utils'
+import { tokenMatch, isLiveNetwork } from './token'
 
 describe('tokenMatch()', async (assert: any) => {
   {

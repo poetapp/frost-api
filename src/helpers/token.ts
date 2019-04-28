@@ -1,9 +1,9 @@
 import { sign } from 'jsonwebtoken'
 import { isNil, path } from 'ramda'
 
-import { Network } from '../../../interfaces/Network'
-import { Vault } from '../../../utils/Vault/Vault'
-import { TokenOptions } from '../../Tokens'
+import { TokenOptions } from '../api/Tokens'
+import { Network } from '../interfaces/Network'
+import { Vault } from '../utils/Vault/Vault'
 
 const createJwtToken = (data: object, secret: string) => sign(data, secret)
 
