@@ -12,7 +12,7 @@ export const hasher = (password: string) =>
 export const processPassword = (password: string, root: string) =>
   Promise.all([isPwned(password, root), hasher(password)]).then(([isUnsafe, hashedPassword]) => {
     if (isUnsafe) throw new Error(UNSAFE)
-    return hashedPassword
+    return hashedPassword.toString()
   })
 
 // DEPRECATED, use passwordMatches

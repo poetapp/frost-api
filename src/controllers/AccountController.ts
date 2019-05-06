@@ -87,7 +87,7 @@ export const AccountController = ({
     const apiToken = await getToken(email, Token.TestApiKey, Network.TEST)
     const encryptedToken = await Vault.encrypt(`TEST_${apiToken}`)
     const issuer = createIssuerFromPrivateKey(privateKey)
-    const hashedPassword = (await processPassword(password, configuration.pwnedCheckerRoot)).toString()
+    const hashedPassword = await processPassword(password, configuration.pwnedCheckerRoot)
 
     const account: Account = {
       id,
@@ -139,10 +139,10 @@ export const AccountController = ({
     if (tokenData.meta.name !== Token.Login.meta.name)
       throw new IncorrectToken(tokenData.meta.name, Token.Login.meta.name)
 
-    if (await passwordMatches(oldPassword, user.password))
+    if (!await passwordMatches(oldPassword, user.password))
       throw new IncorrectOldPassword()
 
-    const newPassword = await processPassword(password, configuration.pwnedCheckerRoot) as string
+    const newPassword = await processPassword(password, configuration.pwnedCheckerRoot)
 
     await updateByIssuer(user.issuer, { password: newPassword })
   }
@@ -158,7 +158,7 @@ export const AccountController = ({
     if (!isForgotPasswordToken(tokenData))
       throw new Unauthorized()
 
-    const password = (await processPassword(newPassword, configuration.pwnedCheckerRoot)).toString()
+    const password = await processPassword(newPassword, configuration.pwnedCheckerRoot)
 
     await accountDao.updateOne({ issuer }, { password })
 
