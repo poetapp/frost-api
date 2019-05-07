@@ -19,7 +19,7 @@
     "coverage:integration": "nyc --report-dir ./.coverage-integration npm run test:integration:legacy",
     "precommit": "lint-staged",
     "semantic-release": "semantic-release",
-    "migrate-issuer": "node dist/src/scripts/issuer.js"
+    "migrate-account-id": "node dist/src/scripts/add-id.js"
   },
   "lint-staged": {
     "*.ts": [

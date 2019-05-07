@@ -15,7 +15,7 @@ export interface AccountDao {
 export const AccountDao = (collection: Collection): AccountDao => {
   const createIndices = async () => {
     await collection.createIndex({ email: 1 }, { unique: true })
-    await collection.createIndex({ id: 1 }, { unique: true })
+    await collection.createIndex({ id: 1 }, { unique: false })
   }
 
   const insertOne = async (account: Account): Promise<void> => {
