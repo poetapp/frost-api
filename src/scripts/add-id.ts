@@ -3,7 +3,7 @@ import * as Pino from 'pino'
 
 import { Configuration } from '../configuration'
 import { AccountDao } from '../daos/AccountDao'
-import { uuid4 } from '../helpers/uuid'
+import { uuid4, uuidToBytes } from '../helpers/uuid'
 import { loadConfigurationWithDefaults } from '../loadConfiguration'
 import { loggingConfigurationToPinoConfiguration } from '../utils/Logging/Logging'
 
@@ -33,7 +33,7 @@ async function addId() {
 
   for (const account of accounts) {
     const id = await getUnusedId()
-    await accountCollection.updateOne({ _id: account._id }, { $set: { id } })
+    await accountCollection.updateOne({ _id: account._id }, { $set: { id: uuidToBytes(id) } })
     logger.info({ id, email: account.email, _id: account._id }, 'Updated account!')
   }
 
