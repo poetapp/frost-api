@@ -11,7 +11,7 @@
     "lint": "tslint -p ./tsconfig.json",
     "lint:fix": "tslint -p ./tsconfig.json --fix",
     "test:unit": "ts-node -r tsconfig-paths/register --files tests/unit/index.ts",
-    "test:integration": "ts-node -r tsconfig-paths/register --files ./tests/integration/index.ts",
+    "test:integration": "ts-node --files ./tests/integration/index.ts",
     "test:integration:legacy": "TS_NODE_FILES=true mocha --timeout 200000 --exit --require ts-node/register -r tsconfig-paths/register ./test/Integration/**/*.ts",
     "coverage": "npm run coverage:unit && npm run coverage:integration && npm run coverage:integration:legacy",
     "coverage:unit": "nyc --report-dir ./.coverage-unit npm run test:unit",
