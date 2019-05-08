@@ -1,4 +1,5 @@
 import { createIssuerFromPrivateKey, generateED25519Base58Keys } from '@po.et/poet-js'
+import { verify } from 'jsonwebtoken'
 import * as Pino from 'pino'
 
 import { Token, TokenOptions } from '../api/Tokens'
@@ -6,9 +7,9 @@ import { getApiKeyByNetwork, getTokenByNetwork } from '../api/tokens/CreateToken
 import { AccountDao } from '../daos/AccountDao'
 import {
   AccountAlreadyExists,
-  AccountNotFound,
+  AccountNotFound, AuthenticationFailed, BadToken,
   IncorrectOldPassword,
-  IncorrectToken,
+  IncorrectToken, InvalidToken,
   Unauthorized,
 } from '../errors/errors'
 import { getToken, tokenMatch } from '../helpers/token'
@@ -25,6 +26,7 @@ interface EmailPassword {
 }
 
 export interface AccountController {
+  readonly authorizeRequest: (token: string) => Promise<{ account: Account, tokenData: any, jwt: any }>
   readonly create: (e: EmailPassword) => Promise<{ id: string, issuer: string, token: string }>
   readonly findByIssuer: (issuer: string) => Promise<Account>
   readonly findByEmail: (email: string) => Promise<Account>
@@ -69,6 +71,32 @@ export const AccountController = ({
   },
   configuration,
 }: Arguments): AccountController => {
+  const authorizeRequest = async (token: string) => {
+    try {
+      const secret = await Vault.readSecret('frost')
+      const { jwt } = secret.data
+      const decoded = verify(token.replace('TEST_', ''), jwt)
+      const { client_token, email } = decoded as any
+
+      const tokenData = await Vault.verifyToken(client_token)
+      const account = await findByEmail(email)
+      return { jwt, tokenData, account }
+    } catch (error) {
+      logger.error({ error }, 'Authorization Error')
+
+      switch (error.message) {
+        case 'bad token':
+          throw new BadToken()
+        case 'invalid token':
+          throw new InvalidToken()
+        case 'jwt malformed':
+          throw new InvalidToken()
+        default:
+          throw new AuthenticationFailed()
+      }
+    }
+  }
+
   const findByIssuer = (issuer: string) => accountDao.findOne({ issuer })
 
   const findByEmail = (email: string) => accountDao.findOne({ email })
@@ -179,6 +207,7 @@ export const AccountController = ({
   }
 
   return {
+    authorizeRequest,
     create,
     findByIssuer,
     findByEmail,

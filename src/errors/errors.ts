@@ -98,3 +98,18 @@ export class EmailAlreadyVerified extends Error {
   status = 422
   message = 'Email already verified.'
 }
+
+export class BadToken extends Error {
+  status = errors.ExpiredToken.code
+  message = errors.ExpiredToken.message
+}
+
+export class InvalidToken extends Error {
+  status = errors.InvalidToken.code
+  message = errors.InvalidToken.message
+}
+
+export class AuthenticationFailed extends Error {
+  status = errors.AuthenticationFailed.code
+  message = errors.AuthenticationFailed.message
+}
