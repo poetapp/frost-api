@@ -1,5 +1,5 @@
 import { createIssuerFromPrivateKey, generateED25519Base58Keys } from '@po.et/poet-js'
-import { verify } from 'jsonwebtoken'
+import { sign, verify } from 'jsonwebtoken'
 import * as Pino from 'pino'
 
 import { Token, TokenOptions } from '../api/Tokens'
@@ -12,7 +12,7 @@ import {
   IncorrectToken, InvalidToken,
   Unauthorized,
 } from '../errors/errors'
-import { getToken, tokenMatch } from '../helpers/token'
+import { tokenMatch } from '../helpers/token'
 import { uuid4 } from '../helpers/uuid'
 import { Network } from '../interfaces/Network'
 import { Account } from '../models/Account'
@@ -63,8 +63,9 @@ interface Dependencies {
 }
 
 interface Configuration {
-  readonly verifiedAccount: boolean,
-  readonly pwnedCheckerRoot: string,
+  readonly verifiedAccount: boolean
+  readonly pwnedCheckerRoot: string
+  readonly jwtSecret: string
 }
 
 interface Arguments {
@@ -264,6 +265,13 @@ export const AccountController = ({
     const apiTokenEncrypted = await Vault.encrypt(testOrMainApiToken)
     await accountDao.insertToken({ issuer }, network, apiTokenEncrypted)
     return testOrMainApiToken
+  }
+
+  const getToken = async (email: string, options: TokenOptions, network?: Network) => {
+    const tokenVault = await Vault.createToken(options)
+    const { client_token } = tokenVault.auth
+
+    return sign({ email, client_token, network }, configuration.jwtSecret)
   }
 
   return {

@@ -46,6 +46,8 @@ export async function app(localVars: any = {}) {
 
   const sendEmail = SendEmail(configurationFrostAPI.sendEmail)
 
+  const { data: { jwt: jwtSecret } } = await Vault.readSecret('frost')
+
   const accountController = AccountController({
     dependencies: {
       logger: logger.child({ file: 'AccountController' }),
@@ -55,6 +57,7 @@ export async function app(localVars: any = {}) {
     configuration: {
       verifiedAccount: configuration.verifiedAccount,
       pwnedCheckerRoot: configuration.pwnedCheckerRoot,
+      jwtSecret,
     },
   })
 
