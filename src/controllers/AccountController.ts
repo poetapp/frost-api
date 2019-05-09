@@ -7,7 +7,7 @@ import { getApiKeyByNetwork, getTokenByNetwork } from '../api/tokens/CreateToken
 import { AccountDao } from '../daos/AccountDao'
 import {
   AccountAlreadyExists,
-  AccountNotFound, AuthenticationFailed, BadToken,
+  AccountNotFound, AuthenticationFailed, BadToken, EmailAlreadyVerified,
   IncorrectOldPassword,
   IncorrectToken, InvalidToken,
   Unauthorized,
@@ -25,11 +25,20 @@ interface EmailPassword {
   readonly password: string
 }
 
+interface Authentication {
+  readonly id: string
+  readonly issuer: string
+  readonly token: string
+}
+
 export interface AccountController {
   readonly authorizeRequest: (token: string) => Promise<{ account: Account, tokenData: any, jwt: any }>
-  readonly create: (e: EmailPassword) => Promise<{ id: string, issuer: string, token: string }>
+  readonly create: (e: EmailPassword) => Promise<Authentication>
+  readonly login: (e: EmailPassword) => Promise<Authentication>
   readonly findByIssuer: (issuer: string) => Promise<Account>
   readonly findByEmail: (email: string) => Promise<Account>
+  readonly sendAccountVerificationEmail: (email: string) => Promise<void>
+  readonly verifyAccount: (account: Account, tokenData: TokenOptions) => Promise<Authentication>
   readonly sendPasswordResetEmail: (email: string) => Promise<void>
   readonly updateByIssuer: (issuer: string, updates: Partial<Account>) => Promise<void>
   readonly changePassword: (
@@ -143,6 +152,57 @@ export const AccountController = ({
     }
   }
 
+  const login = async ({ email, password }: EmailPassword) => {
+    const account = await findByEmail(email)
+
+    if (!account) {
+      logger.trace({ email, password }, 'Account not found')
+      throw new AccountNotFound()
+    }
+
+    if (!await passwordMatches(password, account.password)) {
+      logger.trace({ email, password }, 'Password does not match')
+      throw new AccountNotFound()
+    }
+
+    const token = await getToken(email, Token.Login)
+
+    const { id, issuer } = account
+
+    return {
+      id,
+      issuer,
+      token,
+    }
+  }
+
+  const sendAccountVerificationEmail = async (email: string) => {
+    const token = await getToken(email, Token.VerifyAccount)
+    await sendEmail(email).sendVerified(token)
+  }
+
+  const verifyAccount = async (account: Account, tokenData: TokenOptions) => {
+    if (account.verified)
+      throw new EmailAlreadyVerified()
+
+    if (tokenData.meta.name !== Token.VerifyAccount.meta.name) {
+      logger.warn({ account, tokenData }, 'User tried to verify email with incorrect token type.')
+      throw new Unauthorized()
+    }
+
+    await updateByIssuer(account.issuer, { verified: true })
+
+    const token = await getToken(account.email, Token.Login)
+
+    const { id, issuer } = account
+
+    return {
+      id,
+      issuer,
+      token,
+    }
+  }
+
   const sendPasswordResetEmail = async (email: string) => {
     const user = await findByEmail(email)
 
@@ -208,10 +268,13 @@ export const AccountController = ({
 
   return {
     authorizeRequest,
+    login,
     create,
     findByIssuer,
     findByEmail,
     updateByIssuer,
+    sendAccountVerificationEmail,
+    verifyAccount,
     sendPasswordResetEmail,
     changePassword,
     changePasswordWithToken,

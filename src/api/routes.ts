@@ -106,7 +106,7 @@ export const routes = (accountController: AccountController) => (
     validate({ body: PasswordChangeTokenSchema(passwordComplexConfiguration) }),
     PasswordChangeToken(accountController),
   )
-  router.post(Path.ACCOUNTS_VERIFY, VerifyAccount(sendEmail))
+  router.post(Path.ACCOUNTS_VERIFY, VerifyAccount(accountController))
   router.get(Path.ACCOUNTS_VERIFY_TOKEN, VerifyAccountToken(accountController))
 
   router.post(Path.TOKENS, CreateToken(maxApiTokens, accountController))
