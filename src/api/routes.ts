@@ -6,12 +6,13 @@ import { isLoggedIn } from '../middlewares/isLoggedIn'
 import { monitor } from '../middlewares/monitor'
 import { requireEmailVerified } from '../middlewares/requireEmailVerified'
 import { validate } from '../middlewares/validate'
-import { SendEmail, SendEmailConfiguration } from '../utils/SendEmail'
+import { SendEmailConfiguration } from '../utils/SendEmail'
 
 import { PasswordComplexConfiguration } from './PasswordComplexConfiguration'
 import { Path } from './Path'
 
 import { CreateAccount, CreateAccountSchema } from './accounts/CreateAccount'
+import { FindAccount, FindAccountSchema } from './accounts/FindAccount'
 import { ForgotPassword, ForgotPasswordSchema } from './accounts/ForgotPassword'
 import { GetAccount, GetAccountSchema } from './accounts/GetAccount'
 import { Login, LoginSchema } from './accounts/Login'
@@ -39,7 +40,6 @@ export const routes = (accountController: AccountController) => (
   testPoetUrl: string,
 ) => {
   const router = new KoaRouter()
-  const sendEmail = SendEmail(sendEmailConfiguration)
 
   router.use([Path.WORKS, Path.WORKS_WORKID], (ctx: any, next: any) => {
     ctx.set('Access-Control-Allow-Methods', 'POST,GET')
@@ -77,6 +77,11 @@ export const routes = (accountController: AccountController) => (
     Path.ACCOUNTS,
     validate({ body: CreateAccountSchema(passwordComplexConfiguration) }),
     CreateAccount(accountController),
+  )
+  router.get(
+    Path.ACCOUNTS,
+    validate(FindAccountSchema),
+    FindAccount(accountController),
   )
   router.get(
     Path.ACCOUNTS_ID,
