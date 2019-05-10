@@ -83,7 +83,6 @@ sudo docker-compose exec vault vault operator unseal
 sudo docker-compose exec vault vault login
 sudo docker-compose exec vault vault secrets enable transit
 sudo docker-compose exec vault vault write -f transit/keys/frost
-sudo docker-compose exec vault vault write secret/frost jwt=jwtsecretkey
 ```
 
 By default, `init` will create an _Initial Root Token_ and 5 _Unseal Keys_, out of which any three can reconstruct the root token.
@@ -91,8 +90,6 @@ By default, `init` will create an _Initial Root Token_ and 5 _Unseal Keys_, out 
 The _Root Token_ is what we'll use in the `VAULT_TOKEN` environment variable, and also for the `vault login` command.
 
 The _key shares_ will need to be provided to the `operator unseal` command.
-
-The `jwt=jwtsecretkey` in the `write secret/frost jwt=jwtsecretkey` is what will be used to sign the JWTs. In the future the API will directly consume the `JWT` environment variable.
 
 These instructions are perfectly valid for a development environment, for production environments please follow more secure practices.
 

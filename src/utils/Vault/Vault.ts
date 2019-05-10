@@ -45,23 +45,6 @@ export namespace Vault {
     return this.vault.tokenLookup({ token })
   }
 
-  export async function readSecret(key: string) {
-    return this.vault.read(`secret/${key}`)
-  }
-
-  export async function writeSecret(key: string, value: object) {
-    return this.vault.write(`secret/${key}`, value)
-  }
-
-  export async function mountSecret() {
-    await this.vault.mounts()
-    return this.vault.mount({
-      mount_point: 'secret',
-      type: 'generic',
-      description: 'secrets',
-    })
-  }
-
   export async function mountTransit() {
     await this.vault.mounts()
     return this.vault.mount({

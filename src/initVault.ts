@@ -37,13 +37,6 @@ export const initVault = async () => {
 
   await Vault.mountTransit()
   await Vault.writeTransitKey()
-
-  const frostSecrets = {
-    transactionalMandrill: configuration.transactionalMandrill,
-    jwt: configuration.jwt,
-  }
-
-  await Vault.writeSecret('frost', frostSecrets)
 }
 
 const initializeWithRetries = async (logger: Pino.Logger) => {

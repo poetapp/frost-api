@@ -83,14 +83,12 @@ export const AccountController = ({
 }: Arguments): AccountController => {
   const authorizeRequest = async (token: string) => {
     try {
-      const secret = await Vault.readSecret('frost')
-      const { jwt } = secret.data
-      const decoded = verify(token.replace('TEST_', ''), jwt)
+      const decoded = verify(token.replace('TEST_', ''), configuration.jwtSecret)
       const { client_token, email } = decoded as any
 
       const tokenData = await Vault.verifyToken(client_token)
       const account = await findByEmail(email)
-      return { jwt, tokenData, account }
+      return { jwt: configuration.jwtSecret, tokenData, account }
     } catch (error) {
       logger.error({ error }, 'Authorization Error')
 
