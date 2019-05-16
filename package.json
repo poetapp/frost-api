@@ -32,11 +32,17 @@
       "@semantic-release/github"
     ],
     "analyzeCommits": [
-      ["@semantic-release/commit-analyzer", {
-        "releaseRules": [
-          {"type": "refactor", "release": "patch"}
-        ]
-      }]
+      [
+        "@semantic-release/commit-analyzer",
+        {
+          "releaseRules": [
+            {
+              "type": "refactor",
+              "release": "patch"
+            }
+          ]
+        }
+      ]
     ],
     "prepare": [
       "@semantic-release/npm"
@@ -58,6 +64,7 @@
     "@po.et/poet-js": "5.1.17",
     "body-parser": "1.18.3",
     "dotenv": "6.2.0",
+    "ethereumjs-util": "6.1.0",
     "form-data": "2.3.3",
     "joi": "14.1.1",
     "joi-password-complexity": "2.0.1",
@@ -81,6 +88,7 @@
   "devDependencies": {
     "@po.et/frost-client": "2.1.0",
     "@po.et/tslint-rules": "2.2.0",
+    "@types/bn.js": "4.11.5",
     "@types/chai": "4.1.7",
     "@types/cheerio": "0.22.10",
     "@types/form-data": "2.2.1",

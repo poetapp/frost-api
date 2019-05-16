@@ -21,6 +21,6 @@ export const GetAccount = (accountController: AccountController) => async (ctx: 
   if (!response)
     throw new AccountNotFound()
 
-  const { id, email, createdAt, name, bio, ethereumAddress } = response
-  ctx.body = { id, email, createdAt, name, bio, ethereumAddress }
+  const { id, email, createdAt, name, bio, ethereumAddress, poeAddress, poeAddressVerified } = response
+  ctx.body = { id, email, createdAt, name, bio, ethereumAddress, poeAddress, poeAddressVerified }
 }

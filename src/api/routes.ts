@@ -19,6 +19,10 @@ import { Login, LoginSchema } from './accounts/Login'
 import { PasswordChange, PasswordChangeSchema } from './accounts/PasswordChange'
 import { PasswordChangeToken, PasswordChangeTokenSchema } from './accounts/PasswordChangeToken'
 import { PatchAccount, PatchAccountSchema } from './accounts/PatchAccount'
+import {
+  PostAccountPoeChallenge,
+  PostAccountPoeChallengeSchema,
+} from './accounts/PostAccountPoeChallenge'
 import { VerifyAccount } from './accounts/Verify'
 import { VerifyAccountToken } from './accounts/VerifyToken'
 
@@ -93,6 +97,12 @@ export const routes = (accountController: AccountController) => (
     authorization(accountController),
     validate(PatchAccountSchema),
     PatchAccount(accountController),
+  )
+  router.post(
+    Path.ACCOUNTS_ID_POE_CHALLENGE,
+    authorization(accountController),
+    validate(PostAccountPoeChallengeSchema),
+    PostAccountPoeChallenge(accountController),
   )
 
   router.post(

@@ -54,6 +54,7 @@ export interface AccountController {
     newPassword: string,
   ) => Promise<string>
   readonly addToken: (issuer: string, email: string, network: Network) => Promise<string>
+  readonly poeAddressChallenge: (issuer: string) => Promise<string>
 }
 
 interface Dependencies {
@@ -272,6 +273,13 @@ export const AccountController = ({
     return sign({ email, client_token, network }, configuration.jwtSecret)
   }
 
+  const poeAddressChallenge = async (issuer: string) => {
+    const { email } = await accountDao.findOne({ issuer })
+    const poeAddressMessage = `Proof of POE ${email} ${new Date().toISOString()}`
+    await accountDao.updateOne({ issuer }, { poeAddressMessage, poeAddressVerified: false })
+    return poeAddressMessage
+  }
+
   return {
     authorizeRequest,
     login,
@@ -285,5 +293,6 @@ export const AccountController = ({
     changePassword,
     changePasswordWithToken,
     addToken,
+    poeAddressChallenge,
   }
 }

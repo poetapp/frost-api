@@ -1,3 +1,4 @@
+import '../../src/api/accounts/PatchAccount.test'
 import '../../src/api/health/GetHealth.test'
 import '../../src/api/tokens/CreateToken.test'
 import '../../src/decorators/injectDao/injectDao.test'

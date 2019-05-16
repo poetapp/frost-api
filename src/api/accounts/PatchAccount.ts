@@ -2,7 +2,9 @@ import * as Joi from 'joi'
 
 import { AccountController } from '../../controllers/AccountController'
 import { AccountAlreadyExists, Unauthorized } from '../../errors/errors'
+import { signatureIsValid } from '../../helpers/ethereum'
 import { ValidateParams } from '../../middlewares/validate'
+import { Account } from '../../models/Account'
 
 export const PatchAccountSchema: ValidateParams = {
   params: () => ({
@@ -13,6 +15,8 @@ export const PatchAccountSchema: ValidateParams = {
     name: Joi.string().allow('').optional(),
     bio: Joi.string().allow('').optional(),
     ethereumAddress: Joi.string().allow('').optional(),
+    poeAddress: Joi.string().allow('').optional(),
+    poeSignature: Joi.string().allow('').optional(),
   }),
 }
 
@@ -35,9 +39,31 @@ export const PatchAccount = (accountController: AccountController) => async (ctx
       throw new AccountAlreadyExists()
   }
 
-  await accountController.updateByIssuer(issuer, body)
+  const poeAddressVerified = isPoeAddressVerified(body.poeAddress, body.poeSignature, user)
 
-  const { email, createdAt, name, bio, ethereumAddress } = user
+  await accountController.updateByIssuer(issuer, { ...body, poeAddressVerified })
 
-  ctx.body = { email, createdAt, issuer, name, bio, ethereumAddress, ...body }
+  const { email, createdAt, name, bio, ethereumAddress, poeAddress, poeSignature } = user
+
+  ctx.body = {
+    email,
+    createdAt,
+    issuer,
+    name,
+    bio,
+    ethereumAddress,
+    poeAddress,
+    poeSignature,
+    poeAddressVerified,
+    ...body,
+  }
 }
+
+export const isPoeAddressVerified = (poeAddress: string, poeSignature: string, account: Account): boolean =>
+  (poeAddress || poeSignature)
+    ? signatureIsValid(
+      poeAddress || account.poeAddress,
+      account.poeAddressMessage,
+      poeSignature || account.poeAddressSignature,
+    )
+    : !!account.poeAddressVerified

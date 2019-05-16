@@ -12,6 +12,10 @@ export interface Account {
   readonly name?: string
   readonly bio?: string
   readonly ethereumAddress?: string
+  readonly poeAddress?: string
+  readonly poeAddressMessage?: string
+  readonly poeAddressSignature?: string
+  readonly poeAddressVerified?: boolean
 }
 
 interface Token {
