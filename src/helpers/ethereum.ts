@@ -17,7 +17,7 @@ export function signatureIsValid(address: string, message: string, signature: st
     const addressBuffer = publicToAddress(publicKey)
     const addressVerified = bufferToHex(addressBuffer)
 
-    return addressVerified === address
+    return addressVerified.toLowerCase() === address.toLowerCase()
   } catch (exception) {
     if (exception.message === 'Invalid signature length')
       return false
