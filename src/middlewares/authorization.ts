@@ -2,7 +2,7 @@ import { AccountController } from '../controllers/AccountController'
 
 export const extractToken = (ctx: any): string => (ctx.header.token ? ctx.header.token : ctx.params.token) || ''
 
-export const authorization = (accountController: AccountController) => async (ctx: any, next: any) => {
+export const Authorization = (accountController: AccountController) => async (ctx: any, next: any) => {
   // TODO: add configuration to ctx in app.ts so middlewares have access.
   // This is needed until we can figure out how to restart vault between
   // individual tests.

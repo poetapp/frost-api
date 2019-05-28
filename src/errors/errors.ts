@@ -89,8 +89,11 @@ export class IncorrectOldPassword extends Error {
 export class IncorrectToken extends Error {
   status = 401
 
-  constructor(got: string, wanted: string) {
-    super(`Incorrect Token Type. Got "${got}", wanted "${wanted}".`)
+  constructor(got: string, wanted: string | string[]) {
+    super(
+      `Incorrect Token Type. Got "${got}", ` +
+      `wanted ${Array.isArray(wanted) ? `one of [${wanted.map(_ => `"${_}"`).join(', ')}]` : `"${wanted}"`}.`,
+    )
   }
 }
 
@@ -112,4 +115,17 @@ export class InvalidToken extends Error {
 export class AuthenticationFailed extends Error {
   status = errors.AuthenticationFailed.code
   message = errors.AuthenticationFailed.message
+}
+
+export class PoeAddressNotVerified extends Error {
+  status = 403
+  message = 'POE address not verified.'
+}
+
+export class PoeBalanceInsufficient extends Error {
+  status = 403
+
+  constructor(minimum: number, balance: number) {
+    super(`Insufficient POE balance. You need at least ${minimum} POE. You currently have ${balance}.`)
+  }
 }

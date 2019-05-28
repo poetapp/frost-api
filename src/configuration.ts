@@ -60,6 +60,8 @@ export interface Configuration
   readonly transactionalMandrill: string
   readonly jwt: string
   readonly skipVault: boolean
+  readonly poeContractAddress: string
+  readonly poeBalanceMinimum: number
 }
 
 export const configuration: Configuration = {
@@ -107,4 +109,6 @@ export const configuration: Configuration = {
   maildevIgnoreTLS: true,
   loggingLevel: 'info',
   loggingPretty: true,
+  poeContractAddress: '0x0e0989b1f9b8a38983c2ba8053269ca62ec9b195',
+  poeBalanceMinimum: 1000,
 }

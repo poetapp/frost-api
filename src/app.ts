@@ -4,7 +4,9 @@ import * as Pino from 'pino'
 import { API } from './api/API'
 import { Configuration } from './configuration'
 import { AccountController } from './controllers/AccountController'
+import { ArchiveController } from './controllers/ArchiveController'
 import { AccountDao } from './daos/AccountDao'
+import { PoetNode } from './daos/PoetNodeDao'
 import { initVault } from './initVault'
 import { loadConfigurationWithDefaults } from './loadConfiguration'
 import { loggingConfigurationToPinoConfiguration } from './utils/Logging/Logging'
@@ -59,7 +61,19 @@ export async function app(localVars: any = {}) {
     },
   })
 
-  const frostAPI = await API(accountController)(configurationFrostAPI).start()
+  const archiveController = ArchiveController({
+    dependencies: {
+      logger: logger.child({ file: 'ArchiveController' }),
+      mainnetNode: PoetNode(configuration.poetUrl),
+      testnetNode: PoetNode(configuration.testPoetUrl),
+    },
+    configuration: {
+      poeContractAddress: configuration.poeContractAddress,
+      poeBalanceMinimum: configuration.poeBalanceMinimum,
+    },
+  })
+
+  const frostAPI = await API(accountController, archiveController)(configurationFrostAPI).start()
 
   await accountDao.createIndices()
 

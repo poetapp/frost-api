@@ -1,7 +1,9 @@
 import * as KoaRouter from 'koa-router'
 
 import { AccountController } from '../controllers/AccountController'
-import { authorization } from '../middlewares/authorization'
+import { ArchiveController } from '../controllers/ArchiveController'
+
+import { Authorization } from '../middlewares/authorization'
 import { isLoggedIn } from '../middlewares/isLoggedIn'
 import { monitor } from '../middlewares/monitor'
 import { requireEmailVerified } from '../middlewares/requireEmailVerified'
@@ -36,7 +38,9 @@ import { CreateWork, CreateWorkSchema } from './works/CreateWork'
 import { GetWork, GetWorkSchema } from './works/GetWork'
 import { GetWorks } from './works/GetWorks'
 
-export const routes = (accountController: AccountController) => (
+import { PostArchive } from './archives/PostArchive'
+
+export const routes = (accountController: AccountController, archiveController: ArchiveController) => (
   passwordComplexConfiguration: PasswordComplexConfiguration,
   sendEmailConfiguration: SendEmailConfiguration,
   poetUrl: string,
@@ -44,6 +48,7 @@ export const routes = (accountController: AccountController) => (
   testPoetUrl: string,
 ) => {
   const router = new KoaRouter()
+  const authorization = Authorization(accountController)
 
   router.use([Path.WORKS, Path.WORKS_WORKID], (ctx: any, next: any) => {
     ctx.set('Access-Control-Allow-Methods', 'POST,GET')
@@ -67,7 +72,7 @@ export const routes = (accountController: AccountController) => (
       Path.TOKENS,
       Path.TOKENS_TOKENID,
     ],
-    authorization(accountController),
+    authorization,
   )
 
   router.use([Path.WORKS, Path.WORKS_WORKID], requireEmailVerified())
@@ -94,13 +99,13 @@ export const routes = (accountController: AccountController) => (
   )
   router.patch(
     Path.ACCOUNTS_ID,
-    authorization(accountController),
+    authorization,
     validate(PatchAccountSchema),
     PatchAccount(accountController),
   )
   router.post(
     Path.ACCOUNTS_ID_POE_CHALLENGE,
-    authorization(accountController),
+    authorization,
     validate(PostAccountPoeChallengeSchema),
     PostAccountPoeChallenge(accountController),
   )
@@ -136,6 +141,12 @@ export const routes = (accountController: AccountController) => (
   )
   router.get(Path.WORKS_WORKID, validate({ params: GetWorkSchema }), GetWork(poetUrl, testPoetUrl))
   router.get(Path.WORKS, GetWorks(poetUrl, testPoetUrl))
+
+  router.post(
+    Path.ARCHIVES,
+    authorization,
+    PostArchive(archiveController),
+  )
 
   return router
 }
