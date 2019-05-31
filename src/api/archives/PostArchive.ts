@@ -11,7 +11,9 @@ export const PostArchive = (archiveController: ArchiveController) => async (ctx:
   if (!allowedTokens.includes(tokenData.data.meta.name))
     throw new IncorrectToken(tokenData.data.meta.name, allowedTokens)
 
-  const response = await archiveController.postArchive(user, req, tokenData.data.meta.network)
+  const contentLength = parseInt(req.headers['content-length'], 10)
+
+  const response = await archiveController.postArchive(user, req, tokenData.data.meta.network, contentLength)
 
   ctx.status = 200
   ctx.body = response

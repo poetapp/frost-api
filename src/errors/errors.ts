@@ -1,5 +1,7 @@
 // tslint:disable:max-classes-per-file
 
+import { byteLengthToHumanReadable } from '../helpers/byteSizes'
+
 export const errors = {
   AccountAlreadyExists: {
     code: 409,
@@ -127,5 +129,16 @@ export class PoeBalanceInsufficient extends Error {
 
   constructor(minimum: number, balance: number) {
     super(`Insufficient POE balance. You need at least ${minimum} POE. You currently have ${balance}.`)
+  }
+}
+
+export class FileTooBig extends Error {
+  status = 403
+
+  constructor(size: number, maxSize: number) {
+    super(
+      `File too big. Got ${byteLengthToHumanReadable(size)}. ` +
+      `Max is ${byteLengthToHumanReadable(maxSize)}.`,
+    )
   }
 }

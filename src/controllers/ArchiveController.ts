@@ -1,7 +1,7 @@
 import * as Pino from 'pino'
 
 import { PoetNode } from '../daos/PoetNodeDao'
-import { PoeAddressNotVerified, PoeBalanceInsufficient } from '../errors/errors'
+import { FileTooBig, PoeAddressNotVerified, PoeBalanceInsufficient } from '../errors/errors'
 import { fetchBalance } from '../helpers/ethereum'
 import { Network } from '../interfaces/Network'
 import { Account } from '../models/Account'
@@ -11,6 +11,7 @@ export interface ArchiveController {
     account: Account,
     archive: ReadableStream,
     network: Network,
+    fileSize: number,
   ) => Promise<any>
 }
 
@@ -28,6 +29,7 @@ interface Dependencies {
 interface Configuration {
   readonly poeContractAddress: string
   readonly poeBalanceMinimum: number
+  readonly maximumFileSizeInBytes: number
 }
 
 export const ArchiveController = ({
@@ -39,6 +41,7 @@ export const ArchiveController = ({
   configuration: {
     poeContractAddress,
     poeBalanceMinimum,
+    maximumFileSizeInBytes,
   },
 }: Arguments): ArchiveController => {
   logger.info({ poeContractAddress, poeBalanceMinimum }, 'ArchiveController Instantiated')
@@ -47,7 +50,10 @@ export const ArchiveController = ({
 
   const networkToNode = (network: Network) => network === Network.LIVE ? mainnetNode : testnetNode
 
-  const postArchive = async (account: Account, archive: ReadableStream, network: Network) => {
+  const postArchive = async (account: Account, archive: ReadableStream, network: Network, fileSize: number) => {
+    if (fileSize > maximumFileSizeInBytes)
+      throw new FileTooBig(fileSize, maximumFileSizeInBytes)
+
     const node = networkToNode(network)
 
     const { id: userId, email, poeAddress, poeAddressVerified } = account

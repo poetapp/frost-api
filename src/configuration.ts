@@ -1,3 +1,4 @@
+import { MiB } from './helpers/byteSizes'
 import { LoggingConfiguration } from './utils/Logging/Logging'
 
 export const defaultMongodbUrl = 'mongodb://localhost:27017/frost'
@@ -62,6 +63,7 @@ export interface Configuration
   readonly skipVault: boolean
   readonly poeContractAddress: string
   readonly poeBalanceMinimum: number
+  readonly maximumFileSizeInBytes: number
 }
 
 export const configuration: Configuration = {
@@ -111,4 +113,5 @@ export const configuration: Configuration = {
   loggingPretty: true,
   poeContractAddress: '0x0e0989b1f9b8a38983c2ba8053269ca62ec9b195',
   poeBalanceMinimum: 1000,
+  maximumFileSizeInBytes: MiB * 15,
 }

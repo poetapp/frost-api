@@ -70,6 +70,7 @@ export async function app(localVars: any = {}) {
     configuration: {
       poeContractAddress: configuration.poeContractAddress,
       poeBalanceMinimum: configuration.poeBalanceMinimum,
+      maximumFileSizeInBytes: configuration.maximumFileSizeInBytes,
     },
   })
 
