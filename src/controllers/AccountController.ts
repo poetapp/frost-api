@@ -14,6 +14,7 @@ import {
 } from '../errors/errors'
 import { tokenMatch } from '../helpers/token'
 import { uuid4 } from '../helpers/uuid'
+import { isJWTData, JWTData } from '../interfaces/JWTData'
 import { Network } from '../interfaces/Network'
 import { Account } from '../models/Account'
 import { processPassword, passwordMatches } from '../utils/Password'
@@ -84,9 +85,7 @@ export const AccountController = ({
 }: Arguments): AccountController => {
   const authorizeRequest = async (token: string) => {
     try {
-      const decoded = verify(token.replace('TEST_', ''), configuration.jwtSecret)
-      const { client_token, email } = decoded as any
-
+      const { client_token, email } = decodeJWT(token)
       const tokenData = await Vault.verifyToken(client_token)
       const account = await findByEmail(email)
       return { jwt: configuration.jwtSecret, tokenData, account }
@@ -271,6 +270,17 @@ export const AccountController = ({
     const { client_token } = tokenVault.auth
 
     return sign({ email, client_token, network }, configuration.jwtSecret)
+  }
+
+  const decodeJWT = (token: string): JWTData => {
+    const decoded: unknown = verify(token.replace('TEST_', ''), configuration.jwtSecret)
+
+    if (!isJWTData(decoded)) {
+      logger.error({ decoded }, 'Unrecognized JWT')
+      throw new Error(`Unrecognized JWT`)
+    }
+
+    return decoded
   }
 
   const poeAddressChallenge = async (issuer: string) => {
