@@ -1,8 +1,8 @@
 export interface PasswordComplexConfiguration {
-  min: number
-  max: number
-  lowerCase: number
-  upperCase: number
-  numeric: number
-  symbol: number
+  readonly min: number
+  readonly max: number
+  readonly lowerCase: number
+  readonly upperCase: number
+  readonly numeric: number
+  readonly symbol: number
 }

@@ -2,7 +2,6 @@ import * as Joi from 'joi'
 const PasswordComplexity = require('joi-password-complexity')
 
 import { PasswordComplexConfiguration } from '../api/PasswordComplexConfiguration'
-import { ComplexityOptions } from '../interfaces/ComplexityOptions'
 
 export const validatePassword = (password: string, passwordComplexity: PasswordComplexConfiguration) =>
   Joi.validate(password, new PasswordComplexity(passwordComplexity), (err: Joi.Err, value: string) => {
@@ -10,9 +9,9 @@ export const validatePassword = (password: string, passwordComplexity: PasswordC
     return value
   })
 
-const getTextErrorPassword = (options: ComplexityOptions) => `Password requirements: ${mapOptions(options)}.`
+const getTextErrorPassword = (options: PasswordComplexConfiguration) => `Password requirements: ${mapOptions(options)}.`
 
-const mapOptions = (options: ComplexityOptions) => Object
+const mapOptions = (options: PasswordComplexConfiguration) => Object
   .entries(options)
   .map(([key, value]) => `${key}: ${value}`)
   .join(', ')

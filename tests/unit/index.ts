@@ -1,7 +1,6 @@
 import '../../src/api/accounts/PatchAccount.test'
 import '../../src/api/health/GetHealth.test'
 import '../../src/api/tokens/CreateToken.test'
-import '../../src/decorators/injectDao/injectDao.test'
 import '../../src/emails/forgotPassword.test'
 import '../../src/emails/verify.test'
 import '../../src/extensions/Error.test'
