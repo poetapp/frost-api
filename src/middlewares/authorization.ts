@@ -11,13 +11,12 @@ export const Authorization = (accountController: AccountController) => async (ct
 
   const token = extractToken(ctx)
 
-  const { account, tokenData, jwt } = await accountController.authorizeRequest(token)
+  const { account, tokenData } = await accountController.authorizeRequest(token)
 
   if (!account) return (ctx.status = 404)
 
   ctx.state.tokenData = tokenData
   ctx.state.user = account
-  ctx.state.jwtSecret = jwt
 
   return next()
 }

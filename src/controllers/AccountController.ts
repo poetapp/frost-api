@@ -7,9 +7,14 @@ import { getApiKeyByNetwork, getTokenByNetwork } from '../api/tokens/CreateToken
 import { AccountDao } from '../daos/AccountDao'
 import {
   AccountAlreadyExists,
-  AccountNotFound, AuthenticationFailed, BadToken, EmailAlreadyVerified,
+  AccountNotFound,
+  AuthenticationFailed,
+  BadToken,
+  EmailAlreadyVerified,
   IncorrectOldPassword,
-  IncorrectToken, InvalidToken,
+  IncorrectToken,
+  InvalidToken,
+  ResourceNotFound,
   Unauthorized,
 } from '../errors/errors'
 import { tokenMatch } from '../helpers/token'
@@ -17,7 +22,7 @@ import { uuid4 } from '../helpers/uuid'
 import { isJWTData, JWTData } from '../interfaces/JWTData'
 import { Network } from '../interfaces/Network'
 import { Account } from '../models/Account'
-import { processPassword, passwordMatches } from '../utils/Password'
+import { passwordMatches, processPassword } from '../utils/Password'
 import { SendEmailTo } from '../utils/SendEmail'
 import { Vault } from '../utils/Vault/Vault'
 
@@ -33,7 +38,7 @@ interface Authentication {
 }
 
 export interface AccountController {
-  readonly authorizeRequest: (token: string) => Promise<{ account: Account, tokenData: any, jwt: any }>
+  readonly authorizeRequest: (token: string) => Promise<{ account: Account, tokenData: any }>
   readonly create: (e: EmailPassword) => Promise<Authentication>
   readonly login: (e: EmailPassword) => Promise<Authentication>
   readonly findByIssuer: (issuer: string) => Promise<Account>
@@ -55,6 +60,7 @@ export interface AccountController {
     newPassword: string,
   ) => Promise<string>
   readonly addToken: (issuer: string, email: string, network: Network) => Promise<string>
+  readonly removeToken: (user: Account, tokenId: string) => Promise<void>
   readonly poeAddressChallenge: (issuer: string) => Promise<string>
 }
 
@@ -88,7 +94,7 @@ export const AccountController = ({
       const { client_token, email } = decodeJWT(token)
       const tokenData = await Vault.verifyToken(client_token)
       const account = await findByEmail(email)
-      return { jwt: configuration.jwtSecret, tokenData, account }
+      return { tokenData, account }
     } catch (error) {
       logger.error({ error }, 'Authorization Error')
 
@@ -265,6 +271,39 @@ export const AccountController = ({
     return testOrMainApiToken
   }
 
+  const removeToken = async (account: Account, token: string) => {
+    const decryptApiTokens = async (tokens: ReadonlyArray<string>) => {
+      const allTokens = tokens.map(Vault.decrypt, Vault)
+      return Promise.all(allTokens)
+    }
+
+    const encryptApiTokens = async (tokens: ReadonlyArray<string>) => {
+      const allTokens = tokens.map(Vault.encrypt, Vault)
+      return Promise.all(allTokens)
+    }
+
+    const { client_token, network } = decodeJWT(token)
+
+    const encryptedTokenObjects = network === Network.LIVE ? account.apiTokens : account.testApiTokens
+    const encryptedTokens = encryptedTokenObjects.map(({ token }) => token)
+    const tokens = await decryptApiTokens(encryptedTokens)
+
+    if (!tokens.find(_ => _ === token))
+      throw new ResourceNotFound()
+
+    await Vault.revokeToken(client_token)
+
+    const filteredTokens = tokens.filter((token: string) => token !== token)
+    const encryptedFilteredTokens = await encryptApiTokens(filteredTokens)
+    const encryptedFilteredTokensObjects = encryptedFilteredTokens.map(token => ({ token }))
+
+    const update = network === Network.LIVE
+      ? { apiTokens: encryptedFilteredTokensObjects }
+      : { testApiTokens: encryptedFilteredTokensObjects }
+
+    await updateByIssuer(account.issuer, update)
+  }
+
   const getToken = async (email: string, options: TokenOptions, network?: Network) => {
     const tokenVault = await Vault.createToken(options)
     const { client_token } = tokenVault.auth
@@ -303,6 +342,7 @@ export const AccountController = ({
     changePassword,
     changePasswordWithToken,
     addToken,
+    removeToken,
     poeAddressChallenge,
   }
 }

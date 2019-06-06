@@ -83,6 +83,11 @@ export class AccountAlreadyExists extends Error {
   message = errors.AccountAlreadyExists.message
 }
 
+export class ResourceNotFound {
+  status = 404
+  message = 'The specified resource does not exist.'
+}
+
 export class IncorrectOldPassword extends Error {
   status = 403
   message = 'Incorrect Old Password.'
