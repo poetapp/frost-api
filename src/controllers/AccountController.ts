@@ -293,7 +293,7 @@ export const AccountController = ({
 
     await Vault.revokeToken(client_token)
 
-    const filteredTokens = tokens.filter((token: string) => token !== token)
+    const filteredTokens = tokens.filter(_ => _ !== token)
     const encryptedFilteredTokens = await encryptApiTokens(filteredTokens)
     const encryptedFilteredTokensObjects = encryptedFilteredTokens.map(token => ({ token }))
 
