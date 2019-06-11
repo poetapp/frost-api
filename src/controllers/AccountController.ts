@@ -43,7 +43,7 @@ export interface AccountController {
   readonly login: (e: EmailPassword) => Promise<Authentication>
   readonly findByIssuer: (issuer: string) => Promise<Account>
   readonly findByEmail: (email: string) => Promise<Account>
-  readonly sendAccountVerificationEmail: (email: string) => Promise<void>
+  readonly sendAccountVerificationEmail: (id: string, email: string) => Promise<void>
   readonly verifyAccount: (account: Account, tokenData: TokenOptions) => Promise<Authentication>
   readonly sendPasswordResetEmail: (email: string) => Promise<void>
   readonly updateByIssuer: (issuer: string, updates: Partial<Account>) => Promise<void>
@@ -55,11 +55,11 @@ export interface AccountController {
   ) => Promise<void>
   readonly changePasswordWithToken: (
     tokenData: TokenOptions,
-    issuer: string,
+    id: string,
     email: string,
     newPassword: string,
   ) => Promise<string>
-  readonly addToken: (issuer: string, email: string, network: Network) => Promise<string>
+  readonly addToken: (id: string, network: Network) => Promise<string>
   readonly removeToken: (user: Account, tokenId: string) => Promise<void>
   readonly poeAddressChallenge: (issuer: string) => Promise<string>
 }
@@ -91,9 +91,12 @@ export const AccountController = ({
 }: Arguments): AccountController => {
   const authorizeRequest = async (token: string) => {
     try {
-      const { client_token, email } = decodeJWT(token)
+      const { client_token, accountId, email } = decodeJWT(token)
       const tokenData = await Vault.verifyToken(client_token)
-      const account = await findByEmail(email)
+      const query = accountId
+        ? { id: accountId }
+        : { email }
+      const account = await accountDao.findOne(query)
       return { tokenData, account }
     } catch (error) {
       logger.error({ error }, 'Authorization Error')
@@ -126,7 +129,7 @@ export const AccountController = ({
     const id = await getUnusedId()
     const { privateKey, publicKey } = generateED25519Base58Keys()
     const encryptedPrivateKey = await Vault.encrypt(privateKey)
-    const apiToken = await getToken(email, Token.TestApiKey, Network.TEST)
+    const apiToken = await createJWT({ accountId: id, network: Network.TEST }, Token.TestApiKey)
     const encryptedToken = await Vault.encrypt(`TEST_${apiToken}`)
     const issuer = createIssuerFromPrivateKey(privateKey)
     const hashedPassword = await processPassword(password, configuration.pwnedCheckerRoot)
@@ -147,9 +150,9 @@ export const AccountController = ({
 
     await accountDao.insertOne(account)
 
-    const tokenVerifiedAccount = await getToken(email, Token.VerifyAccount)
+    const tokenVerifiedAccount = await createJWT({ accountId: id }, Token.VerifyAccount)
     await sendEmail(email).sendVerified(tokenVerifiedAccount)
-    const token = await getToken(email, Token.Login)
+    const token = await createJWT({ accountId: id }, Token.Login)
     return {
       id,
       issuer,
@@ -170,9 +173,9 @@ export const AccountController = ({
       throw new AccountNotFound()
     }
 
-    const token = await getToken(email, Token.Login)
-
     const { id, issuer } = account
+
+    const token = await createJWT({ accountId: id }, Token.Login)
 
     return {
       id,
@@ -181,8 +184,8 @@ export const AccountController = ({
     }
   }
 
-  const sendAccountVerificationEmail = async (email: string) => {
-    const token = await getToken(email, Token.VerifyAccount)
+  const sendAccountVerificationEmail = async (accountId: string, email: string) => {
+    const token = await createJWT({ accountId }, Token.VerifyAccount)
     await sendEmail(email).sendVerified(token)
   }
 
@@ -195,9 +198,9 @@ export const AccountController = ({
       throw new Unauthorized()
     }
 
-    await updateByIssuer(account.issuer, { verified: true })
+    await accountDao.updateOne({ id: account.id }, { verified: true })
 
-    const token = await getToken(account.email, Token.Login)
+    const token = await createJWT({ accountId: account.id }, Token.Login)
 
     const { id, issuer } = account
 
@@ -209,12 +212,12 @@ export const AccountController = ({
   }
 
   const sendPasswordResetEmail = async (email: string) => {
-    const user = await findByEmail(email)
+    const account = await findByEmail(email)
 
-    if (!user)
+    if (!account)
       throw new AccountNotFound()
 
-    const token = await getToken(email, Token.ForgotPassword)
+    const token = await createJWT({ accountId: account.id }, Token.ForgotPassword)
     await sendEmail(email).sendForgotPassword(token)
   }
 
@@ -228,21 +231,21 @@ export const AccountController = ({
     return !account ? id : getUnusedId()
   }
 
-  const changePassword = async (tokenData: TokenOptions, user: Account, password: string, oldPassword: string) => {
+  const changePassword = async (tokenData: TokenOptions, account: Account, password: string, oldPassword: string) => {
     if (tokenData.meta.name !== Token.Login.meta.name)
       throw new IncorrectToken(tokenData.meta.name, Token.Login.meta.name)
 
-    if (!await passwordMatches(oldPassword, user.password))
+    if (!await passwordMatches(oldPassword, account.password))
       throw new IncorrectOldPassword()
 
     const newPassword = await processPassword(password, configuration.pwnedCheckerRoot)
 
-    await updateByIssuer(user.issuer, { password: newPassword })
+    await accountDao.updateOne({ id: account.id }, { password: newPassword })
   }
 
   const changePasswordWithToken = async (
     tokenData: TokenOptions,
-    issuer: string,
+    id: string,
     email: string,
     newPassword: string,
   ) => {
@@ -253,21 +256,21 @@ export const AccountController = ({
 
     const password = await processPassword(newPassword, configuration.pwnedCheckerRoot)
 
-    await accountDao.updateOne({ issuer }, { password })
+    await accountDao.updateOne({ id }, { password })
 
     logger.trace({ tokenData }, 'changePasswordWithToken')
 
     await Vault.revokeToken(tokenData.id)
 
     await sendEmail(email).changePassword()
-    return getToken(email, Token.Login)
+    return createJWT({ accountId: id }, Token.Login)
   }
 
-  const addToken = async (issuer: string, email: string, network: Network) => {
-    const apiToken = await getToken(email, getApiKeyByNetwork(network), network)
+  const addToken = async (accountId: string, network: Network) => {
+    const apiToken = await createJWT({ accountId, network }, getApiKeyByNetwork(network))
     const testOrMainApiToken = getTokenByNetwork(network, apiToken)
     const apiTokenEncrypted = await Vault.encrypt(testOrMainApiToken)
-    await accountDao.insertToken({ issuer }, network, apiTokenEncrypted)
+    await accountDao.insertToken({ id: accountId }, network, apiTokenEncrypted)
     return testOrMainApiToken
   }
 
@@ -301,14 +304,14 @@ export const AccountController = ({
       ? { apiTokens: encryptedFilteredTokensObjects }
       : { testApiTokens: encryptedFilteredTokensObjects }
 
-    await updateByIssuer(account.issuer, update)
+    await accountDao.updateOne({ id: account.id }, update)
   }
 
-  const getToken = async (email: string, options: TokenOptions, network?: Network) => {
+  const createJWT = async (jwtData: JWTData, options: TokenOptions) => {
     const tokenVault = await Vault.createToken(options)
     const { client_token } = tokenVault.auth
 
-    return sign({ email, client_token, network }, configuration.jwtSecret)
+    return sign({ ...jwtData, client_token }, configuration.jwtSecret)
   }
 
   const decodeJWT = (token: string): JWTData => {

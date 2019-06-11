@@ -20,7 +20,6 @@ export const CreateToken = (
   maxApiTokens: number,
   accountController: AccountController,
 ) => async (ctx: any, next: any): Promise<any> => {
-  const logger = ctx.logger(__dirname)
   const tooManyApiTokens = lte(maxApiTokens)
   const { MaximumApiTokensLimitReached } = errors
 
@@ -32,9 +31,8 @@ export const CreateToken = (
     ctx.body = MaximumApiTokensLimitReached.message
     return
   }
-  const { issuer, email } = user
 
-  const testOrMainApiToken = await accountController.addToken(issuer, email, network)
+  const testOrMainApiToken = await accountController.addToken(user.id, network)
 
   ctx.body = {
     apiToken: testOrMainApiToken,

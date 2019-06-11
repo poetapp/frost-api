@@ -11,12 +11,10 @@ export const PasswordChangeTokenSchema = (
 export const PasswordChangeToken = (
   accountController: AccountController,
 ) => async (ctx: any, next: any): Promise<any> => {
-  const logger = ctx.logger(__dirname)
-
-  const { user: { issuer, email }, tokenData } = ctx.state
+  const { user: { id, email }, tokenData } = ctx.state
   const { password } = ctx.request.body
 
-  const token = await accountController.changePasswordWithToken(tokenData.data, issuer, email, password)
+  const token = await accountController.changePasswordWithToken(tokenData.data, id, email, password)
 
   ctx.body = { token }
   ctx.status = 200
