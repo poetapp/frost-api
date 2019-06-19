@@ -29,9 +29,9 @@ export class WorksController {
     this.logger = createLogger(__dirname)
   }
 
-  async generateClaim(issuer: string, privateKey: string, work: WorkAttributes) {
+  async generateClaim(issuer: string, privateKey: string, work: WorkAttributes, context: any) {
     const createAndSignClaim = pipeP(
-      configureCreateVerifiableClaim({ issuer, context: legacyContext }),
+      configureCreateVerifiableClaim({ issuer, context: { ...legacyContext, ...context} }),
       getVerifiableClaimSigner().configureSignVerifiableClaim({ privateKey }),
     )
     const { archiveUrl, hash } = (await this.uploadContent(work.content))[0]

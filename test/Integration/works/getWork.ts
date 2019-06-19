@@ -39,6 +39,26 @@ describe('Works', async function() {
         const user = await createUserVerified(mail, frost)
         const { token } = user
         const { apiToken } = await frost.createApiToken(token, Network.LIVE)
+        const { workId } = await frost.createWork(apiToken, createWork())
+        const work = await frost.getWork(apiToken, workId)
+        expect(work).to.have.all.keys(
+          'name',
+          'datePublished',
+          'dateCreated',
+          'author',
+          'tags',
+          'hash',
+          'archiveUrl',
+          )
+        expect(work).to.not.have.key('content')
+        expect(work.author).to.eql(createWork().author)
+      })
+    })
+    describe('When a newly created work with content has been successfully created', function() {
+      it.skip('Should be able to download the archiveUrl', async function() {
+        const user = await createUserVerified(mail, frost)
+        const { token } = user
+        const { apiToken } = await frost.createApiToken(token, Network.LIVE)
         const { content } = createWork()
         const { workId } = await frost.createWork(apiToken, createWork())
         const work = await frost.getWork(apiToken, workId)
@@ -57,7 +77,6 @@ describe('Works', async function() {
         expect(work.hash).to.eq('QmRf22bZar3WKmojipms22PkXH1MZGmvsqzQtuSvQE3uhm')
       })
     })
-
     describe('When a newly createrd work with an archiveUrl and a hash has been successfully created', function() {
       it('Should return the work with the provided hash and archiveUrl', async function() {
         const user = await createUserVerified(mail, frost)

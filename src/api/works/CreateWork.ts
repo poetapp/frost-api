@@ -6,6 +6,10 @@ import { WorksController } from '../../modules/Works/Works.controller'
 import { Vault } from '../../utils/Vault/Vault'
 
 export const CreateWorkSchema = () => ({
+  '@context': Joi.alternatives(
+    Joi.string(),
+    Joi.object(),
+  ).optional(),
   name: Joi.string().required(),
   datePublished: Joi.string()
     .required()
@@ -29,12 +33,15 @@ export const CreateWork = (poetUrl: string, testPoetUrl: string) => async (ctx: 
     const { user, tokenData } = ctx.state
     const { WorkError } = errors
 
-    const newWork = ctx.request.body
+    const { '@context': context = {}, ...newWork } = ctx.request.body
+
+    logger.info({ context, newWork }, 'Creating Work')
+
     const privateKey = await Vault.decrypt(user.privateKey)
     const nodeNetwork = isLiveNetwork(tokenData.data.meta.network) ? poetUrl : testPoetUrl
 
     const work = new WorksController(ctx.logger, nodeNetwork)
-    const claim = await work.generateClaim(user.issuer, privateKey, newWork)
+    const claim = await work.generateClaim(user.issuer, privateKey, newWork, context)
 
     try {
       await work.create(claim)
