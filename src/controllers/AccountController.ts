@@ -137,6 +137,7 @@ export const AccountController = ({
     const account: Account = {
       id,
       email,
+      emailPublic: false,
       password: hashedPassword,
       privateKey: encryptedPrivateKey,
       publicKey,

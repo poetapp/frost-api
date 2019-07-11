@@ -13,6 +13,7 @@ export const GetAccountSchema: ValidateParams = {
 export const GetAccount = (accountController: AccountController) => async (ctx: any, next: any): Promise<any> => {
   const logger = ctx.logger(__dirname)
   const { issuer } = ctx.params
+  const { user } = ctx.state
 
   logger.info({ issuer }, 'GetAccount')
 
@@ -21,6 +22,19 @@ export const GetAccount = (accountController: AccountController) => async (ctx: 
   if (!response)
     throw new AccountNotFound()
 
-  const { id, email, createdAt, name, bio, ethereumAddress, poeAddress, poeAddressVerified } = response
-  ctx.body = { id, email, createdAt, name, bio, ethereumAddress, poeAddress, poeAddressVerified }
+  const { id, email, emailPublic, createdAt, name, bio, ethereumAddress, poeAddress, poeAddressVerified } = response
+
+  const isAccountOwner = user && user.issuer === issuer
+  const alwaysPublicFields = { id, createdAt, name, bio, ethereumAddress, poeAddressVerified }
+  const alwaysPrivateFields = { poeAddress }
+
+  ctx.body = {
+    ...alwaysPublicFields,
+    ...(isAccountOwner ? {
+      ...alwaysPrivateFields,
+      email,
+    } : {
+      ...(emailPublic && { email }),
+    }),
+  }
 }

@@ -12,6 +12,7 @@ export const PatchAccountSchema: ValidateParams = {
   }),
   body: () => ({
     email: Joi.string().optional(),
+    emailPublic: Joi.boolean().optional(),
     name: Joi.string().allow('').optional(),
     bio: Joi.string().allow('').optional(),
     ethereumAddress: Joi.string().allow('').optional(),

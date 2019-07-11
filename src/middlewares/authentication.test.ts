@@ -1,5 +1,5 @@
 import { describe } from 'riteway'
-import { extractToken } from './authorization'
+import { extractToken } from './authentication'
 
 describe('extractToken()', async (assert: any) => {
   {

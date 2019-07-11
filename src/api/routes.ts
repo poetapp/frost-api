@@ -3,6 +3,7 @@ import * as KoaRouter from 'koa-router'
 import { AccountController } from '../controllers/AccountController'
 import { ArchiveController } from '../controllers/ArchiveController'
 
+import { Authentication } from '../middlewares/authentication'
 import { Authorization } from '../middlewares/authorization'
 import { isLoggedIn } from '../middlewares/isLoggedIn'
 import { monitor } from '../middlewares/monitor'
@@ -48,7 +49,8 @@ export const routes = (accountController: AccountController, archiveController: 
   testPoetUrl: string,
 ) => {
   const router = new KoaRouter()
-  const authorization = Authorization(accountController)
+  const authentication = Authentication(accountController)
+  const authorization = Authorization()
 
   router.use([Path.WORKS, Path.WORKS_WORKID], (ctx: any, next: any) => {
     ctx.set('Access-Control-Allow-Methods', 'POST,GET')
@@ -72,6 +74,7 @@ export const routes = (accountController: AccountController, archiveController: 
       Path.TOKENS,
       Path.TOKENS_TOKENID,
     ],
+    authentication,
     authorization,
   )
 
@@ -95,6 +98,7 @@ export const routes = (accountController: AccountController, archiveController: 
   router.get(
     Path.ACCOUNTS_ID,
     validate(GetAccountSchema),
+    authentication,
     GetAccount(accountController),
   )
   router.patch(

@@ -1,6 +1,7 @@
 export interface Account {
   readonly id?: string
   readonly email: string
+  readonly emailPublic: boolean
   readonly password: string
   readonly verified: boolean
   readonly privateKey: string

@@ -8,6 +8,7 @@ import { isPoeAddressVerified } from './PatchAccount'
 const account: Account = {
   issuer: '',
   email: '',
+  emailPublic: false,
   password: '',
   verified: true,
   privateKey: '',
