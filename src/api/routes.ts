@@ -93,6 +93,7 @@ export const routes = (accountController: AccountController, archiveController: 
   router.get(
     Path.ACCOUNTS,
     validate(FindAccountSchema),
+    authentication,
     FindAccount(accountController),
   )
   router.get(

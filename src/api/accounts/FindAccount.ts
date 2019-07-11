@@ -15,6 +15,7 @@ export const FindAccount = (
 ) => async (ctx: any, next: any): Promise<any> => {
   const logger = ctx.logger(__dirname)
   const { issuer } = ctx.query
+  const { user } = ctx.state
 
   logger.info({ issuer }, 'FindAccount')
 
@@ -23,6 +24,21 @@ export const FindAccount = (
   if (!response)
     throw new AccountNotFound()
 
-  const { id, email, createdAt, name, bio, ethereumAddress } = response
-  ctx.body = { id, email, createdAt, name, bio, ethereumAddress }
+  const {
+    id, email, verified, emailPublic, createdAt, name, bio, ethereumAddress, poeAddress, poeAddressVerified,
+  } = response
+
+  const isAccountOwner = user && user.issuer === issuer
+  const alwaysPublicFields = { id, createdAt, name, bio, ethereumAddress, poeAddressVerified }
+  const alwaysPrivateFields = { poeAddress, verified }
+
+  ctx.body = {
+    ...alwaysPublicFields,
+    ...(isAccountOwner ? {
+      ...alwaysPrivateFields,
+      email,
+    } : {
+      ...(emailPublic && { email }),
+    }),
+  }
 }

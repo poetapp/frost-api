@@ -22,11 +22,13 @@ export const GetAccount = (accountController: AccountController) => async (ctx: 
   if (!response)
     throw new AccountNotFound()
 
-  const { id, email, emailPublic, createdAt, name, bio, ethereumAddress, poeAddress, poeAddressVerified } = response
+  const {
+    id, email, verified, emailPublic, createdAt, name, bio, ethereumAddress, poeAddress, poeAddressVerified,
+  } = response
 
   const isAccountOwner = user && user.issuer === issuer
   const alwaysPublicFields = { id, createdAt, name, bio, ethereumAddress, poeAddressVerified }
-  const alwaysPrivateFields = { poeAddress }
+  const alwaysPrivateFields = { poeAddress, verified }
 
   ctx.body = {
     ...alwaysPublicFields,
