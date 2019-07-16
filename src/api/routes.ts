@@ -104,12 +104,14 @@ export const routes = (accountController: AccountController, archiveController: 
   )
   router.patch(
     Path.ACCOUNTS_ID,
+    authentication,
     authorization,
     validate(PatchAccountSchema),
     PatchAccount(accountController),
   )
   router.post(
     Path.ACCOUNTS_ID_POE_CHALLENGE,
+    authentication,
     authorization,
     validate(PostAccountPoeChallengeSchema),
     PostAccountPoeChallenge(accountController),
@@ -149,6 +151,7 @@ export const routes = (accountController: AccountController, archiveController: 
 
   router.post(
     Path.ARCHIVES,
+    authentication,
     authorization,
     PostArchive(archiveController),
   )
