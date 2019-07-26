@@ -63,10 +63,10 @@ export const ArchiveController = ({
     if (!poeAddressVerified)
       throw new PoeAddressNotVerified()
 
-    const poeBalance = await fetchPoeBalance(poeAddress)
-
-    if (poeBalance < poeBalanceMinimum)
-      throw new PoeBalanceInsufficient(poeBalanceMinimum, poeBalance)
+    // const poeBalance = await fetchPoeBalance(poeAddress)
+    //
+    // if (poeBalance < poeBalanceMinimum)
+    //   throw new PoeBalanceInsufficient(poeBalanceMinimum, poeBalance)
 
     return node.postArchive(archive)
   }
