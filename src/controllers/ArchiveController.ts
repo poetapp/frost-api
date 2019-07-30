@@ -2,7 +2,7 @@ import * as Pino from 'pino'
 
 import { PoetNode } from '../daos/PoetNodeDao'
 import { FileTooBig, PoeAddressNotVerified, PoeBalanceInsufficient } from '../errors/errors'
-import { fetchBalance } from '../helpers/ethereum'
+import { Erc20 } from '../helpers/Erc20'
 import { Network } from '../interfaces/Network'
 import { Account } from '../models/Account'
 
@@ -27,6 +27,8 @@ interface Dependencies {
 }
 
 interface Configuration {
+  readonly ethereumUrl: string
+  readonly poeContractDecimals: number
   readonly poeContractAddress: string
   readonly poeBalanceMinimum: number
   readonly maximumFileSizeInBytes: number
@@ -39,6 +41,8 @@ export const ArchiveController = ({
     testnetNode,
   },
   configuration: {
+    ethereumUrl,
+    poeContractDecimals,
     poeContractAddress,
     poeBalanceMinimum,
     maximumFileSizeInBytes,
@@ -46,7 +50,7 @@ export const ArchiveController = ({
 }: Arguments): ArchiveController => {
   logger.info({ poeContractAddress, poeBalanceMinimum }, 'ArchiveController Instantiated')
 
-  const fetchPoeBalance = fetchBalance(poeContractAddress)
+  const poeContract = Erc20({ ethereumUrl, contractAddress: poeContractAddress })
 
   const networkToNode = (network: Network) => network === Network.LIVE ? mainnetNode : testnetNode
 
@@ -63,10 +67,12 @@ export const ArchiveController = ({
     if (!poeAddressVerified)
       throw new PoeAddressNotVerified()
 
-    // const poeBalance = await fetchPoeBalance(poeAddress)
-    //
-    // if (poeBalance < poeBalanceMinimum)
-    //   throw new PoeBalanceInsufficient(poeBalanceMinimum, poeBalance)
+    const poeBalance = await poeContract.getBalance(poeAddress)
+
+    const poeBalanceWithDecimals = poeBalance / Math.pow(10, poeContractDecimals)
+
+    if (poeBalanceWithDecimals < poeBalanceMinimum)
+      throw new PoeBalanceInsufficient(poeBalanceMinimum, poeBalanceWithDecimals)
 
     return node.postArchive(archive)
   }

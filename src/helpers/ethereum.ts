@@ -1,5 +1,4 @@
 import { bufferToHex, ecrecover, fromRpcSig, hashPersonalMessage, publicToAddress } from 'ethereumjs-util'
-import fetch from 'node-fetch'
 
 export function signatureIsValid(address: string, message: string, signature: string): boolean {
   if (!address || !signature)
@@ -28,7 +27,3 @@ export function signatureIsValid(address: string, message: string, signature: st
       throw exception
   }
 }
-
-export const fetchBalance = (contractAddress: string) => (accountAddress: string) =>
-  fetch(`https://api.tokenbalance.com/balance/${contractAddress}/${accountAddress}`)
-    .then(_ => _.json())

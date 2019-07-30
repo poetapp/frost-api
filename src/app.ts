@@ -68,6 +68,8 @@ export async function app(localVars: any = {}) {
       testnetNode: PoetNode(configuration.testPoetUrl),
     },
     configuration: {
+      ethereumUrl: configuration.ethereumUrl,
+      poeContractDecimals: configuration.poeContractDecimals,
       poeContractAddress: configuration.poeContractAddress,
       poeBalanceMinimum: configuration.poeBalanceMinimum,
       maximumFileSizeInBytes: configuration.maximumFileSizeInBytes,

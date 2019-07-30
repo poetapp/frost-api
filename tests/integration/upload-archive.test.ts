@@ -233,29 +233,29 @@ describe('Try to upload an archive with Proof of POE but without POE balance', a
 
   const fileStream = createReadStream(__filename)
 
-  // const uploadArchiveOptions = {
-  //   method: 'post',
-  //   headers: {
-  //     token: apiKey,
-  //   },
-  //   body: fileStream,
-  // }
+  const uploadArchiveOptions = {
+    method: 'post',
+    headers: {
+      token: apiKey,
+    },
+    body: fileStream,
+  }
 
-  // const uploadResponse = await fetch(`${FROST_URL}${Path.ARCHIVES}`, uploadArchiveOptions)
-  //
-  // assert({
-  //   given: `valid input and a "${uploadArchiveOptions.method}" request to ${Path.ARCHIVES}`,
-  //   should: 'fail',
-  //   actual: uploadResponse.ok,
-  //   expected: false,
-  // })
-  //
-  // assert({
-  //   given: `valid input and a "${uploadArchiveOptions.method}" request to ${Path.ARCHIVES}`,
-  //   should: 'fail',
-  //   actual: await uploadResponse.text(),
-  //   expected: 'Insufficient POE balance. You need at least 1000 POE. You currently have 0.',
-  // })
+  const uploadResponse = await fetch(`${FROST_URL}${Path.ARCHIVES}`, uploadArchiveOptions)
+
+  assert({
+    given: `valid input and a "${uploadArchiveOptions.method}" request to ${Path.ARCHIVES}`,
+    should: 'fail',
+    actual: uploadResponse.ok,
+    expected: false,
+  })
+
+  assert({
+    given: `valid input and a "${uploadArchiveOptions.method}" request to ${Path.ARCHIVES}`,
+    should: 'fail',
+    actual: await uploadResponse.text(),
+    expected: 'Insufficient POE balance. You need at least 1000 POE. You currently have 0.',
+  })
 
   await server.stop()
   await db.teardown()

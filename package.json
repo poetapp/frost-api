@@ -83,7 +83,8 @@
     "ramda": "0.26.1",
     "secure-password": "3.1.0",
     "string-to-stream": "1.1.1",
-    "uuid": "3.3.2"
+    "uuid": "3.3.2",
+    "web3": "1.2.0"
   },
   "devDependencies": {
     "@po.et/frost-client": "2.1.0",

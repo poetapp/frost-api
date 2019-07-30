@@ -61,6 +61,8 @@ export interface Configuration
   readonly transactionalMandrill: string
   readonly jwt: string
   readonly skipVault: boolean
+  readonly ethereumUrl: string
+  readonly poeContractDecimals: number
   readonly poeContractAddress: string
   readonly poeBalanceMinimum: number
   readonly maximumFileSizeInBytes: number
@@ -111,7 +113,9 @@ export const configuration: Configuration = {
   maildevIgnoreTLS: true,
   loggingLevel: 'info',
   loggingPretty: true,
+  ethereumUrl: 'https://mainnet.infura.io/',
   poeContractAddress: '0x0e0989b1f9b8a38983c2ba8053269ca62ec9b195',
+  poeContractDecimals: 8,
   poeBalanceMinimum: 1000,
   maximumFileSizeInBytes: MiB * 15,
 }
