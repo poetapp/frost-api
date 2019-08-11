@@ -15,6 +15,13 @@ const legacyContext = {
   content: 'schema:text',
 }
 
+const aboutContext = {
+  about: {
+    '@id': 'schema:url',
+    '@container': '@list',
+  },
+}
+
 export interface WorkAttributes {
   readonly [key: string]: string
 }
@@ -31,12 +38,12 @@ export class WorksController {
 
   async generateClaim(issuer: string, privateKey: string, work: WorkAttributes, context: any) {
     const createAndSignClaim = pipeP(
-      configureCreateVerifiableClaim({ issuer, context: { ...legacyContext, ...context} }),
+      configureCreateVerifiableClaim({ issuer, context: { ...legacyContext, ...context, ...aboutContext} }),
       getVerifiableClaimSigner().configureSignVerifiableClaim({ privateKey }),
     )
     const { archiveUrl, hash } = (await this.uploadContent(work.content))[0]
     const newWork = omit(['content'], work)
-    return createAndSignClaim({ archiveUrl, hash, ...newWork })
+    return createAndSignClaim({ about: [ archiveUrl ], hash, ...newWork })
   }
 
   async create(workAttributes: any) {

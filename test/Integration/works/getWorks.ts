@@ -44,7 +44,7 @@ describe('Works', async function() {
     })
 
     describe('When there are 2 works with content', function() {
-      it('Should return 2 works with the hash and archiveUrl', async function() {
+      it('Should return 2 works with the hash and about', async function() {
         const user = await createUserVerified(mail, frost)
         const { token } = user
         const { apiToken } = await frost.createApiToken(token, Network.LIVE)
@@ -60,7 +60,7 @@ describe('Works', async function() {
           'author',
           'tags',
           'hash',
-          'archiveUrl',
+          'about',
           )
         expect(works[1]).to.have.all.keys(
           'name',
@@ -69,7 +69,7 @@ describe('Works', async function() {
           'author',
           'tags',
           'hash',
-          'archiveUrl',
+          'about',
         )
       })
     })
@@ -96,7 +96,7 @@ describe('Works', async function() {
     })
 
     describe('When there are 2 works with content', function() {
-      it('Should return 2 works with hash and archiveUrl', async function() {
+      it('Should return 2 works with hash and about', async function() {
         const user = await createUserVerified(mail, frost)
         const { token } = user
         const { apiToken } = await frost.createApiToken(token, Network.TEST)
@@ -112,7 +112,7 @@ describe('Works', async function() {
           'author',
           'tags',
           'hash',
-          'archiveUrl',
+          'about',
         )
         expect(works[1]).to.have.all.keys(
           'name',
@@ -121,7 +121,7 @@ describe('Works', async function() {
           'author',
           'tags',
           'hash',
-          'archiveUrl',
+          'about',
         )
       })
     })
