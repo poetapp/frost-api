@@ -93,7 +93,7 @@ services:
       - "1025:25"
 
   poet-node:
-    image: "poetapp/node:v2.18.4"
+    image: "poetapp/node:v2.21.1"
     ports:
       - "18080:18080"
     environment:
@@ -107,14 +107,14 @@ services:
       - BITCOIN_URL=bitcoind-1
       - INTEGRATION_TEST_NODE_URL=http://poet-node:18080
     volumes:
-      - ./Docker/tools/wait-for-it.bash:/wait-for-it.sh
+      - ./Docker/tools/wait-for-it.sh:/wait-for-it.sh
     depends_on:
       - mongo
       - rabbit
       - ipfs
       - bitcoind-1
-    command: sh -c '/wait-for-it.sh mongo:27017 -- /wait-for-it.sh rabbit:5672 -t 30 -- npm start'
-
+    command: ["-c", "/wait-for-it.sh mongo:27017 && /wait-for-it.sh rabbit:5672 && npm start"]
+    entrypoint: ["/bin/sh"]
 
   frost-api:
     image: frost_api
