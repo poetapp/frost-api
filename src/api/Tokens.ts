@@ -19,7 +19,7 @@ export namespace Token {
     policies: ['login'],
     no_default_policy: true,
     renewable: false,
-    ttl: '24h',
+    ttl: '720h',
     display_name: 'Login',
     num_uses: 0, // The value of 0 has no limit to the number of uses.
     meta: {
