@@ -1,3 +1,4 @@
+import { getVerifiableClaimSigner } from '@po.et/poet-js'
 import { MongoClient } from 'mongodb'
 import * as Pino from 'pino'
 
@@ -70,6 +71,7 @@ export async function app(localVars: any = {}) {
       logger: logger.child({ file: 'WorkController' }),
       mainnetNode,
       testnetNode,
+      verifiableClaimSigner: getVerifiableClaimSigner(),
     },
   })
 

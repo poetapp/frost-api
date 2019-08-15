@@ -1,4 +1,8 @@
-import { configureCreateVerifiableClaim, getVerifiableClaimSigner, SignedVerifiableClaim } from '@po.et/poet-js'
+import {
+  configureCreateVerifiableClaim,
+  SignedVerifiableClaim,
+  VerifiableClaimSigner,
+} from '@po.et/poet-js'
 import * as Pino from 'pino'
 import { pipeP } from 'ramda'
 
@@ -26,6 +30,7 @@ interface Dependencies {
   readonly logger: Pino.Logger
   readonly mainnetNode: PoetNode
   readonly testnetNode: PoetNode
+  readonly verifiableClaimSigner: VerifiableClaimSigner
 }
 
 export const WorkController = ({
@@ -33,6 +38,7 @@ export const WorkController = ({
     logger,
     mainnetNode,
     testnetNode,
+    verifiableClaimSigner,
   },
 }: Arguments): WorkController => {
   const networkToNode = (network: Network) => network === Network.LIVE ? mainnetNode : testnetNode
@@ -65,7 +71,7 @@ export const WorkController = ({
 
     const createAndSignClaim = pipeP(
       configureCreateVerifiableClaim({ issuer, context: { ...legacyContext, ...context, ...aboutContext} }),
-      getVerifiableClaimSigner().configureSignVerifiableClaim({ privateKey }),
+      verifiableClaimSigner.configureSignVerifiableClaim({ privateKey }),
     )
 
     const { content, ...newWork } = claim
