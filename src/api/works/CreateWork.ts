@@ -1,8 +1,6 @@
 import * as Joi from 'joi'
 
-import { errors } from '../../errors/errors'
-import { isLiveNetwork } from '../../helpers/token'
-import { WorksController } from '../../modules/Works/Works.controller'
+import { WorkController } from '../../controllers/WorkController'
 import { Vault } from '../../utils/Vault/Vault'
 
 export const CreateWorkSchema = () => ({
@@ -26,35 +24,19 @@ export const CreateWorkSchema = () => ({
     .optional(),
 })
 
-export const CreateWork = (poetUrl: string, testPoetUrl: string) => async (ctx: any, next: any): Promise<any> => {
-  const logger = ctx.logger(__dirname)
+export const CreateWork = (workController: WorkController) => async (ctx: any, next: any): Promise<any> => {
+  const { user, tokenData } = ctx.state
 
-  try {
-    const { user, tokenData } = ctx.state
-    const { WorkError } = errors
+  const { '@context': context = {}, ...claim } = ctx.request.body
 
-    const { '@context': context = {}, ...newWork } = ctx.request.body
+  const signedVerifiableClaim = await workController.create(
+    claim,
+    context,
+    user.issuer,
+    user.privateKey,
+    tokenData.data.meta.network,
+  )
 
-    logger.info({ context, newWork }, 'Creating Work')
-
-    const privateKey = await Vault.decrypt(user.privateKey)
-    const nodeNetwork = isLiveNetwork(tokenData.data.meta.network) ? poetUrl : testPoetUrl
-
-    const work = new WorksController(ctx.logger, nodeNetwork)
-    const claim = await work.generateClaim(user.issuer, privateKey, newWork, context)
-
-    try {
-      await work.create(claim)
-    } catch (e) {
-      ctx.status = WorkError.code
-      ctx.body = WorkError.message
-      return
-    }
-
-    ctx.status = 200
-    ctx.body = { workId: claim.id }
-  } catch (exception) {
-    logger.error({ exception }, 'api.CreateWork')
-    ctx.status = 500
-  }
+  ctx.status = 200
+  ctx.body = { workId: signedVerifiableClaim.id }
 }

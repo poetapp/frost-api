@@ -41,10 +41,6 @@ export const errors = {
     code: 400,
     message: 'Could not create the work.',
   },
-  WorkNotFound: {
-    code: 400,
-    message: 'Work not found.',
-  },
   InternalErrorExternalAPI: {
     code: 500,
     message:
@@ -86,6 +82,11 @@ export class AccountAlreadyExists extends Error {
 export class ResourceNotFound {
   status = 404
   message = 'The specified resource does not exist.'
+}
+
+export class WorkNotFound {
+  status = 404
+  message = 'Work not found.'
 }
 
 export class IncorrectOldPassword extends Error {

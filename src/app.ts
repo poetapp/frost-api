@@ -5,6 +5,7 @@ import { API } from './api/API'
 import { Configuration } from './configuration'
 import { AccountController } from './controllers/AccountController'
 import { ArchiveController } from './controllers/ArchiveController'
+import { WorkController } from './controllers/WorkController'
 import { AccountDao } from './daos/AccountDao'
 import { PoetNode } from './daos/PoetNodeDao'
 import { initVault } from './initVault'
@@ -48,6 +49,9 @@ export async function app(localVars: any = {}) {
 
   const sendEmail = SendEmail(configurationFrostAPI.sendEmail)
 
+  const mainnetNode = PoetNode(configuration.poetUrl)
+  const testnetNode = PoetNode(configuration.testPoetUrl)
+
   const accountController = AccountController({
     dependencies: {
       logger: logger.child({ file: 'AccountController' }),
@@ -61,11 +65,19 @@ export async function app(localVars: any = {}) {
     },
   })
 
+  const workController = WorkController({
+    dependencies: {
+      logger: logger.child({ file: 'WorkController' }),
+      mainnetNode,
+      testnetNode,
+    },
+  })
+
   const archiveController = ArchiveController({
     dependencies: {
       logger: logger.child({ file: 'ArchiveController' }),
-      mainnetNode: PoetNode(configuration.poetUrl),
-      testnetNode: PoetNode(configuration.testPoetUrl),
+      mainnetNode,
+      testnetNode,
     },
     configuration: {
       ethereumUrl: configuration.ethereumUrl,
@@ -76,7 +88,7 @@ export async function app(localVars: any = {}) {
     },
   })
 
-  const frostAPI = await API(accountController, archiveController)(configurationFrostAPI).start()
+  const frostAPI = await API(accountController, archiveController, workController)(configurationFrostAPI).start()
 
   await accountDao.createIndices()
 
@@ -88,20 +100,6 @@ export async function app(localVars: any = {}) {
     },
   }
 }
-
-const configurationToMongoDB = (configuration: Configuration) => ({
-  mongodbUrl: configuration.mongodbUrl,
-  options: {
-    socketTimeoutMS: configuration.mongodbSocketTimeoutMS,
-    keepAlive: configuration.mongodbKeepAlive,
-    reconnectTries: configuration.mongodbReconnectTries,
-    useNewUrlParser: configuration.mongodbUseNewUrlParser,
-  },
-  loggingConfiguration: {
-    loggingLevel: configuration.loggingLevel,
-    loggingPretty: configuration.loggingPretty,
-  },
-})
 
 const configurationToFrostAPI = (configuration: Configuration) => ({
   host: configuration.frostHost,

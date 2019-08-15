@@ -10,6 +10,7 @@ import { SendEmailConfiguration } from '../utils/SendEmail'
 
 import { AccountController } from '../controllers/AccountController'
 import { ArchiveController } from '../controllers/ArchiveController'
+import { WorkController } from '../controllers/WorkController'
 import { errorHandling } from '../middlewares/errorHandling'
 import { logger } from '../middlewares/logger'
 
@@ -41,23 +42,23 @@ interface APIMethods {
   stop(): Promise<APIMethods>
 }
 
-const init = (accountController: AccountController, archiveController: ArchiveController) => ({
+const init = (
+  accountController: AccountController,
+  archiveController: ArchiveController,
+  workController: WorkController,
+) => ({
   maxApiRequestLimitForm,
   maxApiRequestLimitJson,
   passwordComplex,
   sendEmail,
-  poetUrl,
-  testPoetUrl,
   maxApiTokens,
   loggingConfiguration,
 }: APIConfiguration) => {
   const app = new Koa()
-  const route = routes(accountController, archiveController)(
+  const route = routes(accountController, archiveController, workController)(
     passwordComplex,
     sendEmail,
-    poetUrl,
     maxApiTokens,
-    testPoetUrl,
   )
 
   app
@@ -97,13 +98,14 @@ const stopAPI = async (server: any, logger: Pino.Logger) => {
 export const API = (
   accountController: AccountController,
   archiveController: ArchiveController,
+  workController: WorkController,
 ) => (configuration: APIConfiguration): APIMethods => {
   const { loggingConfiguration } = configuration
   const logger = createModuleLogger(loggingConfiguration)(__dirname)
 
   return {
     async start(): Promise<APIMethods> {
-      const app = init(accountController, archiveController)(configuration)
+      const app = init(accountController, archiveController, workController)(configuration)
       this.server = await startAPI(app, configuration, logger)
       return this
     },

@@ -2,6 +2,7 @@ import * as KoaRouter from 'koa-router'
 
 import { AccountController } from '../controllers/AccountController'
 import { ArchiveController } from '../controllers/ArchiveController'
+import { WorkController } from '../controllers/WorkController'
 
 import { Authentication } from '../middlewares/authentication'
 import { Authorization } from '../middlewares/authorization'
@@ -41,12 +42,14 @@ import { GetWorks } from './works/GetWorks'
 
 import { PostArchive } from './archives/PostArchive'
 
-export const routes = (accountController: AccountController, archiveController: ArchiveController) => (
+export const routes = (
+  accountController: AccountController,
+  archiveController: ArchiveController,
+  workController: WorkController,
+) => (
   passwordComplexConfiguration: PasswordComplexConfiguration,
   sendEmailConfiguration: SendEmailConfiguration,
-  poetUrl: string,
   maxApiTokens: number,
-  testPoetUrl: string,
 ) => {
   const router = new KoaRouter()
   const authentication = Authentication(accountController)
@@ -144,10 +147,10 @@ export const routes = (accountController: AccountController, archiveController: 
   router.post(
     Path.WORKS,
     validate({ body: CreateWorkSchema, options: { allowUnknown: true } }),
-    CreateWork(poetUrl, testPoetUrl),
+    CreateWork(workController),
   )
-  router.get(Path.WORKS_WORKID, validate({ params: GetWorkSchema }), GetWork(poetUrl, testPoetUrl))
-  router.get(Path.WORKS, GetWorks(poetUrl, testPoetUrl))
+  router.get(Path.WORKS_WORKID, validate({ params: GetWorkSchema }), GetWork(workController))
+  router.get(Path.WORKS, GetWorks(workController))
 
   router.post(
     Path.ARCHIVES,
