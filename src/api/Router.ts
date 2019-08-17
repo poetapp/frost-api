@@ -10,9 +10,8 @@ import { isLoggedIn } from '../middlewares/isLoggedIn'
 import { monitor } from '../middlewares/monitor'
 import { requireEmailVerified } from '../middlewares/requireEmailVerified'
 import { validate } from '../middlewares/validate'
-import { SendEmailConfiguration } from '../utils/SendEmail'
 
-import { PasswordComplexConfiguration } from './PasswordComplexConfiguration'
+import { PasswordComplexityConfiguration } from './PasswordComplexityConfiguration'
 import { Path } from './Path'
 
 import { CreateAccount, CreateAccountSchema } from './accounts/CreateAccount'
@@ -42,15 +41,33 @@ import { GetWorks } from './works/GetWorks'
 
 import { PostArchive } from './archives/PostArchive'
 
-export const routes = (
-  accountController: AccountController,
-  archiveController: ArchiveController,
-  workController: WorkController,
-) => (
-  passwordComplexConfiguration: PasswordComplexConfiguration,
-  sendEmailConfiguration: SendEmailConfiguration,
-  maxApiTokens: number,
-) => {
+interface Configuration {
+  readonly passwordComplexity: PasswordComplexityConfiguration,
+  readonly maxApiTokens: number,
+}
+
+interface Dependencies {
+  readonly accountController: AccountController,
+  readonly archiveController: ArchiveController,
+  readonly workController: WorkController,
+}
+
+interface Arguments {
+  readonly configuration: Configuration
+  readonly dependencies: Dependencies
+}
+
+export const Router = ({
+ configuration: {
+   passwordComplexity,
+   maxApiTokens,
+ },
+ dependencies: {
+   accountController,
+   archiveController,
+   workController,
+ },
+}: Arguments) => {
   const router = new KoaRouter()
   const authentication = Authentication(accountController)
   const authorization = Authorization()
@@ -61,10 +78,6 @@ export const routes = (
 
     return next()
   })
-
-  router.use([Path.PASSWORD_CHANGE, Path.PASSWORD_CHANGE_TOKEN, Path.PASSWORD_RESET])
-  router.use([Path.ACCOUNTS])
-  router.use([Path.LOGIN])
 
   router.use(
     [
@@ -88,9 +101,11 @@ export const routes = (
   const secureKeys = ['password', 'token', 'tokenId']
   router.use(monitor(secureKeys))
 
+  router.get(Path.HEALTH, GetHealth())
+
   router.post(
     Path.ACCOUNTS,
-    validate({ body: CreateAccountSchema(passwordComplexConfiguration) }),
+    validate({ body: CreateAccountSchema(passwordComplexity) }),
     CreateAccount(accountController),
   )
   router.get(
@@ -113,6 +128,11 @@ export const routes = (
     PatchAccount(accountController),
   )
   router.post(
+    Path.LOGIN,
+    validate({ body: LoginSchema }),
+    Login(accountController),
+  )
+  router.post(
     Path.ACCOUNTS_ID_POE_CHALLENGE,
     authentication,
     authorization,
@@ -125,15 +145,14 @@ export const routes = (
     validate({ body: ForgotPasswordSchema }),
     ForgotPassword(accountController),
   )
-  router.post(Path.LOGIN, validate({ body: LoginSchema }), Login(accountController))
   router.post(
     Path.PASSWORD_CHANGE,
-    validate({ body: PasswordChangeSchema(passwordComplexConfiguration) }),
+    validate({ body: PasswordChangeSchema(passwordComplexity) }),
     PasswordChange(accountController),
   )
   router.post(
     Path.PASSWORD_CHANGE_TOKEN,
-    validate({ body: PasswordChangeTokenSchema(passwordComplexConfiguration) }),
+    validate({ body: PasswordChangeTokenSchema(passwordComplexity) }),
     PasswordChangeToken(accountController),
   )
   router.post(Path.ACCOUNTS_VERIFY, VerifyAccount(accountController))
@@ -141,7 +160,6 @@ export const routes = (
 
   router.post(Path.TOKENS, CreateToken(maxApiTokens, accountController))
   router.get(Path.TOKENS, GetToken(accountController))
-  router.get(Path.HEALTH, GetHealth())
   router.del(Path.TOKENS_TOKENID, validate({ params: RemoveTokenSchema }), RemoveToken(accountController))
 
   router.post(

@@ -1,9 +1,9 @@
 import { AccountController } from '../../controllers/AccountController'
 import { validatePassword } from '../../helpers/validatePassword'
-import { PasswordComplexConfiguration } from '../PasswordComplexConfiguration'
+import { PasswordComplexityConfiguration } from '../PasswordComplexityConfiguration'
 
 export const PasswordChangeTokenSchema = (
-  passwordComplex: PasswordComplexConfiguration,
+  passwordComplex: PasswordComplexityConfiguration,
 ) => ({ password }: { password: string }) => ({
   password: validatePassword(password, passwordComplex),
 })

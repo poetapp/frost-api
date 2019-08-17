@@ -1,4 +1,4 @@
-export interface PasswordComplexConfiguration {
+export interface PasswordComplexityConfiguration {
   readonly min: number
   readonly max: number
   readonly lowerCase: number

@@ -2,14 +2,14 @@
 import fetch from 'node-fetch'
 import { describe } from 'riteway'
 
+import { Frost } from '../../src/Frost'
 import { Path } from '../../src/api/Path'
-import { app } from '../../src/app'
 import { getHeader, delay, runtimeId, createDatabase } from '../helpers/utils'
 
 describe('CORS header exists when calling every known route', async assert => {
   const db = await createDatabase(`test-integration-frost-api-poet-${runtimeId()}`)
 
-  const server = await app({
+  const server = await Frost({
     FROST_PORT: '30080',
     FROST_HOST: 'localhost',
     FROST_URL: 'http://localhost:30080',

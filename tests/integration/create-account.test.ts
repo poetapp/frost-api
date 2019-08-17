@@ -1,8 +1,8 @@
 import fetch from 'node-fetch'
 import { describe } from 'riteway'
 
+import { Frost } from '../../src/Frost'
 import { Path } from '../../src/api/Path'
-import { app } from '../../src/app'
 import {
   testUserEmail,
   testUserPassword,
@@ -23,7 +23,7 @@ const createUserOptions = {
 describe('Requesting create of an already existing account', async assert => {
   const db = await createDatabase(`test-integration-frost-api-poet-${runtimeId()}`)
 
-  const server = await app({
+  const server = await Frost({
     FROST_PORT,
     FROST_HOST,
     MONGODB_DATABASE: db.settings.tempDbName,
@@ -58,7 +58,7 @@ describe('Requesting create of an already existing account', async assert => {
 describe('Successfully create a user account', async assert => {
   const db = await createDatabase(`test-integration-frost-api-poet-${runtimeId()}`)
 
-  const server = await app({
+  const server = await Frost({
     FROST_PORT,
     FROST_HOST,
     MONGODB_DATABASE: db.settings.tempDbName,

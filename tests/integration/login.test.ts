@@ -1,8 +1,8 @@
 import fetch from 'node-fetch'
 import { describe } from 'riteway'
 
+import { Frost } from '../../src/Frost'
 import { Path } from '../../src/api/Path'
-import { app } from '../../src/app'
 import { createUser } from '../helpers/user'
 import {
   testUserEmail,
@@ -18,7 +18,7 @@ import {
 describe('Login to an existing account', async assert => {
   const db = await createDatabase(`test-integration-frost-api-poet-${runtimeId()}`)
 
-  const server = await app({
+  const server = await Frost({
     FROST_PORT,
     FROST_HOST,
     FROST_URL,
@@ -102,7 +102,7 @@ describe('Login to an existing account', async assert => {
 describe('Login to an non-existent account', async assert => {
   const db = await createDatabase(`test-integration-frost-api-poet-${runtimeId()}`)
 
-  const server = await app({
+  const server = await Frost({
     FROST_PORT,
     FROST_HOST,
     FROST_URL,

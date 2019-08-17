@@ -1,8 +1,12 @@
 #!/usr/bin/env node
 
 /* tslint:disable:no-console */
-import { app } from './app'
+import { Frost } from './Frost'
 
-app()
+import './extensions/Error'
+
+require('dotenv').config({ path: '.env' })
+
+Frost()
   .then(server => process.on('SIGINT', () => server.stop()))
   .catch(console.error)

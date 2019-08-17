@@ -1,7 +1,7 @@
 /* tslint:disable:no-relative-imports */
 import { promisify } from 'util'
 
-import { app } from '../../src/app'
+import { Frost } from '../../src/Frost'
 import { dbHelper } from './database'
 
 export const FROST_HOST = 'localhost'
@@ -41,7 +41,7 @@ export const setUpServerAndDb = async ({
   blockchainSettings?: any,
 }) => {
   const db = await createDatabase(PREFIX)
-  const server = await app({
+  const server = await Frost({
     BITCOIN_URL: process.env.BITCOIN_URL || 'bitcoind-1',
     API_PORT: NODE_PORT,
     MONGODB_DATABASE: db.settings.tempDbName,

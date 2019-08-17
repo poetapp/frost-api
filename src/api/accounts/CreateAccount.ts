@@ -1,11 +1,11 @@
 import * as Joi from 'joi'
 
-import { PasswordComplexConfiguration } from '../../api/PasswordComplexConfiguration'
 import { AccountController } from '../../controllers/AccountController'
 import { validatePassword } from '../../helpers/validatePassword'
+import { PasswordComplexityConfiguration } from '../PasswordComplexityConfiguration'
 
 export const CreateAccountSchema = (
-  passwordComplex: PasswordComplexConfiguration,
+  passwordComplex: PasswordComplexityConfiguration,
 ) => ({ password }: { password: string }) => ({
   email: Joi.string()
     .email()

@@ -2,8 +2,8 @@
 import fetch from 'node-fetch'
 import { describe } from 'riteway'
 
+import { Frost } from '../../src/Frost'
 import { Path } from '../../src/api/Path'
-import { app } from '../../src/app'
 import { FROST_HOST, FROST_PORT, FROST_URL, delay, runtimeId, createDatabase } from '../helpers/utils'
 
 const options = {
@@ -13,7 +13,7 @@ const options = {
 describe('gracefully stopping the application', async assert => {
   const db = await createDatabase(`test-integration-frost-api-poet-${runtimeId()}`)
 
-  const server = await app({
+  const server = await Frost({
     FROST_PORT,
     FROST_HOST,
     FROST_URL,

@@ -1,6 +1,6 @@
 import fetch from 'node-fetch'
 import { describe } from 'riteway'
-import { app } from '../../src/app'
+import { Frost } from '../../src/Frost'
 import { delay, runtimeId, createDatabase } from '../helpers/utils'
 
 const features = [
@@ -29,7 +29,7 @@ const features = [
 describe('Security headers', async assert => {
   const db = await createDatabase(`test-integration-frost-api-poet-${runtimeId()}`)
 
-  const server = await app({
+  const server = await Frost({
     FROST_PORT: '30080',
     FROST_HOST: 'localhost',
     FROST_URL: 'http://localhost:30080',
@@ -44,7 +44,7 @@ describe('Security headers', async assert => {
 
   features.forEach(async feature => {
     assert({
-      given: 'a running app',
+      given: 'a running Frost',
       should: `Should be ${feature.expected} for the header ${feature.value}`,
       actual: result.headers.get(feature.value),
       expected: feature.expected,

@@ -4,8 +4,8 @@ import { privateToAddress, ecsign, hashPersonalMessage, toRpcSig } from 'ethereu
 import fetch from 'node-fetch'
 import { describe } from 'riteway'
 
+import { Frost } from '../../src/Frost'
 import { Path } from '../../src/api/Path'
-import { app } from '../../src/app'
 import {
   testUserEmail,
   testUserPassword,
@@ -26,7 +26,7 @@ const createUserOptions = {
 describe('Try to upload an archive without Proof of POE', async assert => {
   const db = await createDatabase(`test-integration-frost-api-poet-${runtimeId()}`)
 
-  const server = await app({
+  const server = await Frost({
     FROST_PORT,
     FROST_HOST,
     MONGODB_DATABASE: db.settings.tempDbName,
@@ -102,7 +102,7 @@ describe('Try to upload an archive without Proof of POE', async assert => {
 describe('Try to upload an archive with Proof of POE but without POE balance', async assert => {
   const db = await createDatabase(`test-integration-frost-api-poet-${runtimeId()}`)
 
-  const server = await app({
+  const server = await Frost({
     FROST_PORT,
     FROST_HOST,
     MONGODB_DATABASE: db.settings.tempDbName,
@@ -264,7 +264,7 @@ describe('Try to upload an archive with Proof of POE but without POE balance', a
 describe('Upload an archive with Proof of POE with enough POE balance', async assert => {
   const db = await createDatabase(`test-integration-frost-api-poet-${runtimeId()}`)
 
-  const server = await app({
+  const server = await Frost({
     FROST_PORT,
     FROST_HOST,
     MONGODB_DATABASE: db.settings.tempDbName,
