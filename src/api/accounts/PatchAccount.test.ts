@@ -120,6 +120,28 @@ describe('isPoeAddressVerified()', async (assert) => {
     expected: false,
   })
 
+  assert({
+    given: 'clearing the address of a verified account',
+    should: 'return false',
+    actual: isPoeAddressVerified('', undefined, {
+      ...account,
+      poeAddressVerified: true,
+    }),
+    expected: false,
+  })
+
+  assert({
+    given: 'clearing the address of a verified account (with complete signature data)',
+    should: 'return false',
+    actual: isPoeAddressVerified('', undefined, {
+      ...account,
+      poeAddress: signedMessage.address,
+      poeAddressSignature: signedMessage.sig,
+      poeAddressVerified: true,
+    }),
+    expected: false,
+  })
+
   // Default cases - nothing provided in request should not change anything
 
   assert({

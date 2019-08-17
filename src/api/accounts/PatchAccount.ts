@@ -61,10 +61,10 @@ export const PatchAccount = (accountController: AccountController) => async (ctx
 }
 
 export const isPoeAddressVerified = (poeAddress: string, poeSignature: string, account: Account): boolean =>
-  (poeAddress || poeSignature)
+  (poeAddress !== undefined || poeSignature !== undefined) // TODO: https://github.com/microsoft/TypeScript/issues/26578
     ? signatureIsValid(
-      poeAddress || account.poeAddress,
-      account.poeAddressMessage,
-      poeSignature || account.poeAddressSignature,
-    )
+        poeAddress !== undefined ? poeAddress : account.poeAddress,
+        account.poeAddressMessage,
+        poeSignature !== undefined ? poeSignature : account.poeAddressSignature,
+      )
     : !!account.poeAddressVerified
