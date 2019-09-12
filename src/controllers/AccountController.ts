@@ -17,6 +17,7 @@ import {
   ResourceNotFound,
   Unauthorized,
 } from '../errors/errors'
+import { encrypt } from '../helpers/crypto'
 import { tokenMatch } from '../helpers/token'
 import { uuid4 } from '../helpers/uuid'
 import { isJWTData, JWTData } from '../interfaces/JWTData'
@@ -74,6 +75,7 @@ interface Configuration {
   readonly verifiedAccount: boolean
   readonly pwnedCheckerRoot: string
   readonly jwtSecret: string
+  readonly privateKeyEncryptionKey: string
 }
 
 interface Arguments {
@@ -128,7 +130,7 @@ export const AccountController = ({
 
     const id = await getUnusedId()
     const { privateKey, publicKey } = generateED25519Base58Keys()
-    const encryptedPrivateKey = await Vault.encrypt(privateKey)
+    const encryptedPrivateKey = encrypt(privateKey, configuration.privateKeyEncryptionKey)
     const apiToken = await createJWT({ accountId: id, network: Network.TEST }, Token.TestApiKey)
     const encryptedToken = await Vault.encrypt(`TEST_${apiToken}`)
     const issuer = createIssuerFromPrivateKey(privateKey)

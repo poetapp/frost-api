@@ -66,6 +66,7 @@ export interface Configuration
   readonly poeContractAddress: string
   readonly poeBalanceMinimum: number
   readonly maximumFileSizeInBytes: number
+  readonly privateKeyEncryptionKey: string
 }
 
 export const configuration: Configuration = {
@@ -118,4 +119,5 @@ export const configuration: Configuration = {
   poeContractDecimals: 8,
   poeBalanceMinimum: 1000,
   maximumFileSizeInBytes: MiB * 15,
+  privateKeyEncryptionKey: '0000000000000000000000000000000000000000000000000000000000000000',
 }

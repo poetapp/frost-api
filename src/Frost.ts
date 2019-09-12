@@ -75,10 +75,14 @@ export async function Frost(localVars: any = {}) {
       verifiedAccount: configuration.verifiedAccount,
       pwnedCheckerRoot: configuration.pwnedCheckerRoot,
       jwtSecret: configuration.jwt,
+      privateKeyEncryptionKey: configuration.privateKeyEncryptionKey,
     },
   })
 
   const workController = WorkController({
+    configuration: {
+      privateKeyEncryptionKey: configuration.privateKeyEncryptionKey,
+    },
     dependencies: {
       logger: logger.child({ file: 'WorkController' }),
       mainnetNode,
