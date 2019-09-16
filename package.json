@@ -19,7 +19,7 @@
     "coverage:integration": "nyc --report-dir ./.coverage-integration npm run test:integration:legacy",
     "precommit": "lint-staged",
     "semantic-release": "semantic-release",
-    "migrate-account-id": "node dist/src/scripts/add-id.js"
+    "migrate-private-keys": "node dist/src/scripts/migrate-private-keys.js"
   },
   "lint-staged": {
     "*.ts": [
@@ -66,6 +66,7 @@
     "dotenv": "6.2.0",
     "ethereumjs-util": "6.1.0",
     "form-data": "2.3.3",
+    "fp-ts": "2.0.5",
     "joi": "14.1.1",
     "joi-password-complexity": "2.0.1",
     "jsonwebtoken": "8.4.0",
