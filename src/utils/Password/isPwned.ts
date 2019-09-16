@@ -1,9 +1,9 @@
-const crypto = require('crypto')
+import { createHash } from 'crypto'
+
 import fetch from 'node-fetch'
 
 const sha1sum = (password: string) =>
-  crypto
-    .createHash('sha1')
+  createHash('sha1')
     .update(password)
     .digest('hex')
 

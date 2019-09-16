@@ -1,1 +1,1 @@
-export { processPassword, verify, passwordMatches } from './Password'
+export { processPassword, passwordMatches } from './Password'

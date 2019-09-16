@@ -62,6 +62,7 @@
   },
   "dependencies": {
     "@po.et/poet-js": "5.1.17",
+    "@types/secure-password": "3.1.0",
     "body-parser": "1.18.3",
     "dotenv": "6.2.0",
     "ethereumjs-util": "6.1.0",

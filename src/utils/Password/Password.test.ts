@@ -1,31 +1,16 @@
 import { describe } from 'riteway'
-import { INVALID, hasher, verify } from './Password'
+import SecurePassword = require('secure-password')
+
+import { passwordMatches } from './Password'
 
 const sekretPassword = 'Ae-12345678'
+const securePassword = new SecurePassword()
 
-describe('hasher', async (assert: any) => {
-  {
-    const actual = await hasher(sekretPassword)
-
-    assert({
-      given: 'a password string',
-      should: 'return a hash',
-      actual: typeof actual,
-      expected: 'object',
-    })
-  }
-})
-
-describe('verify', async (assert: any) => {
-  const hash = (await hasher(sekretPassword)).toString()
+describe('verify', async assert => {
+  const hash = (await securePassword.hash(Buffer.from(sekretPassword))).toString()
 
   {
-    let actual
-    try {
-      actual = await verify(sekretPassword, hash)
-    } catch (e) {
-      actual = e
-    }
+    const actual = await passwordMatches(sekretPassword, hash)
 
     assert({
       given: 'a password string and a valid hash of the string',
@@ -36,18 +21,13 @@ describe('verify', async (assert: any) => {
   }
 
   {
-    let actual
-    try {
-      actual = await verify('FOO', hash)
-    } catch (e) {
-      actual = e
-    }
+    const actual = await passwordMatches('FOO', hash)
 
     assert({
       given: 'an invalid password and a hash',
-      should: 'throw an error',
+      should: 'return false',
       actual,
-      expected: INVALID,
+      expected: false,
     })
   }
 })
