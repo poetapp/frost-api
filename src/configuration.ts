@@ -57,7 +57,6 @@ export interface Configuration
   readonly sendEmailDisabled: boolean
   readonly emailTransportMailDev: boolean
   readonly maxApiTokens: number
-  readonly pwnedCheckerRoot: string
   readonly transactionalMandrill: string
   readonly jwt: string
   readonly skipVault: boolean
@@ -105,7 +104,6 @@ export const configuration: Configuration = {
   passwordComplexUpperCase: 1,
   passwordComplexNumeric: 1,
   passwordComplexSymbol: 1,
-  pwnedCheckerRoot: '',
   skipVault: false,
   transactionalMandrill: '',
   jwt: 'example',

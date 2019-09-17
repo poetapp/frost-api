@@ -1,6 +1,7 @@
 import { createIssuerFromPrivateKey, generateED25519Base58Keys } from '@po.et/poet-js'
 import { sign, verify } from 'jsonwebtoken'
 import * as Pino from 'pino'
+import SecurePassword = require('secure-password')
 
 import { Token, TokenOptions } from '../api/Tokens'
 import { getApiKeyByNetwork, getTokenByNetwork } from '../api/tokens/CreateToken'
@@ -23,7 +24,7 @@ import { uuid4 } from '../helpers/uuid'
 import { isJWTData, JWTData } from '../interfaces/JWTData'
 import { Network } from '../interfaces/Network'
 import { Account } from '../models/Account'
-import { passwordMatches, processPassword } from '../utils/Password'
+import { passwordMatches } from '../utils/Password'
 import { SendEmailTo } from '../utils/SendEmail'
 import { Vault } from '../utils/Vault/Vault'
 
@@ -73,7 +74,6 @@ interface Dependencies {
 
 interface Configuration {
   readonly verifiedAccount: boolean
-  readonly pwnedCheckerRoot: string
   readonly jwtSecret: string
   readonly privateKeyEncryptionKey: string
 }
@@ -91,6 +91,9 @@ export const AccountController = ({
   },
   configuration,
 }: Arguments): AccountController => {
+  const securePassword = new SecurePassword()
+  const hash = (s: string) => securePassword.hash(Buffer.from(s)).then(_ => _.toString())
+
   const authorizeRequest = async (token: string) => {
     try {
       const { client_token, accountId, email } = decodeJWT(token)
@@ -134,7 +137,7 @@ export const AccountController = ({
     const apiToken = await createJWT({ accountId: id, network: Network.TEST }, Token.TestApiKey)
     const encryptedToken = await Vault.encrypt(`TEST_${apiToken}`)
     const issuer = createIssuerFromPrivateKey(privateKey)
-    const hashedPassword = await processPassword(password, configuration.pwnedCheckerRoot)
+    const hashedPassword = await hash(password)
 
     const account: Account = {
       id,
@@ -241,7 +244,7 @@ export const AccountController = ({
     if (!await passwordMatches(oldPassword, account.password))
       throw new IncorrectOldPassword()
 
-    const newPassword = await processPassword(password, configuration.pwnedCheckerRoot)
+    const newPassword = await hash(password)
 
     await accountDao.updateOne({ id: account.id }, { password: newPassword })
   }
@@ -257,7 +260,7 @@ export const AccountController = ({
     if (!isForgotPasswordToken(tokenData))
       throw new Unauthorized()
 
-    const password = await processPassword(newPassword, configuration.pwnedCheckerRoot)
+    const password = await hash(newPassword)
 
     await accountDao.updateOne({ id }, { password })
 

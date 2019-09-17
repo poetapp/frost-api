@@ -88,7 +88,6 @@ describe('mergeConfigs', async (assert: any) => {
       PASSWORD_COMPLEX_UPPER_CASE: 'override',
       PASSWORD_COMPLEX_NUMERIC: 'override',
       PASSWORD_COMPLEX_SYMBOL: 'override',
-      PWNED_CHECKER_ROOT: 'override',
       LOGGING_LEVEL: 'override',
       LOGGING_PRETTY: 'override',
     }
@@ -122,7 +121,6 @@ describe('mergeConfigs', async (assert: any) => {
       passwordComplexUpperCase: 'override',
       passwordComplexNumeric: 'override',
       passwordComplexSymbol: 'override',
-      pwnedCheckerRoot: 'override',
       loggingLevel: 'override',
       loggingPretty: 'override',
     }

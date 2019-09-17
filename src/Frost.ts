@@ -73,7 +73,6 @@ export async function Frost(localVars: any = {}) {
     },
     configuration: {
       verifiedAccount: configuration.verifiedAccount,
-      pwnedCheckerRoot: configuration.pwnedCheckerRoot,
       jwtSecret: configuration.jwt,
       privateKeyEncryptionKey: configuration.privateKeyEncryptionKey,
     },
