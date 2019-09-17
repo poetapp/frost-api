@@ -1,7 +1,6 @@
 import { createIssuerFromPrivateKey, generateED25519Base58Keys } from '@po.et/poet-js'
 import { sign, verify } from 'jsonwebtoken'
 import * as Pino from 'pino'
-import SecurePassword = require('secure-password')
 
 import { Token, TokenOptions } from '../api/Tokens'
 import { getApiKeyByNetwork, getTokenByNetwork } from '../api/tokens/CreateToken'
@@ -18,13 +17,13 @@ import {
   ResourceNotFound,
   Unauthorized,
 } from '../errors/errors'
+import { PasswordHelper } from '../helpers/Password'
 import { encrypt } from '../helpers/crypto'
 import { tokenMatch } from '../helpers/token'
 import { uuid4 } from '../helpers/uuid'
 import { isJWTData, JWTData } from '../interfaces/JWTData'
 import { Network } from '../interfaces/Network'
 import { Account } from '../models/Account'
-import { passwordMatches } from '../utils/Password'
 import { SendEmailTo } from '../utils/SendEmail'
 import { Vault } from '../utils/Vault/Vault'
 
@@ -70,6 +69,7 @@ interface Dependencies {
   readonly logger: Pino.Logger
   readonly accountDao: AccountDao
   readonly sendEmail: SendEmailTo
+  readonly passwordHelper: PasswordHelper
 }
 
 interface Configuration {
@@ -88,12 +88,10 @@ export const AccountController = ({
     logger,
     accountDao,
     sendEmail,
+    passwordHelper,
   },
   configuration,
 }: Arguments): AccountController => {
-  const securePassword = new SecurePassword()
-  const hash = (s: string) => securePassword.hash(Buffer.from(s)).then(_ => _.toString())
-
   const authorizeRequest = async (token: string) => {
     try {
       const { client_token, accountId, email } = decodeJWT(token)
@@ -137,7 +135,7 @@ export const AccountController = ({
     const apiToken = await createJWT({ accountId: id, network: Network.TEST }, Token.TestApiKey)
     const encryptedToken = await Vault.encrypt(`TEST_${apiToken}`)
     const issuer = createIssuerFromPrivateKey(privateKey)
-    const hashedPassword = await hash(password)
+    const hashedPassword = await passwordHelper.hash(password)
 
     const account: Account = {
       id,
@@ -174,7 +172,7 @@ export const AccountController = ({
       throw new AccountNotFound()
     }
 
-    if (!await passwordMatches(password, account.password)) {
+    if (!await passwordHelper.passwordMatches(password, account.password)) {
       logger.trace({ email, password }, 'Password does not match')
       throw new AccountNotFound()
     }
@@ -241,10 +239,10 @@ export const AccountController = ({
     if (tokenData.meta.name !== Token.Login.meta.name)
       throw new IncorrectToken(tokenData.meta.name, Token.Login.meta.name)
 
-    if (!await passwordMatches(oldPassword, account.password))
+    if (!await passwordHelper.passwordMatches(oldPassword, account.password))
       throw new IncorrectOldPassword()
 
-    const newPassword = await hash(password)
+    const newPassword = await passwordHelper.hash(password)
 
     await accountDao.updateOne({ id: account.id }, { password: newPassword })
   }
@@ -260,7 +258,7 @@ export const AccountController = ({
     if (!isForgotPasswordToken(tokenData))
       throw new Unauthorized()
 
-    const password = await hash(newPassword)
+    const password = await passwordHelper.hash(newPassword)
 
     await accountDao.updateOne({ id }, { password })
 

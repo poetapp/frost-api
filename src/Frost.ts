@@ -10,6 +10,7 @@ import { ArchiveController } from './controllers/ArchiveController'
 import { WorkController } from './controllers/WorkController'
 import { AccountDao } from './daos/AccountDao'
 import { PoetNode } from './daos/PoetNodeDao'
+import { PasswordHelper } from './helpers/Password'
 import { initVault } from './initVault'
 import { loadConfigurationWithDefaults } from './loadConfiguration'
 import { loggingConfigurationToPinoConfiguration } from './utils/Logging/Logging'
@@ -65,11 +66,14 @@ export async function Frost(localVars: any = {}) {
   const mainnetNode = PoetNode(configuration.poetUrl)
   const testnetNode = PoetNode(configuration.testPoetUrl)
 
+  const passwordHelper = PasswordHelper()
+
   const accountController = AccountController({
     dependencies: {
       logger: logger.child({ file: 'AccountController' }),
       accountDao,
       sendEmail,
+      passwordHelper,
     },
     configuration: {
       verifiedAccount: configuration.verifiedAccount,
