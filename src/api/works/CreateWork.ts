@@ -1,7 +1,6 @@
 import * as Joi from 'joi'
 
 import { WorkController } from '../../controllers/WorkController'
-import { Vault } from '../../utils/Vault/Vault'
 
 export const CreateWorkSchema = () => ({
   '@context': Joi.alternatives(
