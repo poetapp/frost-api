@@ -32,7 +32,7 @@ import { VerifyAccountToken } from './accounts/VerifyToken'
 import { GetHealth } from './health/GetHealth'
 
 import { CreateToken } from './tokens/CreateToken'
-import { GetToken } from './tokens/GetToken'
+import { GetTokens } from './tokens/GetTokens'
 import { RemoveToken, RemoveTokenSchema } from './tokens/RemoveToken'
 
 import { CreateWork, CreateWorkSchema } from './works/CreateWork'
@@ -159,7 +159,7 @@ export const Router = ({
   router.get(Path.ACCOUNTS_VERIFY_TOKEN, VerifyAccountToken(accountController))
 
   router.post(Path.TOKENS, CreateToken(maxApiTokens, accountController))
-  router.get(Path.TOKENS, GetToken(accountController))
+  router.get(Path.TOKENS, GetTokens(accountController))
   router.del(Path.TOKENS_TOKENID, validate({ params: RemoveTokenSchema }), RemoveToken(accountController))
 
   router.post(

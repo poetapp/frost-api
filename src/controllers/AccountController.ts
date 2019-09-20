@@ -60,6 +60,7 @@ export interface AccountController {
     email: string,
     newPassword: string,
   ) => Promise<string>
+  readonly getTokens: (account: Account) => Promise<ReadonlyArray<string>>
   readonly addToken: (id: string, network: Network) => Promise<string>
   readonly removeToken: (user: Account, tokenId: string) => Promise<void>
   readonly poeAddressChallenge: (issuer: string) => Promise<string>
@@ -270,6 +271,12 @@ export const AccountController = ({
     return createJWT({ accountId: id }, Token.Login)
   }
 
+  const getTokens = async (account: Account) => {
+    const apiTokensPromise = account.apiTokens.map(({ token }) => Vault.decrypt(token))
+    const testApiTokensPromise = account.testApiTokens.map(({ token }) => Vault.decrypt(token))
+    return Promise.all([...apiTokensPromise, ...testApiTokensPromise])
+  }
+
   const addToken = async (accountId: string, network: Network) => {
     const apiToken = await createJWT({ accountId, network }, getApiKeyByNetwork(network))
     const testOrMainApiToken = getTokenByNetwork(network, apiToken)
@@ -348,6 +355,7 @@ export const AccountController = ({
     sendPasswordResetEmail,
     changePassword,
     changePasswordWithToken,
+    getTokens,
     addToken,
     removeToken,
     poeAddressChallenge,
