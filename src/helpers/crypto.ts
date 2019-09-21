@@ -3,7 +3,7 @@ import { createCipheriv, createDecipheriv, randomBytes } from 'crypto'
 const algorithm = 'id-aes256-GCM'
 const ivLengthInBytes = 96
 
-export const encrypt = (text: string, key: string): string => {
+export const encrypt = (key: string) => (text: string): string => {
   const iv = randomBytes(ivLengthInBytes)
   const cipher = createCipheriv(algorithm, Buffer.from(key, 'hex'), iv)
   const ciphertext = cipher.update(text, 'utf8', 'hex') + cipher.final('hex')

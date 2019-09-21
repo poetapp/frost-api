@@ -16,6 +16,7 @@ export interface AccountDao {
 }
 
 export const AccountDao = (collection: Collection, encryptionKey: string): AccountDao => {
+  const encryptWithKey = encrypt(encryptionKey)
   const modelToEncryptedDocument = asyncPipe(encryptAccount(encryptionKey), modelToDocument)
   const documentToDecryptedModel = asyncPipe(documentToModel, decryptAccount(encryptionKey))
 
@@ -44,7 +45,7 @@ export const AccountDao = (collection: Collection, encryptionKey: string): Accou
   const insertToken = async (filter: Partial<Account>, network: Network, token: string): Promise<void> => {
     const filterDocument = await modelToEncryptedDocument(filter)
     const array = network === Network.LIVE ? 'apiTokens' : 'testApiTokens'
-    const apiTokenEncrypted = await Vault.encrypt(token)
+    const apiTokenEncrypted = encryptWithKey(token)
     await collection.updateOne(filterDocument, { $push: { [array]: { token: apiTokenEncrypted } }})
   }
 
@@ -89,9 +90,14 @@ const modelToDocument = (model: Partial<Account>): Partial<AccountDocument> => {
 }
 
 const encryptAccount = (encryptionKey: string) => async (account: Partial<Account>): Promise<Partial<Account>> => {
+  const encryptWithKey = encrypt(encryptionKey)
+
+  const encryptApiTokens = async (tokens: ReadonlyArray<Token>): Promise<ReadonlyArray<Token>> =>
+    tokens.map(tokenObjectToToken).map(encryptWithKey).map(tokenToTokenObject)
+
   const encryptedAccount = {
     ...account,
-    privateKey: account.privateKey && encrypt(account.privateKey, encryptionKey),
+    privateKey: account.privateKey && encryptWithKey(account.privateKey),
     apiTokens: account.apiTokens && await encryptApiTokens(account.apiTokens),
     testApiTokens: account.testApiTokens && await encryptApiTokens(account.testApiTokens),
   }
@@ -107,9 +113,14 @@ const encryptAccount = (encryptionKey: string) => async (account: Partial<Accoun
 }
 
 const decryptAccount = (decryptionKey: string) => async (account: Partial<Account>): Promise<Partial<Account>> => {
+  const decrypt = decryptBackwardsCompatible(decryptionKey)
+
+  const decryptApiTokens = async (tokens: ReadonlyArray<Token>): Promise<ReadonlyArray<Token>> =>
+    Promise.all(tokens.map(tokenObjectToToken).map(decrypt)).then(tokensToTokenObjects)
+
   const decryptedAccount = {
     ...account,
-    privateKey: account.privateKey && decrypt(account.privateKey, decryptionKey),
+    privateKey: account.privateKey && await decrypt(account.privateKey),
     apiTokens: account.apiTokens && await decryptApiTokens(account.apiTokens),
     testApiTokens: account.testApiTokens && await decryptApiTokens(account.testApiTokens),
   }
@@ -124,17 +135,14 @@ const decryptAccount = (decryptionKey: string) => async (account: Partial<Accoun
   return decryptedAccount
 }
 
-const encryptApiTokens = async (tokens: ReadonlyArray<Token>): Promise<ReadonlyArray<Token>> => {
-  const allTokens = tokens.map(({ token }) => token).map(Vault.encrypt, Vault)
-  const encryptedTokens = await Promise.all(allTokens)
-  return encryptedTokens.map(token => ({ token }))
-}
+const tokenToTokenObject = (token: string): Token => ({ token })
+const tokenObjectToToken = ({ token }: Token): string => token
+const tokensToTokenObjects = (tokens: ReadonlyArray<string>): ReadonlyArray<Token> => tokens.map(tokenToTokenObject)
 
-const decryptApiTokens = async (tokens: ReadonlyArray<Token>): Promise<ReadonlyArray<Token>> => {
-  const allTokens = tokens.map(({ token }) => token).map(Vault.decrypt, Vault)
-  const decryptedTokens = await Promise.all(allTokens)
-  return decryptedTokens.map(token => ({ token }))
-}
+const decryptBackwardsCompatible = (key: string) => (plaintext: string) =>
+  plaintext.startsWith('vault')
+    ? Vault.decrypt(plaintext)
+    : decrypt(plaintext, key)
 
 interface AccountDocument {
   readonly id?: Buffer | Binary
