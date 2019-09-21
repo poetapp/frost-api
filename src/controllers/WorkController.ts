@@ -7,7 +7,6 @@ import * as Pino from 'pino'
 import { pipeP } from 'ramda'
 
 import { PoetNode, WorkSearchFilters } from '../daos/PoetNodeDao'
-import { decrypt } from '../helpers/crypto'
 import { Network } from '../interfaces/Network'
 
 export interface WorkController {
@@ -23,12 +22,7 @@ export interface WorkController {
 }
 
 interface Arguments {
-  readonly configuration: Configuration
   readonly dependencies: Dependencies
-}
-
-interface Configuration {
-  readonly privateKeyEncryptionKey: string
 }
 
 interface Dependencies {
@@ -45,9 +39,6 @@ export const WorkController = ({
     testnetNode,
     verifiableClaimSigner,
   },
-  configuration: {
-    privateKeyEncryptionKey,
-  },
 }: Arguments): WorkController => {
   const networkToNode = (network: Network) => network === Network.LIVE ? mainnetNode : testnetNode
 
@@ -61,7 +52,7 @@ export const WorkController = ({
     return node.searchWorks(filters)
   }
 
-  const create = async (claim: any, context: any, issuer: string, encryptedPrivateKey: string, network: Network) => {
+  const create = async (claim: any, context: any, issuer: string, privateKey: string, network: Network) => {
     const node = networkToNode(network)
 
     const legacyContext = {
@@ -74,8 +65,6 @@ export const WorkController = ({
         '@container': '@list',
       },
     }
-
-    const privateKey = decrypt(encryptedPrivateKey, privateKeyEncryptionKey)
 
     const createAndSignClaim = pipeP(
       configureCreateVerifiableClaim({ issuer, context: { ...legacyContext, ...context, ...aboutContext} }),

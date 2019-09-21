@@ -1,5 +1,7 @@
 import { Collection, Binary } from 'mongodb'
+import { pipe } from 'ramda'
 
+import { encrypt, decrypt } from '../helpers/crypto'
 import { bytesToUuid, uuidToBytes } from '../helpers/uuid'
 import { Network } from '../interfaces/Network'
 import { Account } from '../models/Account'
@@ -12,31 +14,34 @@ export interface AccountDao {
   insertToken: (filter: Partial<Account>, network: Network, token: string) => Promise<void>
 }
 
-export const AccountDao = (collection: Collection): AccountDao => {
+export const AccountDao = (collection: Collection, encryptionKey: string): AccountDao => {
+  const modelToEncryptedDocument = pipe(encryptAccount(encryptionKey), modelToDocument)
+  const documentToDecryptedModel = pipe(documentToModel, decryptAccount(encryptionKey))
+
   const createIndices = async () => {
     await collection.createIndex({ email: 1 }, { unique: true })
     await collection.createIndex({ id: 1 }, { unique: false })
   }
 
   const insertOne = async (account: Account): Promise<void> => {
-    const document = modelToDocument(account)
+    const document = modelToEncryptedDocument(account)
     await collection.insertOne(document)
   }
 
   const findOne = async (filter: Partial<Account>): Promise<Account> => {
-    const document = modelToDocument(filter)
+    const document = modelToEncryptedDocument(filter)
     const account: AccountDocument = await collection.findOne(document)
-    return account && documentToModel(account) as Account
+    return account && documentToDecryptedModel(account) as Account
   }
 
   const updateOne = async (filter: Partial<Account>, updates: Partial<Account>): Promise<void> => {
-    const filterDocument = modelToDocument(filter)
-    const updatesDocument = modelToDocument(updates)
+    const filterDocument = modelToEncryptedDocument(filter)
+    const updatesDocument = modelToEncryptedDocument(updates)
     await collection.updateOne(filterDocument, { $set: updatesDocument })
   }
 
   const insertToken = async (filter: Partial<Account>, network: Network, token: string): Promise<void> => {
-    const filterDocument = modelToDocument(filter)
+    const filterDocument = modelToEncryptedDocument(filter)
     const array = network === Network.LIVE ? 'apiTokens' : 'testApiTokens'
     await collection.updateOne(filterDocument, { $push: { [array]: { token } }})
   }
@@ -79,6 +84,30 @@ const modelToDocument = (model: Partial<Account>): Partial<AccountDocument> => {
     delete document.id
 
   return document
+}
+
+const encryptAccount = (encryptionKey: string) => (account: Partial<Account>): Partial<Account> => {
+  const encryptedAccount = {
+    ...account,
+    privateKey: account.privateKey && encrypt(account.privateKey, encryptionKey),
+  }
+
+  if (!account.privateKey)
+    delete encryptedAccount.privateKey
+
+  return encryptedAccount
+}
+
+const decryptAccount = (decryptionKey: string) => (account: Partial<Account>): Partial<Account> => {
+  const decryptedAccount = {
+    ...account,
+    privateKey: account.privateKey && decrypt(account.privateKey, decryptionKey),
+  }
+
+  if (!account.privateKey)
+    delete decryptedAccount.privateKey
+
+  return decryptedAccount
 }
 
 interface AccountDocument {

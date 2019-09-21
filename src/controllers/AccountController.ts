@@ -18,7 +18,6 @@ import {
   Unauthorized,
 } from '../errors/errors'
 import { PasswordHelper } from '../helpers/Password'
-import { encrypt } from '../helpers/crypto'
 import { tokenMatch } from '../helpers/token'
 import { uuid4 } from '../helpers/uuid'
 import { isJWTData, JWTData } from '../interfaces/JWTData'
@@ -76,7 +75,6 @@ interface Dependencies {
 interface Configuration {
   readonly verifiedAccount: boolean
   readonly jwtSecret: string
-  readonly privateKeyEncryptionKey: string
 }
 
 interface Arguments {
@@ -132,7 +130,6 @@ export const AccountController = ({
 
     const id = await getUnusedId()
     const { privateKey, publicKey } = generateED25519Base58Keys()
-    const encryptedPrivateKey = encrypt(privateKey, configuration.privateKeyEncryptionKey)
     const apiToken = await createJWT({ accountId: id, network: Network.TEST }, Token.TestApiKey)
     const encryptedToken = await Vault.encrypt(`TEST_${apiToken}`)
     const issuer = createIssuerFromPrivateKey(privateKey)
@@ -143,7 +140,7 @@ export const AccountController = ({
       email,
       emailPublic: false,
       password: hashedPassword,
-      privateKey: encryptedPrivateKey,
+      privateKey,
       publicKey,
       createdAt: Date.now().toString(), // .toString(): legacy reasons
       verified: configuration.verifiedAccount,

@@ -42,7 +42,7 @@ export async function Frost(localVars: any = {}) {
   const mongoClient = await MongoClient.connect(configuration.mongodbUrl)
   const dbConnection = await mongoClient.db()
   const accountCollection = dbConnection.collection('accounts')
-  const accountDao = AccountDao(accountCollection)
+  const accountDao = AccountDao(accountCollection, configuration.privateKeyEncryptionKey)
 
   const sendEmail = SendEmail({
     nodemailer: {
@@ -78,14 +78,10 @@ export async function Frost(localVars: any = {}) {
     configuration: {
       verifiedAccount: configuration.verifiedAccount,
       jwtSecret: configuration.jwt,
-      privateKeyEncryptionKey: configuration.privateKeyEncryptionKey,
     },
   })
 
   const workController = WorkController({
-    configuration: {
-      privateKeyEncryptionKey: configuration.privateKeyEncryptionKey,
-    },
     dependencies: {
       logger: logger.child({ file: 'WorkController' }),
       mainnetNode,
