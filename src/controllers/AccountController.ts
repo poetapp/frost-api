@@ -131,7 +131,6 @@ export const AccountController = ({
     const id = await getUnusedId()
     const { privateKey, publicKey } = generateED25519Base58Keys()
     const apiToken = await createJWT({ accountId: id, network: Network.TEST }, Token.TestApiKey)
-    const encryptedToken = await Vault.encrypt(`TEST_${apiToken}`)
     const issuer = createIssuerFromPrivateKey(privateKey)
     const hashedPassword = await passwordHelper.hash(password)
 
@@ -144,7 +143,7 @@ export const AccountController = ({
       publicKey,
       createdAt: Date.now().toString(), // .toString(): legacy reasons
       verified: configuration.verifiedAccount,
-      testApiTokens: [{ token: encryptedToken }],
+      testApiTokens: [{ token: `TEST_${apiToken}` }],
       issuer,
     }
 
@@ -269,35 +268,21 @@ export const AccountController = ({
   }
 
   const getTokens = async (account: Account) => {
-    const apiTokensPromise = account.apiTokens.map(({ token }) => Vault.decrypt(token))
-    const testApiTokensPromise = account.testApiTokens.map(({ token }) => Vault.decrypt(token))
-    return Promise.all([...apiTokensPromise, ...testApiTokensPromise])
+    return [...account.apiTokens, ...account.testApiTokens].map(({ token }) => token)
   }
 
   const addToken = async (accountId: string, network: Network) => {
     const apiToken = await createJWT({ accountId, network }, getApiKeyByNetwork(network))
     const testOrMainApiToken = getTokenByNetwork(network, apiToken)
-    const apiTokenEncrypted = await Vault.encrypt(testOrMainApiToken)
-    await accountDao.insertToken({ id: accountId }, network, apiTokenEncrypted)
+    await accountDao.insertToken({ id: accountId }, network, testOrMainApiToken)
     return testOrMainApiToken
   }
 
   const removeToken = async (account: Account, token: string) => {
-    const decryptApiTokens = async (tokens: ReadonlyArray<string>) => {
-      const allTokens = tokens.map(Vault.decrypt, Vault)
-      return Promise.all(allTokens)
-    }
-
-    const encryptApiTokens = async (tokens: ReadonlyArray<string>) => {
-      const allTokens = tokens.map(Vault.encrypt, Vault)
-      return Promise.all(allTokens)
-    }
-
     const { client_token, network } = decodeJWT(token)
 
-    const encryptedTokenObjects = network === Network.LIVE ? account.apiTokens : account.testApiTokens
-    const encryptedTokens = encryptedTokenObjects.map(({ token }) => token)
-    const tokens = await decryptApiTokens(encryptedTokens)
+    const tokenObjects = network === Network.LIVE ? account.apiTokens : account.testApiTokens
+    const tokens = tokenObjects.map(({ token }) => token)
 
     if (!tokens.find(_ => _ === token))
       throw new ResourceNotFound()
@@ -305,12 +290,11 @@ export const AccountController = ({
     await Vault.revokeToken(client_token)
 
     const filteredTokens = tokens.filter(_ => _ !== token)
-    const encryptedFilteredTokens = await encryptApiTokens(filteredTokens)
-    const encryptedFilteredTokensObjects = encryptedFilteredTokens.map(token => ({ token }))
+    const filteredTokensObjects = filteredTokens.map(token => ({ token }))
 
     const update = network === Network.LIVE
-      ? { apiTokens: encryptedFilteredTokensObjects }
-      : { testApiTokens: encryptedFilteredTokensObjects }
+      ? { apiTokens: filteredTokensObjects }
+      : { testApiTokens: filteredTokensObjects }
 
     await accountDao.updateOne({ id: account.id }, update)
   }

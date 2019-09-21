@@ -18,7 +18,7 @@ export namespace Vault {
     return this.vault.unseal({ secret_shares: 1, key })
   }
 
-  export async function encrypt(text: string) {
+  export async function encrypt(text: string): Promise<string> {
     const plaintext = Buffer.from(text).toString('base64')
     const encrypted = await this.vault.write('transit/encrypt/frost', {
       plaintext,
