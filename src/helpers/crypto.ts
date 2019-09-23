@@ -11,7 +11,7 @@ export const encrypt = (key: string) => (text: string): string => {
   return ciphertext + '|' + authTag + '|' + iv.toString('hex')
 }
 
-export const decrypt = (ciphertextWithAuthTagAndIv: string, key: string): string => {
+export const decrypt = (key: string) => (ciphertextWithAuthTagAndIv: string): string => {
   const [ciphertext, authTagHex, ivHex] = ciphertextWithAuthTagAndIv.split('|')
   const decipher = createDecipheriv(algorithm, Buffer.from(key, 'hex'), Buffer.from(ivHex, 'hex'))
   decipher.setAuthTag(Buffer.from(authTagHex, 'hex'))

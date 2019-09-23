@@ -142,7 +142,7 @@ const tokensToTokenObjects = (tokens: ReadonlyArray<string>): ReadonlyArray<Toke
 const decryptBackwardsCompatible = (key: string) => (plaintext: string) =>
   plaintext.startsWith('vault')
     ? Vault.decrypt(plaintext)
-    : decrypt(plaintext, key)
+    : decrypt(key)(plaintext)
 
 interface AccountDocument {
   readonly id?: Buffer | Binary
