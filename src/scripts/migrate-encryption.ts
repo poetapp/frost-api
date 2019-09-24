@@ -66,8 +66,8 @@ async function migratePrivateKeys() {
   const decryptedAccounts = await Promise.all(accounts.map(async account => {
     try {
       const privateKey = await decryptBackwardsCompatible(account.privateKey)
-      const apiTokens = await decryptApiTokens(account.apiTokens)
-      const testApiTokens = await decryptApiTokens(account.testApiTokens)
+      const apiTokens = await decryptApiTokens(account.apiTokens || [])
+      const testApiTokens = await decryptApiTokens(account.testApiTokens || [])
       return right({
         _id: account._id,
         email: account.email,
