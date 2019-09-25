@@ -34,9 +34,6 @@ export const initVault = async () => {
 
   await unsealWithRetries(logger, keys[0])
   await waitWhileVaultIsInStandby(logger)
-
-  await Vault.mountTransit()
-  await Vault.writeTransitKey()
 }
 
 const initializeWithRetries = async (logger: Pino.Logger) => {

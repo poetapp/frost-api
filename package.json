@@ -18,8 +18,7 @@
     "coverage:integration:legacy": "nyc --report-dir ./.coverage-integration-legacy npm run test:integration",
     "coverage:integration": "nyc --report-dir ./.coverage-integration npm run test:integration:legacy",
     "precommit": "lint-staged",
-    "semantic-release": "semantic-release",
-    "migrate-encryption": "node dist/src/scripts/migrate-encryption.js"
+    "semantic-release": "semantic-release"
   },
   "lint-staged": {
     "*.ts": [

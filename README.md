@@ -70,9 +70,9 @@ There are two other tokens sent by email:
 
 ## Vault
 
-The Po.et API uses [Vault](https://www.vaultproject.io/) to encrypt and decrypt data that is stored in MongoDB.
+The Po.et API uses [Vault](https://www.vaultproject.io/) to manage API keys.
 
-The API needs Vault to be running, initialized and unsealed, with the [transit engine](https://www.vaultproject.io/docs/secrets/transit/index.html) enabled and an empty transit key at `transit/keys/frost`.
+The API needs Vault to be running, initialized and unsealed.
 
 Currently, if the `VAULT_TOKEN` environment variable isn't set, the API will try and initialize, unseal and configure Vault automatically. This functionality will be removed in future releases.
 
@@ -81,8 +81,6 @@ To manually set up Vault, if using the provided Docker container:
 sudo docker-compose exec vault vault operator init
 sudo docker-compose exec vault vault operator unseal
 sudo docker-compose exec vault vault login
-sudo docker-compose exec vault vault secrets enable transit
-sudo docker-compose exec vault vault write -f transit/keys/frost
 ```
 
 By default, `init` will create an _Initial Root Token_ and 5 _Unseal Keys_, out of which any three can reconstruct the root token.

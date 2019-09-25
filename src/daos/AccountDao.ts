@@ -1,3 +1,4 @@
+import { flow } from 'fp-ts/lib/function'
 import { Collection, Binary } from 'mongodb'
 
 import { asyncPipe } from '../helpers/asyncPipe'
@@ -5,7 +6,6 @@ import { encrypt, decrypt } from '../helpers/crypto'
 import { bytesToUuid, uuidToBytes } from '../helpers/uuid'
 import { Network } from '../interfaces/Network'
 import { Account } from '../models/Account'
-import { Vault } from '../utils/Vault/Vault'
 
 export interface AccountDao {
   createIndices: () => Promise<void>
@@ -91,15 +91,13 @@ const modelToDocument = (model: Partial<Account>): Partial<AccountDocument> => {
 
 const encryptAccount = (encryptionKey: string) => async (account: Partial<Account>): Promise<Partial<Account>> => {
   const encryptWithKey = encrypt(encryptionKey)
-
-  const encryptApiTokens = async (tokens: ReadonlyArray<Token>): Promise<ReadonlyArray<Token>> =>
-    tokens.map(tokenObjectToToken).map(encryptWithKey).map(tokenToTokenObject)
+  const encryptApiToken = flow(tokenObjectToToken, encryptWithKey, tokenToTokenObject)
 
   const encryptedAccount = {
     ...account,
     privateKey: account.privateKey && encryptWithKey(account.privateKey),
-    apiTokens: account.apiTokens && await encryptApiTokens(account.apiTokens),
-    testApiTokens: account.testApiTokens && await encryptApiTokens(account.testApiTokens),
+    apiTokens: account.apiTokens && account.apiTokens.map(encryptApiToken),
+    testApiTokens: account.testApiTokens && account.testApiTokens.map(encryptApiToken),
   }
 
   if (!account.privateKey)
@@ -113,16 +111,14 @@ const encryptAccount = (encryptionKey: string) => async (account: Partial<Accoun
 }
 
 const decryptAccount = (decryptionKey: string) => async (account: Partial<Account>): Promise<Partial<Account>> => {
-  const decrypt = decryptBackwardsCompatible(decryptionKey)
-
-  const decryptApiTokens = async (tokens: ReadonlyArray<Token>): Promise<ReadonlyArray<Token>> =>
-    Promise.all(tokens.map(tokenObjectToToken).map(decrypt)).then(tokensToTokenObjects)
+  const decryptWithKey = decrypt(decryptionKey)
+  const decryptApiToken = flow(tokenObjectToToken, decryptWithKey, tokenToTokenObject)
 
   const decryptedAccount = {
     ...account,
-    privateKey: account.privateKey && await decrypt(account.privateKey),
-    apiTokens: account.apiTokens && await decryptApiTokens(account.apiTokens),
-    testApiTokens: account.testApiTokens && await decryptApiTokens(account.testApiTokens),
+    privateKey: account.privateKey && decryptWithKey(account.privateKey),
+    apiTokens: account.apiTokens && account.apiTokens.map(decryptApiToken),
+    testApiTokens: account.testApiTokens && account.testApiTokens.map(decryptApiToken),
   }
 
   if (!account.privateKey)
@@ -137,12 +133,6 @@ const decryptAccount = (decryptionKey: string) => async (account: Partial<Accoun
 
 const tokenToTokenObject = (token: string): Token => ({ token })
 const tokenObjectToToken = ({ token }: Token): string => token
-const tokensToTokenObjects = (tokens: ReadonlyArray<string>): ReadonlyArray<Token> => tokens.map(tokenToTokenObject)
-
-const decryptBackwardsCompatible = (key: string) => (plaintext: string) =>
-  plaintext.startsWith('vault')
-    ? Vault.decrypt(plaintext)
-    : decrypt(key)(plaintext)
 
 interface AccountDocument {
   readonly id?: Buffer | Binary
