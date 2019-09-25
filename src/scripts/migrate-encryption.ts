@@ -103,7 +103,7 @@ async function migratePrivateKeys() {
       const reencryptedApiTokens = apiTokens.map(encryptApiToken)
       const reencryptedTestApiTokens = testApiTokens.map(encryptApiToken)
       await accountCollection.updateOne({ _id }, { $set: {
-          privateKey: encryptedPrivateKey,
+          privateKey: reencryptedPrivateKey,
           apiTokens: reencryptedApiTokens,
           testApiTokens: reencryptedTestApiTokens,
         }})
