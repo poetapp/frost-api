@@ -6,6 +6,7 @@ export interface JWTData {
   readonly accountId: string
   readonly email?: string
   readonly network?: Network
+  readonly accessType?: string
 }
 
 export const isJWTData = (a: any): a is JWTData =>

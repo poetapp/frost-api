@@ -38,7 +38,7 @@ interface Authentication {
 }
 
 export interface AccountController {
-  readonly authorizeRequest: (token: string) => Promise<{ account: Account, tokenData: any }>
+  readonly authorizeRequest: (token: string) => Promise<{ account: Account, tokenData: any, accessType: string }>
   readonly create: (e: EmailPassword) => Promise<Authentication>
   readonly login: (e: EmailPassword) => Promise<Authentication>
   readonly findByIssuer: (issuer: string) => Promise<Account>
@@ -75,6 +75,7 @@ interface Dependencies {
 interface Configuration {
   readonly verifiedAccount: boolean
   readonly jwtSecret: string
+  readonly jwtPrivateKey: string
 }
 
 interface Arguments {
@@ -93,13 +94,18 @@ export const AccountController = ({
 }: Arguments): AccountController => {
   const authorizeRequest = async (token: string) => {
     try {
-      const { client_token, accountId, email } = decodeJWT(token)
-      const tokenData = await Vault.verifyToken(client_token)
+      const { client_token, accountId, email, accessType } = decodeJWT(token)
+      const tokenData = client_token && await Vault.verifyToken(client_token)
+
       const query = accountId
         ? { id: accountId }
-        : { email }
+        : { email } // TODO: remove this when we remove Vault (clean up all old api keys)
       const account = await accountDao.findOne(query)
-      return { tokenData, account }
+
+      if (accessType === 'apiKey' && !account.apiTokens.map(({ token }) => token).includes(token))
+        throw new Error('Unauthorized. Token is revoked.')
+
+      return { tokenData, account, accessType }
     } catch (error) {
       logger.error({ error }, 'Authorization Error')
 
@@ -287,7 +293,8 @@ export const AccountController = ({
     if (!tokens.find(_ => _ === token))
       throw new ResourceNotFound()
 
-    await Vault.revokeToken(client_token)
+    if (client_token)
+      await Vault.revokeToken(client_token)
 
     const filteredTokens = tokens.filter(_ => _ !== token)
     const filteredTokensObjects = filteredTokens.map(token => ({ token }))
@@ -300,14 +307,21 @@ export const AccountController = ({
   }
 
   const createJWT = async (jwtData: JWTData, options: TokenOptions) => {
-    const tokenVault = await Vault.createToken(options)
-    const { client_token } = tokenVault.auth
+    const accessType = options.meta.name // TODO: replace options with permissions
 
-    return sign({ ...jwtData, client_token }, configuration.jwtSecret)
+    return sign({ ...jwtData, accessType }, configuration.jwtPrivateKey)
   }
 
   const decodeJWT = (token: string): JWTData => {
-    const decoded: unknown = verify(token.replace('TEST_', ''), configuration.jwtSecret)
+    const verifyBackwardsCompatible = (token: string) => {
+      try {
+        return verify(token, configuration.jwtSecret)
+      } catch (error) {
+        return verify(token, configuration.jwtPrivateKey)
+      }
+    }
+
+    const decoded: unknown = verifyBackwardsCompatible(token.replace('TEST_', ''))
 
     if (!isJWTData(decoded)) {
       logger.error({ decoded }, 'Unrecognized JWT')

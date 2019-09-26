@@ -78,6 +78,7 @@ export async function Frost(localVars: any = {}) {
     configuration: {
       verifiedAccount: configuration.verifiedAccount,
       jwtSecret: configuration.jwt,
+      jwtPrivateKey: configuration.jwtPrivateKey,
     },
   })
 

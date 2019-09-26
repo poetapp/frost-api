@@ -59,6 +59,7 @@ export interface Configuration
   readonly maxApiTokens: number
   readonly transactionalMandrill: string
   readonly jwt: string
+  readonly jwtPrivateKey: string
   readonly skipVault: boolean
   readonly ethereumUrl: string
   readonly poeContractDecimals: number
@@ -107,6 +108,7 @@ export const configuration: Configuration = {
   skipVault: false,
   transactionalMandrill: '',
   jwt: 'example',
+  jwtPrivateKey: 'example',
   maildevPortTcpAddr: 'localhost',
   maildevPortTcpPort: 1025,
   maildevIgnoreTLS: true,

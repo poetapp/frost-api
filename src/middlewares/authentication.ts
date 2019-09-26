@@ -6,10 +6,11 @@ export const Authentication = (accountController: AccountController) => async (c
   const token = extractToken(ctx)
 
   if (token) {
-    const { account, tokenData } = await accountController.authorizeRequest(token)
+    const { account, tokenData, accessType } = await accountController.authorizeRequest(token)
 
     ctx.state.tokenData = tokenData
-    ctx.state.user = account
+    ctx.state.user = ctx.state.account = account
+    ctx.state.accessType = accessType
   }
 
   return next()
