@@ -16,7 +16,6 @@ services:
       -rpcpassword=bitcoinrpcpassword
       -rpcallowip=::/0
       -server
-      -deprecatedrpc=signrawtransaction
 
   mongo:
     image: mongo:3.7
