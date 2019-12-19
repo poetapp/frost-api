@@ -3,7 +3,7 @@ import {
   SignedVerifiableClaim,
   VerifiableClaimSigner,
 } from '@po.et/poet-js'
-import * as Pino from 'pino'
+import Pino from 'pino'
 import { pipeP } from 'ramda'
 
 import { PoetNode, WorkSearchFilters } from '../daos/PoetNodeDao'

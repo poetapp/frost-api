@@ -1,8 +1,8 @@
-import * as Koa from 'koa'
-import * as bodyParser from 'koa-bodyparser'
-import * as helmet from 'koa-helmet'
-import * as KoaRouter from 'koa-router'
-import * as cors from 'koa2-cors'
+import Koa from 'koa'
+import bodyParser from 'koa-bodyparser'
+import helmet from 'koa-helmet'
+import KoaRouter from 'koa-router'
+import cors from 'koa2-cors'
 
 import { securityHeaders } from '../securityHeaders'
 import { createModuleLogger, LoggingConfiguration } from '../utils/Logging/Logging'

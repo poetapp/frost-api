@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events'
-import * as Pino from 'pino'
+import Pino from 'pino'
 import { describe } from 'riteway'
 import { spy } from 'sinon'
 import {

@@ -1,6 +1,6 @@
 import { getVerifiableClaimSigner } from '@po.et/poet-js'
 import { MongoClient } from 'mongodb'
-import * as Pino from 'pino'
+import Pino from 'pino'
 
 import { RestServer } from './api/RestServer'
 import { Router } from './api/Router'

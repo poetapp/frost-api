@@ -1,4 +1,4 @@
-import * as Pino from 'pino'
+import Pino from 'pino'
 
 import { PoetNode } from '../daos/PoetNodeDao'
 import { FileTooBig, PoeAddressNotVerified, PoeBalanceInsufficient } from '../errors/errors'

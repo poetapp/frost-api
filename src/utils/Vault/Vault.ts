@@ -1,4 +1,4 @@
-import * as VaultLib from 'node-vault'
+import VaultLib from 'node-vault'
 import { Options } from './Options'
 
 export namespace Vault {

@@ -1,7 +1,7 @@
 import { readFile as readFileCallback, writeFileSync, mkdirSync } from 'fs'
 import { homedir } from 'os'
 import * as path from 'path'
-import * as Pino from 'pino'
+import Pino from 'pino'
 import { promisify } from 'util'
 
 import { Configuration } from './configuration'

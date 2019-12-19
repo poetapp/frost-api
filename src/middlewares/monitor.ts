@@ -1,4 +1,4 @@
-import * as Koa from 'koa'
+import Koa from 'koa'
 const { map, lensPath, ifElse, compose, view, set, identity } = require('ramda')
 
 export const omitSecretsInUrl = (secrets: ReadonlyArray<string> = [], url: string = '') => {

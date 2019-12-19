@@ -1,4 +1,4 @@
-import * as Pino from 'pino'
+import Pino from 'pino'
 
 export const logger = (logger: (dirname: string) => Pino.Logger) => async (
   context: any,

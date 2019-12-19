@@ -1,4 +1,4 @@
-import * as KoaRouter from 'koa-router'
+import KoaRouter from 'koa-router'
 
 import { AccountController } from '../controllers/AccountController'
 import { ArchiveController } from '../controllers/ArchiveController'

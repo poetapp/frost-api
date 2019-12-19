@@ -1,5 +1,5 @@
 import { basename } from 'path'
-import * as Pino from 'pino'
+import Pino from 'pino'
 
 export interface LoggingConfiguration {
   readonly loggingLevel: string

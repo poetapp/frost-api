@@ -1,6 +1,6 @@
 import Web3 = require('web3')
 
-import * as Erc20Abi from './Erc20Abi.json'
+import Erc20Abi from './Erc20Abi.json'
 
 interface Arguments {
   readonly ethereumUrl: string

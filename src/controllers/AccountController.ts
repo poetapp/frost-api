@@ -1,6 +1,6 @@
 import { createIssuerFromPrivateKey, generateED25519Base58Keys } from '@po.et/poet-js'
 import { sign, verify } from 'jsonwebtoken'
-import * as Pino from 'pino'
+import Pino from 'pino'
 
 import { Token, TokenOptions } from '../api/Tokens'
 import { getApiKeyByNetwork, getTokenByNetwork } from '../api/tokens/CreateToken'

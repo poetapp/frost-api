@@ -11,6 +11,7 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./src",
+    "esModuleInterop": true,
     "paths": {
       "test/*" : ["../test/*"],
       "expect": ["../test/utils/expect"]
