@@ -11,15 +11,13 @@ export const createEnvToConfigurationKeyMap: (keys: ReadonlyArray<string>) => { 
 export const camelCaseToScreamingSnakeCase = (camelCase: string = '') =>
   camelCase.replace(/([A-Z])/g, capital => '_' + capital).toUpperCase()
 
-const extractValue = (value: any) => {
-  const coercedValue = value === 'true' ? true : value === 'false' ? false : value
-
-  return isNaN(coercedValue)
-    ? coercedValue
-    : typeof coercedValue === 'boolean'
-      ? coercedValue
-      : parseInt(coercedValue, 10)
-}
+export const guessValueType = (value: unknown) =>
+  typeof value !== 'string' ? value :
+  value === 'true' ? true :
+  value === 'false' ? false :
+  Number.isNaN(parseInt(value, 10)) ? value :
+  value.startsWith('0x') ? value :
+  parseInt(value, 10)
 
 const loadConfigurationFromEnv = (env: any): Partial<Configuration> => {
   const map = createEnvToConfigurationKeyMap(keys(configuration))
@@ -29,7 +27,7 @@ const loadConfigurationFromEnv = (env: any): Partial<Configuration> => {
     .reduce(
       (previousValue, [key, value]: [string, any]) => ({
         ...previousValue,
-        [map[key]]: extractValue(value),
+        [map[key]]: guessValueType(value),
       }),
       {},
     )

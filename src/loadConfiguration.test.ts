@@ -1,7 +1,7 @@
 import { pick } from 'ramda'
 import { describe } from 'riteway'
 import { configuration } from './configuration'
-import { mergeConfigs, loadConfigurationWithDefaults } from './loadConfiguration'
+import { mergeConfigs, loadConfigurationWithDefaults, guessValueType } from './loadConfiguration'
 
 describe('mergeConfigs', async (assert: any) => {
   {
@@ -155,5 +155,27 @@ describe('loadConfigurationWithDefaults', async (assert: any) => {
       actual,
       expected,
     })
+  }
+})
+
+describe('guessValueType', async assert => {
+  {
+    const assertValue = (input: unknown, expected: unknown = input) =>
+      assert({
+        given: `the "${input}" string`,
+        should: `return a ${typeof expected} of ${expected}`,
+        actual: guessValueType(input),
+        expected,
+      })
+
+    assertValue('true', true)
+    assertValue('false', false)
+    assertValue('random', 'random')
+    assertValue('5', 5)
+    assertValue('666', 666)
+    assertValue('0x0001')
+    assertValue('0xffff')
+    assertValue('0xffffffffffffff')
+    assertValue('0x' + 'f'.repeat(64))
   }
 })
