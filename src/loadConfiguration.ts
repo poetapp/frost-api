@@ -15,9 +15,8 @@ export const guessValueType = (value: unknown) =>
   typeof value !== 'string' ? value :
   value === 'true' ? true :
   value === 'false' ? false :
-  Number.isNaN(parseInt(value, 10)) ? value :
-  value.startsWith('0x') ? value :
-  parseInt(value, 10)
+  !value.match(/[^0-9]+/gi) ? parseInt(value, 10) :
+  value
 
 const loadConfigurationFromEnv = (env: any): Partial<Configuration> => {
   const map = createEnvToConfigurationKeyMap(keys(configuration))

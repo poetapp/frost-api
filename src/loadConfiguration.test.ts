@@ -159,23 +159,24 @@ describe('loadConfigurationWithDefaults', async (assert: any) => {
 })
 
 describe('guessValueType', async assert => {
-  {
-    const assertValue = (input: unknown, expected: unknown = input) =>
-      assert({
-        given: `the "${input}" string`,
-        should: `return a ${typeof expected} of ${expected}`,
-        actual: guessValueType(input),
-        expected,
-      })
+  const assertValue = (input: unknown, expected: unknown = input) =>
+    assert({
+      given: `the "${input}" string`,
+      should: `return a ${typeof expected} of ${expected}`,
+      actual: guessValueType(input),
+      expected,
+    })
 
-    assertValue('true', true)
-    assertValue('false', false)
-    assertValue('random', 'random')
-    assertValue('5', 5)
-    assertValue('666', 666)
-    assertValue('0x0001')
-    assertValue('0xffff')
-    assertValue('0xffffffffffffff')
-    assertValue('0x' + 'f'.repeat(64))
-  }
+  assertValue('true', true)
+  assertValue('false', false)
+  assertValue('random', 'random')
+  assertValue('5', 5)
+  assertValue('666', 666)
+  assertValue('0x0001')
+  assertValue('0xffff')
+  assertValue('0xffffffffffffff')
+  assertValue('0x' + 'f'.repeat(64))
+  assertValue('89E6mcQUBxeUFpMUDhgycnl7')
+  assertValue('0b0010')
+  assertValue('0o11')
 })
