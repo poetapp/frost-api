@@ -96,12 +96,16 @@ const encryptAccount = (encryptionKey: string) => async (account: Partial<Accoun
   const encryptedAccount = {
     ...account,
     privateKey: account.privateKey && encryptWithKey(account.privateKey),
+    ethereumRegistryPrivateKey: account.ethereumRegistryPrivateKey
+      && encryptWithKey(account.ethereumRegistryPrivateKey),
     apiTokens: account.apiTokens && account.apiTokens.map(encryptApiToken),
     testApiTokens: account.testApiTokens && account.testApiTokens.map(encryptApiToken),
   }
 
   if (!account.privateKey)
     delete encryptedAccount.privateKey
+  if (!account.ethereumRegistryPrivateKey)
+    delete encryptedAccount.ethereumRegistryPrivateKey
   if (!account.apiTokens)
     delete encryptedAccount.apiTokens
   if (!account.testApiTokens)
@@ -117,12 +121,16 @@ const decryptAccount = (decryptionKey: string) => async (account: Partial<Accoun
   const decryptedAccount = {
     ...account,
     privateKey: account.privateKey && decryptWithKey(account.privateKey),
+    ethereumRegistryPrivateKey: account.ethereumRegistryPrivateKey
+      && decryptWithKey(account.ethereumRegistryPrivateKey),
     apiTokens: account.apiTokens && account.apiTokens.map(decryptApiToken),
     testApiTokens: account.testApiTokens && account.testApiTokens.map(decryptApiToken),
   }
 
   if (!account.privateKey)
     delete decryptedAccount.privateKey
+  if (!account.ethereumRegistryPrivateKey)
+    delete decryptedAccount.ethereumRegistryPrivateKey
   if (!account.apiTokens)
     delete decryptedAccount.apiTokens
   if (!account.testApiTokens)
@@ -148,6 +156,8 @@ interface AccountDocument {
   readonly name: string
   readonly bio: string
   readonly ethereumAddress: string
+  readonly ethereumRegistryPrivateKey?: string
+  readonly ethereumRegistryAddress?: string
 }
 
 interface Token {

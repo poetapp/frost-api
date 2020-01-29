@@ -1,3 +1,4 @@
+import { create as createEthereumAccount } from 'eth-lib/lib/account'
 import * as Joi from 'joi'
 
 import { AccountController } from '../../controllers/AccountController'
@@ -18,6 +19,7 @@ export const PatchAccountSchema: ValidateParams = {
     ethereumAddress: Joi.string().allow('').optional(),
     poeAddress: Joi.string().allow('').optional(),
     poeSignature: Joi.string().allow('').optional(),
+    ethereumRegistryPrivateKey: Joi.boolean().optional(),
   }),
 }
 
@@ -40,9 +42,27 @@ export const PatchAccount = (accountController: AccountController) => async (ctx
       throw new AccountAlreadyExists()
   }
 
+  const getEthereumRegistryAccountUpdates = (): Partial<Account> => {
+    if (user.ethereumRegistryPrivateKey)
+      return {}
+    if (body.ethereumRegistryPrivateKey) {
+      const { privateKey, address } = createEthereumAccount()
+      return { ethereumRegistryPrivateKey: privateKey, ethereumRegistryAddress: address }
+    }
+    return {}
+  }
+
+  const ethereumRegistryAccountUpdates = getEthereumRegistryAccountUpdates()
+
   const poeAddressVerified = isPoeAddressVerified(body.poeAddress, body.poeSignature, user)
 
-  await accountController.updateByIssuer(issuer, { ...body, poeAddressVerified })
+  const { ethereumRegistryPrivateKey: hiddenEthereumRegistryPrivateKey, ...bodyWithoutHiddenFields } = body
+
+  await accountController.updateByIssuer(issuer, {
+    ...bodyWithoutHiddenFields,
+    poeAddressVerified,
+    ...ethereumRegistryAccountUpdates,
+  })
 
   const { email, createdAt, name, bio, ethereumAddress, poeAddress, poeSignature } = user
 
@@ -56,7 +76,7 @@ export const PatchAccount = (accountController: AccountController) => async (ctx
     poeAddress,
     poeSignature,
     poeAddressVerified,
-    ...body,
+    ...bodyWithoutHiddenFields,
   }
 }
 

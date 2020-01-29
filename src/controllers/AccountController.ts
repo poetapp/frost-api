@@ -1,4 +1,5 @@
 import { createIssuerFromPrivateKey, generateED25519Base58Keys } from '@po.et/poet-js'
+import { create as createEthereumAccount } from 'eth-lib/lib/account'
 import { sign, verify } from 'jsonwebtoken'
 import Pino from 'pino'
 
@@ -130,6 +131,7 @@ export const AccountController = ({
 
     const id = await getUnusedId()
     const { privateKey, publicKey } = generateED25519Base58Keys()
+    const ethereumAccount = createEthereumAccount()
     const apiToken = await createJWT({ accountId: id, network: Network.TEST }, Token.TestApiKey)
     const issuer = createIssuerFromPrivateKey(privateKey)
     const hashedPassword = await passwordHelper.hash(password)
@@ -145,6 +147,8 @@ export const AccountController = ({
       verified: configuration.verifiedAccount,
       testApiTokens: [{ token: `TEST_${apiToken}` }],
       issuer,
+      ethereumRegistryPrivateKey: ethereumAccount.privateKey,
+      ethereumRegistryAddress: ethereumAccount.address,
     }
 
     logger.trace({ account }, 'Creating account')

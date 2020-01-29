@@ -17,18 +17,19 @@ export const GetAccount = (accountController: AccountController) => async (ctx: 
 
   logger.info({ issuer }, 'GetAccount')
 
-  const response = await accountController.findByIssuer(issuer)
+  const account = await accountController.findByIssuer(issuer)
 
-  if (!response)
+  if (!account)
     throw new AccountNotFound()
 
   const {
     id, email, verified, emailPublic, createdAt, name, bio, ethereumAddress, poeAddress, poeAddressVerified,
-  } = response
+    ethereumRegistryAddress,
+  } = account
 
   const isAccountOwner = user && user.issuer === issuer
   const alwaysPublicFields = { id, createdAt, name, bio, ethereumAddress, poeAddressVerified }
-  const alwaysPrivateFields = { poeAddress, verified }
+  const alwaysPrivateFields = { poeAddress, verified, ethereumRegistryAddress }
 
   ctx.body = {
     ...alwaysPublicFields,

@@ -2,6 +2,7 @@ import KoaRouter from 'koa-router'
 
 import { AccountController } from '../controllers/AccountController'
 import { ArchiveController } from '../controllers/ArchiveController'
+import { RegistryController } from '../controllers/RegistryController'
 import { WorkController } from '../controllers/WorkController'
 
 import { Authentication } from '../middlewares/authentication'
@@ -41,15 +42,21 @@ import { GetWorks } from './works/GetWorks'
 
 import { PostArchive } from './archives/PostArchive'
 
+import { FindRegistries, FindRegistriesSchema } from './registries/FindRegistries'
+import { GetRegistry, GetRegistrySchema } from './registries/GetRegistry'
+import { PostRegistry, PostRegistrySchema } from './registries/PostRegistry'
+import { PostRegistryCid, PostRegistryCidSchema } from './registries/PostRegistryCid'
+
 interface Configuration {
   readonly passwordComplexity: PasswordComplexityConfiguration,
   readonly maxApiTokens: number,
 }
 
 interface Dependencies {
-  readonly accountController: AccountController,
-  readonly archiveController: ArchiveController,
-  readonly workController: WorkController,
+  readonly accountController: AccountController
+  readonly archiveController: ArchiveController
+  readonly workController: WorkController
+  readonly registryController: RegistryController
 }
 
 interface Arguments {
@@ -66,6 +73,7 @@ export const Router = ({
    accountController,
    archiveController,
    workController,
+   registryController,
  },
 }: Arguments) => {
   const router = new KoaRouter()
@@ -175,6 +183,38 @@ export const Router = ({
     authentication,
     authorization,
     PostArchive(archiveController),
+  )
+
+  router.get(
+    Path.REGISTRIES_ID,
+    validate(GetRegistrySchema),
+    authentication,
+    authorization,
+    GetRegistry(registryController),
+  )
+
+  router.get(
+    Path.REGISTRIES,
+    validate(FindRegistriesSchema),
+    authentication,
+    authorization,
+    FindRegistries(registryController),
+  )
+
+  router.post(
+    Path.REGISTRIES_ID,
+    validate(PostRegistryCidSchema),
+    authentication,
+    authorization,
+    PostRegistryCid(registryController),
+  )
+
+  router.post(
+    Path.REGISTRIES,
+    validate(PostRegistrySchema),
+    authentication,
+    authorization,
+    PostRegistry(registryController),
   )
 
   return router

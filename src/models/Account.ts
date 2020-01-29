@@ -17,6 +17,8 @@ export interface Account {
   readonly poeAddressMessage?: string
   readonly poeAddressSignature?: string
   readonly poeAddressVerified?: boolean
+  readonly ethereumRegistryPrivateKey?: string
+  readonly ethereumRegistryAddress?: string
 }
 
 interface Token {

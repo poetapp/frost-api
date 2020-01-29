@@ -14,4 +14,6 @@ export enum Path {
   TOKENS_TOKENID = '/tokens/:tokenId',
   HEALTH = '/health',
   ARCHIVES = '/archives',
+  REGISTRIES = '/registries',
+  REGISTRIES_ID = '/registries/:id',
 }

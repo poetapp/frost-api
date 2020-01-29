@@ -61,6 +61,8 @@ export interface Configuration
   readonly jwt: string
   readonly skipVault: boolean
   readonly ethereumUrl: string
+  readonly ethereumChainId: number
+  readonly ethereumGasPrice: number
   readonly poeContractDecimals: number
   readonly poeContractAddress: string
   readonly poeBalanceMinimum: number
@@ -112,7 +114,9 @@ export const configuration: Configuration = {
   maildevIgnoreTLS: true,
   loggingLevel: 'info',
   loggingPretty: true,
-  ethereumUrl: 'https://mainnet.infura.io/',
+  ethereumUrl: 'http://localhost:8545/',
+  ethereumChainId: 4,
+  ethereumGasPrice: 1e9,
   poeContractAddress: '0x0e0989b1f9b8a38983c2ba8053269ca62ec9b195',
   poeContractDecimals: 8,
   poeBalanceMinimum: 1000,

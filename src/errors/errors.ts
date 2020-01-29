@@ -148,3 +148,19 @@ export class FileTooBig extends Error {
     )
   }
 }
+
+export class NoEthereumAccount extends Error {
+  status = 422
+
+  constructor() {
+    super('This account does not have an associated Ethereum account.')
+  }
+}
+
+export class EtherBalanceInsufficient extends Error {
+  status = 403
+
+  constructor() {
+    super(`Insufficient Ether balance.`)
+  }
+}

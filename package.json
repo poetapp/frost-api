@@ -64,6 +64,7 @@
     "@types/secure-password": "3.1.0",
     "body-parser": "1.18.3",
     "dotenv": "6.2.0",
+    "eth-lib": "0.1.29",
     "ethereumjs-util": "6.1.0",
     "form-data": "2.3.3",
     "fp-ts": "2.0.5",
@@ -85,7 +86,7 @@
     "secure-password": "3.1.0",
     "string-to-stream": "1.1.1",
     "uuid": "3.3.2",
-    "web3": "1.2.0"
+    "web3": "1.2.4"
   },
   "devDependencies": {
     "@po.et/frost-client": "2.1.0",

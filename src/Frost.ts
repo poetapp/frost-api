@@ -7,9 +7,11 @@ import { Router } from './api/Router'
 import { Configuration } from './configuration'
 import { AccountController } from './controllers/AccountController'
 import { ArchiveController } from './controllers/ArchiveController'
+import { RegistryController } from './controllers/RegistryController'
 import { WorkController } from './controllers/WorkController'
 import { AccountDao } from './daos/AccountDao'
 import { PoetNode } from './daos/PoetNodeDao'
+import { RegistryDao } from './daos/RegistryDao'
 import { PasswordHelper } from './helpers/Password'
 import { initVault } from './initVault'
 import { loadConfigurationWithDefaults } from './loadConfiguration'
@@ -43,6 +45,8 @@ export async function Frost(localVars: any = {}) {
   const dbConnection = await mongoClient.db()
   const accountCollection = dbConnection.collection('accounts')
   const accountDao = AccountDao(accountCollection, configuration.privateKeyEncryptionKey)
+  const registryCollection = dbConnection.collection('registries')
+  const registryDao = RegistryDao(registryCollection)
 
   const sendEmail = SendEmail({
     nodemailer: {
@@ -105,6 +109,17 @@ export async function Frost(localVars: any = {}) {
     },
   })
 
+  const registryController = RegistryController({
+    dependencies: {
+      logger: logger.child({ file: 'RegistryController' }),
+      registryDao,
+      accountDao,
+    },
+    configuration: {
+      ethereumUrl: configuration.ethereumUrl,
+    },
+  })
+
   const router = Router({
     configuration: {
       passwordComplexity: {
@@ -121,6 +136,7 @@ export async function Frost(localVars: any = {}) {
       accountController,
       archiveController,
       workController,
+      registryController,
     },
   })
 
@@ -141,6 +157,7 @@ export async function Frost(localVars: any = {}) {
   })
 
   await accountDao.createIndices()
+  await registryDao.createIndices()
 
   return {
     stop: async () => {
