@@ -22,6 +22,7 @@ interface Dependencies {
 
 interface Configuration {
   readonly ethereumUrl: string
+  readonly ethereumChainId: number
   readonly cidPageSize?: number
 }
 
@@ -38,6 +39,7 @@ export const RegistryController = ({
   },
   configuration: {
     ethereumUrl,
+    ethereumChainId,
     cidPageSize = 10,
   },
 }: Arguments): RegistryController => {
@@ -96,6 +98,7 @@ export const RegistryController = ({
       rpcUrl: ethereumUrl,
       contractAddress: registry.address,
       privateKey: account.ethereumRegistryPrivateKey,
+      chainId: ethereumChainId,
     })
 
     const translateError = (error: Error) => {

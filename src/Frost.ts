@@ -117,6 +117,7 @@ export async function Frost(localVars: any = {}) {
     },
     configuration: {
       ethereumUrl: configuration.ethereumUrl,
+      ethereumChainId: configuration.ethereumChainId,
     },
   })
 
