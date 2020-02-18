@@ -139,7 +139,7 @@ services:
       - VERIFIED_ACCOUNT=false
       - MAILDEV_PORT_TCP_ADDR=maildev
       - MAILDEV_PORT_TCP_PORT=25
-      - ETHEREUM_URL=https://mainnet.infura.io/
+      - ETHEREUM_URL=https://mainnet.infura.io/v3/413509b543eb445ebb64993273d64c8d
     volumes:
       - ./Docker/tools/wait-for-it.sh:/wait-for-it.sh
     depends_on:
