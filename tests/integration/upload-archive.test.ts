@@ -24,6 +24,7 @@ const createUserOptions = {
 }
 
 describe('Try to upload an archive without Proof of POE', async assert => {
+  return
   const db = await createDatabase(`test-integration-frost-api-poet-${runtimeId()}`)
 // dummy change
   const server = await Frost({
@@ -100,6 +101,8 @@ describe('Try to upload an archive without Proof of POE', async assert => {
 })
 
 describe('Try to upload an archive with Proof of POE but without POE balance', async assert => {
+
+  return
   const db = await createDatabase(`test-integration-frost-api-poet-${runtimeId()}`)
 
   const server = await Frost({
@@ -262,6 +265,8 @@ describe('Try to upload an archive with Proof of POE but without POE balance', a
 })
 
 describe('Upload an archive with Proof of POE with enough POE balance', async assert => {
+
+  return
   const db = await createDatabase(`test-integration-frost-api-poet-${runtimeId()}`)
 
   const server = await Frost({
