@@ -26,11 +26,12 @@ export const FindAccount = (
 
   const {
     id, email, verified, emailPublic, createdAt, name, bio, ethereumAddress, poeAddress, poeAddressVerified,
+    ethereumRegistryAddress,
   } = response
 
   const isAccountOwner = user && user.issuer === issuer
   const alwaysPublicFields = { id, createdAt, name, bio, ethereumAddress, poeAddressVerified }
-  const alwaysPrivateFields = { poeAddress, verified }
+  const alwaysPrivateFields = { poeAddress, verified, ethereumRegistryAddress }
 
   ctx.body = {
     ...alwaysPublicFields,
